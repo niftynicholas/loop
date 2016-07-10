@@ -1,0 +1,24 @@
+<ion-view title="Cycle" id="page11" class=" ">
+  <ion-content data-tap-disabled="true">
+    <!--Slide Box START
+    <ion-slides  options="options" slider="data.slider">
+      <ion-slide-page>
+                    <h1 align="center">Free Run</h1>
+        
+      </ion-slide-page>
+      <ion-slide-page>
+        <div><h1 align="center">Find A Route</h1></div>
+      </ion-slide-page>
+      <ion-slide-page>
+        <div><h1 align="center">Plan My Route</h1></div>
+      </ion-slide-page>
+    </ion-slides>
+    Slide Box END-->
+
+      <leaflet width="100%" height="90%" lf-center="center" tiles="tiles" layers="layers" markers="markers" paths="paths" geojson="geojson" decorations="decorations"></leaflet>
+      <button class="button button-full button-royal" ng-click="start()">Cycle</button>
+      <button class="button button-full button-royal" ng-click="end()">End Cycle</button>
+      <button class="button button-full button-royal" ng-click="locate()">Locate Me!</button>
+      <button class="button button-full button-royal" ng-click="dbConnect()">Connect to DB</button>
+  </ion-content>
+</ion-view>
