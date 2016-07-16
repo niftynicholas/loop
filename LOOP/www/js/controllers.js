@@ -65,13 +65,25 @@ angular.module('app.controllers', [])
 })
 
 .controller('cycleCtrl', function($scope, leafletData) {
-  leafletData.getMap().then(function (map) {
-      /*var osmGeocoder = new L.Control.OSMGeocoder({ //search box, not very good
+    leafletData.getMap().then(function (map) {
+        map.locate({ setView: true, maxZoom: 22, watch: true, enableHighAccuracy: true });
+        map.on('locationfound', function (e) {
+            $scope.paths.currentLoc.latlngs = [];
+            $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
+            $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
+        });
+        map.on('locationerror', function(e){
+            alert("Location access denied.");
+        });
+      /* Geocoder (old version) search box, not very good
+      var osmGeocoder = new L.Control.OSMGeocoder({ 
             collapsed: false,
             position: 'bottomright',
             text: 'Search',
       });
       osmGeocoder.addTo(map);*/
+
+      /* Routing Codes (Old Version)
       L.Routing.control({
           waypoints: [
               L.latLng(1.3521, 103.8198),
@@ -80,22 +92,23 @@ angular.module('app.controllers', [])
           routeWhileDragging: true,
           geocoder: L.Control.Geocoder.nominatim()
       }).addTo(map);
+      */
 
-      var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-      var track = new L.KML("js/Park_Connector_Loop.kml", {async: true});
-      track.on("loaded", function(e) { map.fitBounds(e.target.getBounds()); });
-      map.addLayer(track);
-      map.addLayer(osm);
-      map.addControl(new L.Control.Layers({}, {'Park Connector Loop':track}));
+      //var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+      //var track = new L.KML("js/Park_Connector_Loop.kml", {async: true});
+      //track.on("loaded", function(e) { map.fitBounds(e.target.getBounds()); });
+      //map.addLayer(track);
+     // map.addLayer(osm);
+      //map.addControl(new L.Control.Layers({}, {'Park Connector Loop':track}));
+      //var kmlLayer = omnivore.kml("js/Park_Connector_Loop.kml").addTo(map);
   });
 
-  angular.extend($scope, {
-      center: {
-          lat: 1.3521,
-          lng: 103.8198,
-          zoom: 13
-          //autoDiscover: true
-      },
+    angular.extend($scope, {
+        center:{
+            lat: 1.3521,
+            lng: 103.8198,
+            zoom: 11
+        },
       layers: {
           baselayers: { //hidden baselayer
               xyz: {
@@ -145,8 +158,9 @@ angular.module('app.controllers', [])
               "coordinates": []
           }
       },
+      /*    Adding markers
       markers: {
-          /*osloMarker: {
+          osloMarker: {
             lat: 1.3521,
             lng: 103.8198,
             focus: true,
@@ -165,8 +179,9 @@ angular.module('app.controllers', [])
               message: "Marker Two",
               focus: true,
               draggable: true
-          }*/
-      },
+          }
+      },*/
+      /*    Drawing Arrow in Leaflet
       decorations: {
           markers: {
               coordinates: [[1.3521, 103.8100], [1.3521, 103.8200]],
@@ -178,7 +193,7 @@ angular.module('app.controllers', [])
                       }
               ]
           }
-      },
+      },*/
       tiles: {
           url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
           options: {
@@ -192,6 +207,7 @@ angular.module('app.controllers', [])
 
   $scope.start = function () {
       leafletData.getMap().then(function (map) {
+          map.stopLocate();
           map.locate({ setView: true, maxZoom: 22, watch: true, enableHighAccuracy: true });
           map.on('locationfound', function (e) {
               //$scope.markers.currentLocation.lat = e.latlng.lat;
@@ -280,7 +296,7 @@ angular.module('app.controllers', [])
           $scope.center.lat = position.coords.latitude;
           $scope.center.lng = position.coords.longitude;
           $scope.center.zoom = 17;
-          console.log($scope.center.lat + '   ' + $scope.center.lng)
+          alert($scope.center.lat + '   ' + $scope.center.lng)
       }, function (err) {
           console.log(err)
       });
