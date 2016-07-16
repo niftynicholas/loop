@@ -1,37 +1,51 @@
-<ion-view title="Cycle" id="page11" class=" ">
-  <ion-content has-header="true" scroll="false" data-tap-disabled="true">
-    <ion-slides style="height:20%;" options="options" slider="data.slider">
-      <ion-slide-page>
-        <div align=center>
-          <br>
-          <a class="button button-outline button-dark" ui-sref="freeRoute">
-              Free Route
-          </a>
+<ion-view title="Cycle">
+  <ion-nav-bar class="bar-balanced">
+  <ion-nav-back-button></ion-nav-back-button>
+  </ion-nav-bar>
+    <ion-content scroll="false">
+      <div class="row">
+        <div class="col col-50">
+          <label class="item item-input item-select">
+            <div class="input-label">
+              Activity
+            </div>
+            <select>
+              <option selected>Cycle</option>
+              <option>Run</option>
+              <option>Walk</option>
+            </select>
+          </label>
         </div>
-      </ion-slide-page>
-      <ion-slide-page>
-        <div align=center>
-          <br>
-          <a class="button button-outline button-dark" ui-sref="findRoute">
-              Find A Route
-          </a>
+        <div class="col col-50">
+        <label class="item item-input item-select">
+            <div class="input-label">
+              Route
+            </div>
+            <select>
+              <option selected>None</option>
+              <option>PCN 1</option>
+              <option>PCN 2</option>
+            </select>
+          </label>
         </div>
-      </ion-slide-page>
-      <ion-slide-page>
-        <div align=center>
-          <br>
-          <a class="button button-outline button-dark" ui-sref="planRoute">
-              Plan My Route
-          </a>
-        </div>
-      </ion-slide-page>
-    </ion-slides>
-          <leaflet width="100%" height="40%" lf-center="center" tiles="tiles" layers="layers" markers="markers" paths="paths" geojson="geojson" decorations="decorations"></leaflet>
-      <ion-scroll align="center">
-          <button class="button button button-dark" ng-click="start()">Cycle</button><br />
-          <button class="button button button-dark" ng-click="end()">End Cycle</button><br />
-          <button class="button button button-dark" ng-click="locate()">Locate Me!</button><br />
-          <button class="button button button-dark" ng-click="dbConnect()">Connect to DB</button>
-      </ion-scroll>
+      </div>
+      <div id="map-container" data-tap-disabled="true">
+          <leaflet markers="markers" defaults="defaults" lf-center="center" height="92%" width="100%"></leaflet>
+            <leaflet width="100%" height="40%" lf-center="center" tiles="tiles" layers="layers" markers="markers" paths="paths" geojson="geojson" decorations="decorations"></leaflet>
+      </div>
+    <button style="position: absolute; bottom: 12px; z-index: 99;" class="button button-block button-balanced">
+      Start Activity
+    </button>
+    <!--<button class="button button-block button-positive" ng-click="locate()">
+      Locate
+    </button>-->
   </ion-content>
 </ion-view>
+
+
+<!--<ion-scroll align="center">
+    <button class="button button button-dark" ng-click="start()">Cycle</button><br />
+    <button class="button button button-dark" ng-click="end()">End Cycle</button><br />
+    <button class="button button button-dark" ng-click="locate()">Locate Me!</button><br />
+    <button class="button button button-dark" ng-click="dbConnect()">Connect to DB</button>
+</ion-scroll>-->

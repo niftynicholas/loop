@@ -1,0 +1,41 @@
+.platform-ios .manual-ios-statusbar-padding{
+  padding-top:20px;
+}
+.manual-remove-top-padding{
+  padding-top:0px;
+}
+.manual-remove-top-padding .scroll{
+  padding-top:0px !important;
+}
+ion-list.manual-list-fullwidth div.list, .list.card.manual-card-fullwidth {
+  margin-left:-10px;
+  margin-right:-10px;
+}
+ion-list.manual-list-fullwidth div.list > .item, .list.card.manual-card-fullwidth > .item {
+  border-radius:0px;
+  border-left:0px;
+  border-right: 0px;
+}
+.slider-pager { top:5px important!}
+
+.item-input{
+  display: block !important;
+}
+
+.input-label {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.item-select select {
+  position: relative !important;
+}
+
+
+.item-select:after {
+  top: 60% !important;
+}
+
+#html, #body, #map-container {
+    height: 100%;
+}

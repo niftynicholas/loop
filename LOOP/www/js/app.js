@@ -8,7 +8,8 @@
 angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'leaflet-directive'])
 
 .config(function ($ionicConfigProvider) {
-    $ionicConfigProvider.tabs.position('bottom');
+  $ionicConfigProvider.tabs.position('bottom');
+  $ionicConfigProvider.navBar.alignTitle('center')
 })
 
 .run(function($ionicPlatform) {

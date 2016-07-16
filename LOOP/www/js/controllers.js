@@ -80,6 +80,13 @@ angular.module('app.controllers', [])
           routeWhileDragging: true,
           geocoder: L.Control.Geocoder.nominatim()
       }).addTo(map);
+
+      var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+      var track = new L.KML("js/Park_Connector_Loop.kml", {async: true});
+      track.on("loaded", function(e) { map.fitBounds(e.target.getBounds()); });
+      map.addLayer(track);
+      map.addLayer(osm);
+      map.addControl(new L.Control.Layers({}, {'Park Connector Loop':track}));
   });
 
   angular.extend($scope, {
@@ -139,7 +146,13 @@ angular.module('app.controllers', [])
           }
       },
       markers: {
-          /*currentLocation: {
+          /*osloMarker: {
+            lat: 1.3521,
+            lng: 103.8198,
+            focus: true,
+            draggable: false
+          }
+          currentLocation: {
               lat: 1.3521,
               lng: 103.8198,
               message: "current position",
@@ -171,6 +184,9 @@ angular.module('app.controllers', [])
           options: {
               attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
           }
+      },
+      defaults: {
+        scrollWheelZoom: false
       }
   });
 
@@ -263,7 +279,7 @@ angular.module('app.controllers', [])
       $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
           $scope.center.lat = position.coords.latitude;
           $scope.center.lng = position.coords.longitude;
-          $scope.center.zoom = 15;
+          $scope.center.zoom = 17;
           console.log($scope.center.lat + '   ' + $scope.center.lng)
       }, function (err) {
           console.log(err)
