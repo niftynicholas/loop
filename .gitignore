@@ -260,15 +260,13 @@ node_modules/
 platforms/
 plugins/
 
-# android
-platforms/android/assets/www
-platforms/android/bin
-platforms/android/gen
-platforms/android/local.properties
-platforms/android/ant-build
-platforms/android/ant-gen
-platforms/android/CordovaLib/ant-build
-platforms/android/CordovaLib/ant-gen
-platforms/android/CordovaLib/bin
-platforms/android/CordovaLib/gen
-platforms/android/CordovaLib/local.properties
+node_modules
+.tmp
+.sass-cache
+**/bower_components or sometimes it is lib/**
+platforms
+plugins
+*.swp
+*.swo
+*.log
+*.DS_Store
