@@ -1,46 +1,41 @@
 <ion-view title="Cycle">
-  <ion-nav-bar class="bar-balanced">
-  <ion-nav-back-button></ion-nav-back-button>
-  </ion-nav-bar>
+    <ion-nav-bar class="bar-balanced">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
     <ion-content scroll="false">
-      <div class="row">
-        <div class="col col-50">
-          <label class="item item-input item-select">
-            <div class="input-label">
-              Activity
+        <div class="row">
+            <div class="col col-50">
+                <label class="item item-input item-select">
+                    <div class="input-label">
+                        Activity
+                    </div>
+                    <select>
+                        <option selected>Cycle</option>
+                        <option>Run</option>
+                        <option>Walk</option>
+                    </select>
+                </label>
             </div>
-            <select>
-              <option selected>Cycle</option>
-              <option>Run</option>
-              <option>Walk</option>
-            </select>
-          </label>
-        </div>
-        <div class="col col-50">
-        <label class="item item-input item-select">
-            <div class="input-label">
-              Route
+            <div class="col col-50">
+                <label class="item item-input item-select">
+                    <div class="input-label">
+                        Route
+                    </div>
+                    <select>
+                        <option selected>None</option>
+                        <option>PCN 1</option>
+                        <option>PCN 2</option>
+                    </select>
+                </label>
             </div>
-            <select>
-              <option selected>None</option>
-              <option>PCN 1</option>
-              <option>PCN 2</option>
-            </select>
-          </label>
         </div>
-      </div>
-      <div id="map-container" data-tap-disabled="true">
-          <leaflet lf-center="center" tiles="tiles" layers="layers" markers="markers" paths="paths" geojson="geojson" decorations="decorations" defaults="defaults" height="92%" width="100%"></leaflet>
-      </div>
-      <a nav-transition="none" href="#/inprogress">
-    <button style="position: absolute; bottom: 12px; z-index: 99;" class="button button-block button-balanced">
-      Start Activity
-    </button>
-  </a>
-    <!--<button class="button button-block button-positive" ng-click="locate()">
-      Locate
-    </button>-->
-  </ion-content>
+        <div id="map-container" data-tap-disabled="true">
+            <leaflet lf-center="center" tiles="tiles" layers="layers" markers="markers" paths="paths" geojson="geojson" decorations="decorations" defaults="defaults" height="92%" width="100%"></leaflet>
+        </div>
+        <button style="position: absolute; bottom: 12px; z-index: 99;" class="button button-block button-balanced" ui-sref="inprogress">
+            Start Activity
+        </button>
+    </ion-content>
 </ion-view>
 
 
