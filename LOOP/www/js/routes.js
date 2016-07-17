@@ -44,7 +44,7 @@ angular.module('app.routes', [])
         controller: 'routesCtrl'
       }
     }
-  })    
+  })
 
   .state('tabsController.cycle', {
     url: '/cycle',
@@ -56,11 +56,23 @@ angular.module('app.routes', [])
     }
   })
 
-   .state('freeRoute', {
+ .state('freeRoute', {
      url: '/freeRoute',
      templateUrl: 'templates/freeRoute.html',
      controller: 'freeRouteCtrl'
    })
+
+  .state('inprogress', {
+     url: '/inprogress',
+    templateUrl: 'templates/inprogress.html',
+    controller: 'inprogressCtrl'
+  })
+
+  .state('completed', {
+    url: '/completed',
+   templateUrl: 'templates/completed.html',
+   controller: 'completedCtrl'
+ })
 
    .state('findRoute', {
        url: '/findRoute',

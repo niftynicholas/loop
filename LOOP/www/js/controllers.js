@@ -76,7 +76,7 @@ angular.module('app.controllers', [])
             alert("Location access denied.");
         });
       /* Geocoder (old version) search box, not very good
-      var osmGeocoder = new L.Control.OSMGeocoder({ 
+      var osmGeocoder = new L.Control.OSMGeocoder({
             collapsed: false,
             position: 'bottomright',
             text: 'Search',
@@ -321,6 +321,12 @@ angular.module('app.controllers', [])
     $scope.activeIndex = data.activeIndex;
     $scope.previousIndex = data.previousIndex;
   });
+})
+
+.controller('inprogressCtrl', function($scope, $log, $cordovaGeolocation, leafletData) {
+})
+
+.controller('completedCtrl', function($scope, $log, $cordovaGeolocation, leafletData) {
 })
 
 .controller('freeRouteCtrl', function ($scope) {
