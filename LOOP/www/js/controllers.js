@@ -219,13 +219,13 @@ angular.module('app.controllers', [])
         }
     });
 
-    $scope.startActivity = function () {
-        leafletData.getMap("cycle").then(function (map) {
+    $scope.startActivity = function() {
+        leafletData.getMap("cycle").then(function(map) {
             map.stopLocate();
         });
         $state.go("inprogress");
     }
-    
+
     /*
      $http({
       url: user.update_path,
@@ -235,7 +235,7 @@ angular.module('app.controllers', [])
             },
       data: {user_id: user.id, draft: true}
      });
-    
+
     $scope.dbConnect = function() {
         $http({
             method: 'GET',
@@ -296,26 +296,26 @@ angular.module('app.controllers', [])
     });
 })
 
-.controller('inprogressCtrl', function ($scope, $state, $ionicPopup, $timeout, leafletData, dataShare) {
+.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare) {
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
     $scope.calories = 0;
-    $scope.duration = 0;    //In seconds
-    $scope.MET = 8;         //FINAL variable to be determined by activity type
+    $scope.duration = 0; //In seconds
+    $scope.MET = 8; //FINAL variable to be determined by activity type
     //$scope.age = 25;      //To be retrieve from database
     //$scope.gender = 'M';  //To be retrieve from database
-    $scope.weight = 60.0;   //To be retrieve from database
+    $scope.weight = 60.0; //To be retrieve from database
 
     $scope.timerRunning = true;
 
-    leafletData.getMap("inprogress").then(function (map) {
+    leafletData.getMap("inprogress").then(function(map) {
         map.locate({
             setView: true,
             watch: true,
             enableHighAccuracy: false
         });
-        map.on('locationfound', function (e) {
+        map.on('locationfound', function(e) {
 
             //*********************************
             //Storing information about Coordinates
@@ -341,7 +341,7 @@ angular.module('app.controllers', [])
                 time: e.timestamp
             });
             $scope.paths.toGEOJson.coordinates.push([e.latlng.lat, e.latlng.lng]);
-            
+
             //*********************************
             //Start to calculate metrics
             //*********************************
@@ -355,7 +355,7 @@ angular.module('app.controllers', [])
                 $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
             }
             $scope.timerRunning = false;
-            $scope.$on('timer-tick', function (event, data) {
+            $scope.$on('timer-tick', function(event, data) {
                 if ($scope.timerRunning === false) {
                     $scope.duration = data.millis / 1000.0;
                     var avgSpd = $scope.distance / ($scope.duration / 3600.0);
@@ -373,19 +373,19 @@ angular.module('app.controllers', [])
 
             **************GENDER SPECIFIC************
             var avgCyclingHeartRate = (220 - $scope.age) * 0.7;
-            Men  
-            = [(Age x 0.2017) — (Weight x 0.09036) + (Heart Rate x 0.6309) — 55.0969] x Minutes / 4.184
+            Men
+            = [(Age x 0.2017) ï¿½ (Weight x 0.09036) + (Heart Rate x 0.6309) ï¿½ 55.0969] x Minutes / 4.184
 
             Women
-            = [(Age x 0.074) — (Weight x 0.05741) + (Heart Rate x 0.4472) — 20.4022] x Minutes / 4.184
+            = [(Age x 0.074) ï¿½ (Weight x 0.05741) + (Heart Rate x 0.4472) ï¿½ 20.4022] x Minutes / 4.184
             *****************************************
             */
             //alert("next GPS Ping");
         });
     });
 
-    $scope.end = function () {
-        leafletData.getMap().then(function (map) {
+    $scope.end = function() {
+        leafletData.getMap().then(function(map) {
             map.stopLocate();
             alert($scope.paths.toGEOJson);
             alert($scope.paths.toGEOJson.type);
@@ -428,38 +428,38 @@ angular.module('app.controllers', [])
             zoomControl: false
         },
         paths: {
-        p1: {
+            p1: {
                 color: '#008000',
                 weight: 8,
                 latlngs: [], //{ lat: 51.50, lng: -0.082 }
                 coordinates: [],
-                },
-        currentLoc: {
-            type: 'circleMarker',
-            fillColor: '#4183D7', //DarkSlateGray
-            //color: '#000000',
-            ///weight: 1,
-            opacity: 80,
-            fillOpacity: 0.9,
-            stroke: false,
-            clickable: false,
-            latlngs: [0, 0], //1.2997810230344622, 103.90907790873663
-            radius: 10
-        },
-        toGEOJson: {
-            "type": "Point",
-            "coordinates": []
+            },
+            currentLoc: {
+                type: 'circleMarker',
+                fillColor: '#4183D7', //DarkSlateGray
+                //color: '#000000',
+                ///weight: 1,
+                opacity: 80,
+                fillOpacity: 0.9,
+                stroke: false,
+                clickable: false,
+                latlngs: [0, 0], //1.2997810230344622, 103.90907790873663
+                radius: 10
+            },
+            toGEOJson: {
+                "type": "Point",
+                "coordinates": []
+            }
         }
-    }
     });
 
-    $scope.showConfirm = function () {
-        leafletData.getMap().then(function (map) {
+    $scope.showConfirm = function() {
+        leafletData.getMap().then(function(map) {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Stop Activity',
                 template: 'Are you sure you want to stop this activity?'
             });
-            confirmPopup.then(function (res) {
+            confirmPopup.then(function(res) {
                 if (res) {
                     map.stopLocate();
                     console.log('Confirmed');
@@ -481,14 +481,14 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('completedCtrl', function ($scope, $state, $ionicPopup, $timeout, leafletData, dataShare) {
+.controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare) {
     var data = dataShare.getData();
     $scope.distance = data.distance;
     $scope.duration = data.duration;
     $scope.averageSpeed = data.averageSpeed;
     $scope.calories = data.calories;
 
-    var monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     var today = new Date();
     var dd = today.getDate();
@@ -535,13 +535,13 @@ angular.module('app.controllers', [])
     $scope.paths.p1.latlngs = data.path;
 
     // A confirm dialog
-    $scope.showConfirm = function () {
+    $scope.showConfirm = function() {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Discard Activity',
             template: 'Are you sure you want to eat discard this activity?'
         });
 
-        confirmPopup.then(function (res) {
+        confirmPopup.then(function(res) {
             if (res) {
                 console.log('You are sure');
                 $state.go('tabsController.cycle');
@@ -551,6 +551,9 @@ angular.module('app.controllers', [])
         });
     };
 
+    $scope.save = function() {
+        $state.go('tabsController.cycle');
+    };
 })
 
 .controller('freeRouteCtrl', function($scope) {
