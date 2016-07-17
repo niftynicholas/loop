@@ -39,33 +39,3 @@ ion-list.manual-list-fullwidth div.list > .item, .list.card.manual-card-fullwidt
 #html, #body, #map-container {
     height: 100%;
 }
-
-.item-input{
-  display: block !important;
-}
-
-.input-label {
-  max-width: 100% !important;
-  width: 100% !important;
-}
-
-.item-select select {
-  position: relative !important;
-}
-
-
-.item-select:after {
-  top: 60% !important;
-}
-
-#html, #body, #map-container {
-    height: 100%;
-}
-
-.custom_grid .no_padding_margin {
-  padding: 0;
-}
-
-.col .row {
-  height: 70px;
-}

@@ -1,49 +1,41 @@
-<ion-view title="" hide-nav-bar="true" hide-back-button="true">
+<ion-view hide-nav-bar="true">
     <ion-content scroll="false">
-        <div class="row custom_grid" style="text-align:center;">
-            <div class="col balanced-bg">
-                Time
-                <br> 45:05
-            </div>
-            <div class="col no_padding_margin">
-                <div class="row no_padding_margin">
-                    <div class="col balanced-bg no_padding_margin">
-                        9:51
-                        <br> Avg. min/km
-                    </div>
-                </div>
-                <div class="row no_padding_margin">
-                    <div class="col balanced-bg no_padding_margin">
-                        453
-                        <br> Calories
-                    </div>
-                </div>
-            </div>
+    </br>
+    </br>
+    </br>
+    </br>
+      <div class="row" style="text-align:center;">
+        <div class="col col-50">
+            $Time$
         </div>
+        <div class="col col-50">
+          <div>
+            $Avg. min/km$
+          </div>
+          <div>
+            $Calories$
+          </div>
         </div>
-        <leaflet lf-center="center" tiles="tiles" layers="layers" markers="markers" paths="paths" geojson="geojson" decorations="decorations" defaults="defaults" height="69%" width="100%"></leaflet>
-        <div class="row no_padding_margin" style="text-align:center;">
-            <div class="col col-50 no_padding_margin balanced-bg">
-                Distance<br>
-                5.67<br>
-                km
-            </div>
-            <div class="col col-50 no_padding_margin balanced-bg">
-                Pace<br>
-                0.14<br>
-                min/km
-            </div>
+      </div>
+      <leaflet height="60%" width="100%"></leaflet>
+      <div class="row" style="text-align:center;">
+        <div class="col col-50">
+          $Distance$ km
         </div>
+        <div class="col col-50">
+          $Pace$ min/km
+        </div>
+      </div>
         <div class="row" style="text-align:center;">
-            <div class="col col-50">
-                <button class="button button-block button-assertive" ng-click="showConfirm()">
-                    Stop
-                </button>
-            </div>
-            <div class="col col-50">
-                <button class="button button-block button-energized">
-                    Pause
-                </button>
-            </div>
-    </ion-content>
+          <div class="col col-50">
+            <button class="button button-block button-assertive">
+              Stop
+            </button>
+          </div>
+          <div class="col col-50">
+            <button class="button button-block button-energized">
+              Pause
+            </button>
+          </div>
+  </ion-content>
 </ion-view>
