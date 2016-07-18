@@ -1,6 +1,8 @@
 <ion-view title="Cycle">
     <ion-nav-bar class="bar-balanced">
-        <ion-nav-back-button></ion-nav-back-button>
+        <ion-nav-buttons side="right">
+            <button class="button button-icon icon ion-android-locate" ng-click="locateMe()"></button>
+        </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content scroll="false">
         <div class="row">
@@ -35,6 +37,7 @@
         <button style="position: absolute; bottom: 12px; z-index: 99;" class="button button-block button-balanced" ng-click="startActivity()">
             Start Activity
         </button>
+
     </ion-content>
 </ion-view>
 

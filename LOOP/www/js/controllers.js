@@ -76,8 +76,6 @@ angular.module('app.controllers', [])
     leafletData.getMap("cycle").then(function(map) {
         map.locate({
             setView: true,
-            watch: true,
-            enableHighAccuracy: false
         });
         map.on('locationfound', function(e) {
             $scope.paths.currentLoc.latlngs = [];
@@ -220,10 +218,15 @@ angular.module('app.controllers', [])
     });
 
     $scope.startActivity = function() {
-        leafletData.getMap("cycle").then(function(map) {
-            map.stopLocate();
-        });
         $state.go("inprogress");
+    }
+
+    $scope.locateMe = function () {
+        leafletData.getMap("cycle").then(function (map) {
+            map.locate({
+                setView: true,
+            });
+        });
     }
 
     /*
