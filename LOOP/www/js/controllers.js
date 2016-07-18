@@ -83,7 +83,8 @@ angular.module('app.controllers', [])
             $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
         });
         map.on('locationerror', function(e) {
-            alert("Location access denied.");
+//            alert("Location access denied.");
+            console.log('Location access denied.');
         });
         /* Geocoder (old version) search box, not very good
         var osmGeocoder = new L.Control.OSMGeocoder({
@@ -316,7 +317,7 @@ angular.module('app.controllers', [])
         map.locate({
             setView: true,
             watch: true,
-            enableHighAccuracy: false
+            enableHighAccuracy: true
         });
         map.on('locationfound', function(e) {
 
@@ -387,7 +388,7 @@ angular.module('app.controllers', [])
         });
     });
 
-    $scope.end = function() {
+    /*$scope.end = function() {
         leafletData.getMap().then(function(map) {
             map.stopLocate();
             alert($scope.paths.toGEOJson);
@@ -412,7 +413,7 @@ angular.module('app.controllers', [])
             alert($scope.paths.p1.coordinates); //an array of hashtable [{ lat : 1.3, lng : 1.11111, alt: 123, time:1323232321 }, { lat : 1.3, lng : 1.11111, alt: 123, time:1323232321  }]
             alert("You have ended your cycle!");
         });
-    };
+    };*/
 
     angular.extend($scope, {
         center: {

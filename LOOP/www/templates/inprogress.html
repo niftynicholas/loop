@@ -1,35 +1,35 @@
 <ion-view hide-nav-bar="true">
     <ion-content scroll="false">
-        <div class="row custom_grid" style="text-align: center; padding: 0px;">
-            <div class="col positive-bg">
-                Time
-                <br> <timer interval="1000">{{hours|digits}}:{{minutes|digits}}:{{seconds|digits}}</timer>
+        <div style="text-align: center; color:white;">
+            <div class="col balanced-bg no_padding_margin">
+                <b>Time</b>
+                <br>
+                <timer interval="1000">
+                    <h1 style="color:white;">{{hours|digits}}:{{minutes|digits}}:{{seconds|digits}}</h1></timer>
             </div>
-            <div class="col no_padding_margin">
-                <div class="row no_padding_margin">
-                    <div class="col energized-bg no_padding_margin">
-                        {{averageSpeed}}
-                        <br> Avg. km/h
-                    </div>
-                </div>
-                <div class="row no_padding_margin">
-                    <div class="col calm-bg no_padding_margin">
-                        {{calories}}
-                        <br> Calories
-                    </div>
-                </div>
+        </div>
+        <div class="row custom_grid" style="text-align: center; color:white; padding:0px">
+            <div class="col balanced-bg no_padding_margin">
+                {{averageSpeed}}
+                <br><b>Avg. km/h</b>
             </div>
+            <div class="col balanced-bg no_padding_margin">
+                {{calories}}
+                <br> <b>Calories</b>
+            </div>
+        </div>
+        </div>
         </div>
         </div>
         <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="58%" width="100%"></leaflet>
-        <div class="row" style="text-align:center; padding: 0px;">
-            <div class="col royal-bg col-50">
+        <div class="row" style="text-align:center; padding: 0px;color:white;">
+            <div class="col balanced-bg col-50">
                 {{distance}}
-                <br> km
+                <br><b>km</b>
             </div>
-            <div class="col royal-bg col-50">
+            <div class="col balanced-bg col-50">
                 {{currentSpeed}}
-                <br> Cur. km/h
+                <br><b> Cur. km/h</b>
             </div>
         </div>
         <div class="row" style="text-align:center;">

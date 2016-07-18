@@ -8,26 +8,26 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content scroll="false">
-        <div align="center">
-            <h3>{{today}}</h3>
+        <div align="center" style="padding-top:5px;">
+            <h3 style="color:black;">{{today}}</h3>
         </div>
         <leaflet id="completed" defaults="defaults" lf-center="center" tiles="tiles" paths="paths" height="60%" width="100%"></leaflet>
-        <div class="row balanced-bg" align="center">
+        <div class="row balanced-bg" align="center" style="color:white;">
             <div class="col col-25">
                 {{distance}}
-                <br> km
+                <br><b>km</b>
             </div>
             <div class="col col-25">
                 {{duration}}
-                <br> Time
+                <br><b>Time</b>
             </div>
             <div class="col col-25">
                 {{averageSpeed}}
-                <br> km/h
+                <br><b>km/h</b>
             </div>
             <div class="col col-25">
                 {{calories}}
-                <br> Calories
+                <br><b>Calories</b>
             </div>
         </div>
         <ul class="list">
