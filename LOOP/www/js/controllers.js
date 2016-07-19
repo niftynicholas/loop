@@ -74,7 +74,37 @@ angular.module('app.controllers', [])
 
 .controller('cycleCtrl', function ($scope, $state, leafletData) {
     $scope.currentLocation = {};
-    leafletData.getMap("cycle").then(function(map) {
+
+    leafletData.getMap("cycle").then(function (map) {
+        //*************************************TESTING**********************
+        var latlons = {
+            src1: [1.301, 103.8198],
+            trg1: [1.341, 103.8197],
+            trg2: [1.341, 103.8197]
+        };
+        var sourceMarker1 = L.marker(latlons.src1);
+        var targetMarker1 = L.marker(latlons.trg1);
+        var targetMarker2 = L.marker(latlons.trg2);
+        r360.config.serviceKey = 'YWtKiQB7MiZETbCoVsG6'; //00AGI2VAF2HNS37EMMLV
+        r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
+
+        var routeLayer = L.featureGroup().addTo(map);
+        var travelOptions = r360.travelOptions();
+        travelOptions.addSource(sourceMarker1);
+        travelOptions.addTarget(targetMarker1);
+        travelOptions.addTarget(targetMarker2);
+        travelOptions.setTravelType('bike');
+
+        r360.RouteService.getRoutes(travelOptions, function (routes) {
+            for (var i = 0; i < routes.length; i++) {
+                var route = routes[i];
+                r360.LeafletUtil.fadeIn(routeLayer, route, 1000, "travelDistance");
+            }
+        });
+
+        console.log(routeLayer);
+        //********************************TESTING******************************
+
         map.locate({
             setView: true,
         });
@@ -172,14 +202,15 @@ angular.module('app.controllers', [])
                 "coordinates": []
             }
         },
-        /*    Adding markers
+        /*    Adding markers*/
         markers: {
+            /*
             osloMarker: {
               lat: 1.3521,
               lng: 103.8198,
               focus: true,
               draggable: false
-            }
+            },
             currentLocation: {
                 lat: 1.3521,
                 lng: 103.8198,
@@ -193,8 +224,8 @@ angular.module('app.controllers', [])
                 message: "Marker Two",
                 focus: true,
                 draggable: true
-            }
-        },*/
+            }*/
+        },
         /*    Drawing Arrow in Leaflet
         decorations: {
             markers: {
