@@ -1,4 +1,4 @@
-.platform-ios .manual-ios-statusbar-padding {
+/*.platform-ios .manual-ios-statusbar-padding {
     padding-top: 20px;
 }
 .manual-remove-top-padding {
@@ -31,7 +31,7 @@ ion-list.manual-list-fullwidth div.list> .item, .list.card.manual-card-fullwidth
 }
 .item-select:after {
     top: 60% !important;
-}
+}*/
 #html, #body, #map-container {
     height: 100%;
 }
