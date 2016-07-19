@@ -72,10 +72,10 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('cycleCtrl', function ($scope, $state, leafletData) {
+.controller('cycleCtrl', function($scope, $state, leafletData) {
     $scope.currentLocation = {};
 
-    leafletData.getMap("cycle").then(function (map) {
+    leafletData.getMap("cycle").then(function(map) {
         //*************************************TESTING**********************
         var latlons = {
             src1: [1.301, 103.8198],
@@ -95,7 +95,7 @@ angular.module('app.controllers', [])
         travelOptions.addTarget(targetMarker2);
         travelOptions.setTravelType('bike');
 
-        r360.RouteService.getRoutes(travelOptions, function (routes) {
+        r360.RouteService.getRoutes(travelOptions, function(routes) {
             for (var i = 0; i < routes.length; i++) {
                 var route = routes[i];
                 r360.LeafletUtil.fadeIn(routeLayer, route, 1000, "travelDistance");
@@ -108,8 +108,11 @@ angular.module('app.controllers', [])
         map.locate({
             setView: true,
         });
-        map.on('locationfound', function (e) {
-            $scope.currentLocation = { lat: e.latlng.lat, lng: e.latlng.lng };
+        map.on('locationfound', function(e) {
+            $scope.currentLocation = {
+                lat: e.latlng.lat,
+                lng: e.latlng.lng
+            };
             $scope.paths.currentLoc.latlngs = [];
             $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
             $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
@@ -344,15 +347,18 @@ angular.module('app.controllers', [])
     $scope.currentLocation = {};
     $scope.timerRunning = true;
 
-    leafletData.getMap("inprogress").then(function (map) {
-       
+    leafletData.getMap("inprogress").then(function(map) {
+
         map.locate({
             setView: true,
             watch: true,
             enableHighAccuracy: true
         });
-        map.on('locationfound', function (e) {
-            $scope.currentLocation = {lat: e.latlng.lat, lng: e.latlng.lng};
+        map.on('locationfound', function(e) {
+            $scope.currentLocation = {
+                lat: e.latlng.lat,
+                lng: e.latlng.lng
+            };
             //*********************************
             //Storing information about Coordinates
             //*********************************
@@ -605,8 +611,24 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('planRouteCtrl', function($scope) {
-
+.controller('planRouteCtrl', function($scope, leafletData) {
+    angular.extend($scope, {
+        center: {
+            lat: 1.3521,
+            lng: 103.8198,
+            zoom: 11
+        },
+        tiles: {
+            url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
+            options: {
+                attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+            }
+        },
+        defaults: {
+            scrollWheelZoom: false,
+            zoomControl: false
+        }
+    });
 })
 
 .controller('profileCtrl', function($scope) {

@@ -5,7 +5,7 @@
     </ion-nav-buttons>
     <ion-content scroll="false">
         <div class="row">
-            <div class="col col-50">
+            <div class="col col-40">
                 <label class="item item-input item-select">
                     <div class="input-label">
                         Activity
@@ -17,7 +17,7 @@
                     </select>
                 </label>
             </div>
-            <div class="col col-50">
+            <div class="col col-40">
                 <label class="item item-input item-select">
                     <div class="input-label">
                         Route
@@ -28,6 +28,11 @@
                         <option>PCN 2</option>
                     </select>
                 </label>
+            </div>
+            <div class="col col-20">
+                <button class="button button-dark" style="width:100%;" ui-sref="planRoute">
+                    Plan My Ride
+                </button>
             </div>
         </div>
         <div id="map-container" data-tap-disabled="true">

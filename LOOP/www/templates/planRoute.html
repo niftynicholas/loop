@@ -1,12 +1,25 @@
-﻿<ion-view title="Plan My Route">
-    <ion-nav-bar side="left">
-        <ion-nav-buttons side="left">
-            <a class="button back-button buttons button-clear header-item" ui-sref="tabsController.cycle">
-                <i class="icon ion-ios-arrow-back"> Back</i>
-            </a>
-        </ion-nav-buttons>
-    </ion-nav-bar>
-    <ion-content padding="true" class="has-header">
-
+<ion-view title="Plan My Route">
+    <ion-nav-bar class="bar-balanced"></ion-nav-bar>
+    <ion-nav-buttons side="left">
+        <a class="button back-button buttons button-clear header-item" ui-sref="tabsController.cycle">
+            <i class="icon ion-ios-arrow-back" style="color:white;">Back</i>
+        </a>
+    </ion-nav-buttons>
+    <ion-content padding="true" class="has-header" scroll="false">
+        <ion-list>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Start Point</span>
+                <input type="text" placeholder="Start Point">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">End Point</span>
+                <input type="text" placeholder="End Point">
+            </label>
+            </ion-item>
+        </ion-list>
+        <a class="button button-block button-dark" ui-sref="cycle">Plan</a>
+        <div id="map-container" data-tap-disabled="true">
+            <leaflet id="planRoute" lf-center="center" defaults="defaults" tiles="tiles" height="50%" width="100%"></leaflet>
+        </div>
     </ion-content>
 </ion-view>
