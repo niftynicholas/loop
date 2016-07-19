@@ -72,12 +72,14 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('cycleCtrl', function($scope, $state, leafletData) {
+.controller('cycleCtrl', function ($scope, $state, leafletData) {
+    $scope.currentLocation = {};
     leafletData.getMap("cycle").then(function(map) {
         map.locate({
             setView: true,
         });
-        map.on('locationfound', function(e) {
+        map.on('locationfound', function (e) {
+            $scope.currentLocation = { lat: e.latlng.lat, lng: e.latlng.lng };
             $scope.paths.currentLoc.latlngs = [];
             $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
             $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
@@ -224,9 +226,7 @@ angular.module('app.controllers', [])
 
     $scope.locateMe = function() {
         leafletData.getMap("cycle").then(function(map) {
-            map.locate({
-                setView: true,
-            });
+            map.setView($scope.currentLocation);
         });
     }
 
@@ -310,34 +310,33 @@ angular.module('app.controllers', [])
     //$scope.age = 25;      //To be retrieve from database
     //$scope.gender = 'M';  //To be retrieve from database
     $scope.weight = 60.0; //To be retrieve from database
-
+    $scope.currentLocation = {};
     $scope.timerRunning = true;
 
-    leafletData.getMap("inprogress").then(function(map) {
+    leafletData.getMap("inprogress").then(function (map) {
+       
         map.locate({
             setView: true,
             watch: true,
             enableHighAccuracy: true
         });
-        map.on('locationfound', function(e) {
-
+        map.on('locationfound', function (e) {
+            $scope.currentLocation = {lat: e.latlng.lat, lng: e.latlng.lng};
             //*********************************
             //Storing information about Coordinates
             //*********************************
-
             //$scope.markers.currentLocation.lat = e.latlng.lat;
             //$scope.markers.currentLocation.lng = e.latlng.lng;
             //$scope.markers.currentLocation.message = "current position";
             //$scope.markers.currentLocation.focus = true;
-            $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
             //$scope.markers.currentLocation.lng = e.latlng.lng
             $scope.paths.currentLoc.latlngs = [];
+            $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
             $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
             $scope.paths.p1.latlngs.push({
                 lat: e.latlng.lat,
                 lng: e.latlng.lng
             });
-
             $scope.paths.p1.coordinates.push({ //storing each coordinate information
                 lat: e.latlng.lat,
                 lng: e.latlng.lng,
@@ -459,9 +458,7 @@ angular.module('app.controllers', [])
 
     $scope.locateMe = function() {
         leafletData.getMap("inprogress").then(function(map) {
-            map.locate({
-                setView: true,
-            });
+            map.setView($scope.currentLocation);
         });
     }
 
@@ -543,13 +540,8 @@ angular.module('app.controllers', [])
 
     $scope.paths.p1.latlngs = data.path;
 
-    var bounds;
-    leafletData.getMap("inprogress").then(function(map) {
-        bounds = map.getBounds();
-    });
-
     leafletData.getMap("completed").then(function(map) {
-        map.fitBounds(bounds);
+        map.fitBounds($scope.paths.p1.latlngs);
     });
 
     // A confirm dialog
