@@ -24,6 +24,9 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'leaflet-direct
     service.getData = function() {
         return this.data;
     };
+    service.clearData = function () {
+        this.data = {};
+    };
     return service;
 })
 

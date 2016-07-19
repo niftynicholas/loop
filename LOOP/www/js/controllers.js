@@ -76,35 +76,6 @@ angular.module('app.controllers', [])
     $scope.currentLocation = {};
 
     leafletData.getMap("cycle").then(function(map) {
-        //*************************************TESTING**********************
-        var latlons = {
-            src1: [1.301, 103.8198],
-            trg1: [1.341, 103.8197],
-            trg2: [1.341, 103.8197]
-        };
-        var sourceMarker1 = L.marker(latlons.src1);
-        var targetMarker1 = L.marker(latlons.trg1);
-        var targetMarker2 = L.marker(latlons.trg2);
-        r360.config.serviceKey = 'YWtKiQB7MiZETbCoVsG6'; //00AGI2VAF2HNS37EMMLV
-        r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
-
-        var routeLayer = L.featureGroup().addTo(map);
-        var travelOptions = r360.travelOptions();
-        travelOptions.addSource(sourceMarker1);
-        travelOptions.addTarget(targetMarker1);
-        travelOptions.addTarget(targetMarker2);
-        travelOptions.setTravelType('bike');
-
-        r360.RouteService.getRoutes(travelOptions, function(routes) {
-            for (var i = 0; i < routes.length; i++) {
-                var route = routes[i];
-                r360.LeafletUtil.fadeIn(routeLayer, route, 1000, "travelDistance");
-            }
-        });
-
-        console.log(routeLayer);
-        //********************************TESTING******************************
-
         map.locate({
             setView: true,
         });
@@ -205,7 +176,7 @@ angular.module('app.controllers', [])
                 "coordinates": []
             }
         },
-        /*    Adding markers*/
+        /*    Adding markers
         markers: {
             /*
             osloMarker: {
@@ -227,8 +198,8 @@ angular.module('app.controllers', [])
                 message: "Marker Two",
                 focus: true,
                 draggable: true
-            }*/
-        },
+            }
+        },*/
         /*    Drawing Arrow in Leaflet
         decorations: {
             markers: {
@@ -254,7 +225,14 @@ angular.module('app.controllers', [])
         }
     });
 
-    $scope.startActivity = function() {
+    $scope.startActivity = function () {
+        leafletData.getMap("inprogress").then(function (map) {
+            map.locate({
+                setView: true,
+                watch: true,
+                enableHighAccuracy: true
+            });
+        });
         $state.go("inprogress");
     }
 
@@ -345,16 +323,11 @@ angular.module('app.controllers', [])
     //$scope.gender = 'M';  //To be retrieve from database
     $scope.weight = 60.0; //To be retrieve from database
     $scope.currentLocation = {};
-    $scope.timerRunning = true;
 
     leafletData.getMap("inprogress").then(function(map) {
 
-        map.locate({
-            setView: true,
-            watch: true,
-            enableHighAccuracy: true
-        });
-        map.on('locationfound', function(e) {
+        map.on('locationfound', function (e) {
+            $scope.timerRunning = true;
             $scope.currentLocation = {
                 lat: e.latlng.lat,
                 lng: e.latlng.lng
@@ -517,6 +490,16 @@ angular.module('app.controllers', [])
                         path: $scope.paths.p1.coordinates
                     };
                     dataShare.sendData(data); //pass as JS object
+                    $scope.distance = 0;
+                    $scope.currentSpeed = 0;
+                    $scope.averageSpeed = 0;
+                    $scope.calories = 0;
+                    $scope.duration = 0;
+                    $scope.paths.p1.coordinates = [];
+                    $scope.paths.p1.latlngs = [];
+                    $scope.paths.currentLoc.latlngs = [0,0];
+                    $scope.timerRunning = false;
+                    $scope.$broadcast('timer-reset');
                     $state.go('completed');
                 } else {
                     console.log('Cancelled');
@@ -582,7 +565,7 @@ angular.module('app.controllers', [])
     });
 
     // A confirm dialog
-    $scope.showConfirm = function() {
+    $scope.discard = function() {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Discard Activity',
             template: 'Are you sure you want to eat discard this activity?'
@@ -591,6 +574,7 @@ angular.module('app.controllers', [])
         confirmPopup.then(function(res) {
             if (res) {
                 console.log('You are sure');
+                dataShare.clearData();
                 $state.go('tabsController.cycle');
             } else {
                 console.log('You are not sure');
@@ -598,7 +582,8 @@ angular.module('app.controllers', [])
         });
     };
 
-    $scope.save = function() {
+    $scope.save = function () {
+        dataShare.clearData();
         $state.go('tabsController.cycle');
     };
 })
@@ -611,7 +596,49 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('planRouteCtrl', function($scope, leafletData) {
+.controller('planRouteCtrl', function ($scope, leafletData) {
+    leafletData.getMap("planRoute").then(function (map) {
+        //map.locate({
+       //     setView: true,
+        //});
+        //*************************************TESTING**********************
+        var latlons = {
+            src1: [1.301, 103.8198],
+            trg1: [1.331, 103.8197],
+        };
+        
+        r360.config.serviceKey = 'YWtKiQB7MiZETbCoVsG6'; //00AGI2VAF2HNS37EMMLV
+        r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
+
+        var redIcon = L.icon({
+            iconUrl: 'lib/leaflet-route360/marker-icon-red.png',
+            shadowUrl: 'lib/leaflet-route360/marker-shadow.png',
+            iconAnchor: [12, 45],
+            popupAnchor: [0, -35]
+        });
+
+        var sourceMarker1 = L.marker(latlons.src1).addTo(map);
+        var targetMarker1 = L.marker(latlons.trg1, {
+            icon: redIcon
+        }).addTo(map);
+
+        var routeLayer = L.featureGroup().addTo(map);
+        var travelOptions = r360.travelOptions();
+        travelOptions.addSource(sourceMarker1);
+        travelOptions.addTarget(targetMarker1);
+        travelOptions.setTravelType('bike');
+
+        r360.RouteService.getRoutes(travelOptions, function(routes) {
+            for (var i = 0; i < routes.length; i++) {
+                var route = routes[i];
+                r360.LeafletUtil.fadeIn(routeLayer, route, 1000, "travelDistance");
+            }
+        });
+
+        console.log(routeLayer);
+        //********************************TESTING******************************
+    });
+
     angular.extend($scope, {
         center: {
             lat: 1.3521,
@@ -627,6 +654,15 @@ angular.module('app.controllers', [])
         defaults: {
             scrollWheelZoom: false,
             zoomControl: false
+        },
+        markers: {
+            /*
+            osloMarker: {
+                lat: 1.3521,
+                lng: 103.8198,
+                focus: true,
+                draggable: false
+            },*/
         }
     });
 })
