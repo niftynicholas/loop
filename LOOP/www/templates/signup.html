@@ -1,4 +1,10 @@
-<ion-view title="Signup" id="page6" class=" ">
+<ion-view title="Signup">
+    <ion-nav-bar class="bar-balanced"></ion-nav-bar>
+    <ion-nav-buttons side="left">
+        <a class="button back-button buttons button-clear header-item" ui-sref="login">
+            <i class="icon ion-ios-arrow-back" style="color:white;">Back</i>
+        </a>
+    </ion-nav-buttons>
     <ion-content padding="true" class="has-header">
         <form id="signup-form2" class="list ">
             <ion-list id="signup-list2" class=" ">
@@ -9,7 +15,7 @@
                 <label class="item item-input " id="signup-input5">
                     <span class="input-label">Password</span>
                     <input type="text" placeholder="" ng-model="input.password">
-                </label>                
+                </label>
             </ion-list>
             <a ui-sref="login" id="signup-button3" class=" button button-dark  button-block " ng-click="signUp()">Sign Up</a>
         </form>

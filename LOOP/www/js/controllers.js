@@ -83,7 +83,7 @@ angular.module('app.controllers', [])
             $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
         });
         map.on('locationerror', function(e) {
-//            alert("Location access denied.");
+            //            alert("Location access denied.");
             console.log('Location access denied.');
         });
         /* Geocoder (old version) search box, not very good
@@ -222,8 +222,8 @@ angular.module('app.controllers', [])
         $state.go("inprogress");
     }
 
-    $scope.locateMe = function () {
-        leafletData.getMap("cycle").then(function (map) {
+    $scope.locateMe = function() {
+        leafletData.getMap("cycle").then(function(map) {
             map.locate({
                 setView: true,
             });
@@ -329,9 +329,9 @@ angular.module('app.controllers', [])
             //$scope.markers.currentLocation.lng = e.latlng.lng;
             //$scope.markers.currentLocation.message = "current position";
             //$scope.markers.currentLocation.focus = true;
+            $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
             //$scope.markers.currentLocation.lng = e.latlng.lng
             $scope.paths.currentLoc.latlngs = [];
-            $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
             $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
             $scope.paths.p1.latlngs.push({
                 lat: e.latlng.lat,
@@ -457,8 +457,16 @@ angular.module('app.controllers', [])
         }
     });
 
+    $scope.locateMe = function() {
+        leafletData.getMap("inprogress").then(function(map) {
+            map.locate({
+                setView: true,
+            });
+        });
+    }
+
     $scope.showConfirm = function() {
-        leafletData.getMap().then(function(map) {
+        leafletData.getMap("inprogress").then(function(map) {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Stop Activity',
                 template: 'Are you sure you want to stop this activity?'
@@ -512,17 +520,14 @@ angular.module('app.controllers', [])
     $scope.today = today;
 
     angular.extend($scope, {
-        center: {
-            lat: 1.3521,
-            lng: 103.8198,
-            zoom: 11
-        },
         tiles: {
             url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
             options: {
                 attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
             }
         },
+        center: {},
+        bounds: {},
         defaults: {
             scrollWheelZoom: false,
             zoomControl: false
@@ -537,6 +542,15 @@ angular.module('app.controllers', [])
     });
 
     $scope.paths.p1.latlngs = data.path;
+
+    var bounds;
+    leafletData.getMap("inprogress").then(function(map) {
+        bounds = map.getBounds();
+    });
+
+    leafletData.getMap("completed").then(function(map) {
+        map.fitBounds(bounds);
+    });
 
     // A confirm dialog
     $scope.showConfirm = function() {
