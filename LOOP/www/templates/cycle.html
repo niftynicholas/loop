@@ -5,33 +5,14 @@
     </ion-nav-buttons>
     <ion-content scroll="false">
         <div class="row">
-            <div class="col col-40">
-                <label class="item item-input item-select">
-                    <div class="input-label">
-                        Activity
-                    </div>
-                    <select>
-                        <option selected>Cycle</option>
-                        <option>Run</option>
-                        <option>Walk</option>
-                    </select>
-                </label>
+            <div class="col col-50">
+                <button class="button button-clear button-balanced" style="width:100%;" ui-sref="selectRoute">
+                    <p class="button-paragraph"><b>Route ></b><br>None</p>
+                </button>
             </div>
-            <div class="col col-40">
-                <label class="item item-input item-select">
-                    <div class="input-label">
-                        Route
-                    </div>
-                    <select>
-                        <option selected>None</option>
-                        <option>PCN 1</option>
-                        <option>PCN 2</option>
-                    </select>
-                </label>
-            </div>
-            <div class="col col-20">
-                <button class="button button-dark" style="width:100%;" ui-sref="planRoute">
-                    Plan My Ride
+            <div class="col col-50">
+                <button class="button button-clear button-balanced" style="width:100%;" ui-sref="planRoute">
+                    <b>Plan My Ride</b>
                 </button>
             </div>
         </div>

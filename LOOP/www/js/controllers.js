@@ -72,6 +72,32 @@ angular.module('app.controllers', [])
 
 })
 
+.controller('selectRouteCtrl', function($scope) {
+
+})
+
+.controller('viewRouteCtrl', function($scope, leafletData) {
+    angular.extend($scope, {
+        center: {
+            lat: 1.3521,
+            lng: 103.8198,
+            zoom: 11
+        },
+        tiles: {
+            url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
+            options: {
+                attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+            }
+        },
+        defaults: {
+            scrollWheelZoom: false,
+            zoomControl: false
+        }
+    });
+
+})
+
+
 .controller('cycleCtrl', function($scope, $state, leafletData) {
     $scope.currentLocation = {};
 
@@ -606,7 +632,7 @@ angular.module('app.controllers', [])
             src1: [1.301, 103.8198],
             trg1: [1.331, 103.8197],
         };
-        
+
         r360.config.serviceKey = 'YWtKiQB7MiZETbCoVsG6'; //00AGI2VAF2HNS37EMMLV
         r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
 

@@ -46,6 +46,18 @@ angular.module('app.routes', [])
         }
     })
 
+    .state('viewRoute', {
+        url: '/viewRoute',
+        templateUrl: 'templates/viewRoute.html',
+        controller: 'viewRouteCtrl'
+    })
+
+    .state('selectRoute', {
+        url: '/selectRoute',
+        templateUrl: 'templates/selectRoute.html',
+        controller: 'selectRouteCtrl'
+    })
+
     .state('tabsController.cycle', {
         url: '/cycle',
         views: {

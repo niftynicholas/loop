@@ -41,3 +41,7 @@ ion-list.manual-list-fullwidth div.list> .item, .list.card.manual-card-fullwidth
 .col .row {
     height: 70px;
 }
+
+.button-paragraph {
+line-height: 1.5em;
+}
