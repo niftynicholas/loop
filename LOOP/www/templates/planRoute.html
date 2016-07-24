@@ -9,17 +9,17 @@
         <ion-list>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Start Point</span>
-                <input type="text" placeholder="Start Point">
+                <input type="text" placeholder="Start Point" ng-model="input.startPoint">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">End Point</span>
-                <input type="text" placeholder="End Point">
+                <input type="text" placeholder="End Point" ng-model="input.endPoint">
             </label>
             </ion-item>
         </ion-list>
-        <a class="button button-block button-dark" ui-sref="cycle">Plan</a>
+        <a class="button button-block button-dark" ui-sref="cycle" ng-click="planRoute()">Plan</a>
         <div id="map-container" data-tap-disabled="true">
-            <leaflet id="planRoute" lf-center="center" defaults="defaults" tiles="tiles" markers="markers" height="50%" width="100%"></leaflet>
+            <leaflet id="planRoute" lf-center="center" defaults="defaults" tiles="tiles" height="50%" width="100%"></leaflet>
         </div>
     </ion-content>
 </ion-view>
