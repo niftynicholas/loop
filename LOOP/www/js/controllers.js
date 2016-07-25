@@ -68,6 +68,26 @@ angular.module('app.controllers', [])
     });
 })
 
+.controller('pcnCtrl', function($scope) {
+    angular.extend($scope, {
+        center: {
+            lat: 1.3521,
+            lng: 103.8198,
+            zoom: 11
+        },
+        tiles: {
+            url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
+            options: {
+                attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+            }
+        },
+        defaults: {
+            scrollWheelZoom: false,
+            zoomControl: false
+        }
+    });
+})
+
 .controller('routesCtrl', function($scope) {
 
 })
@@ -136,7 +156,7 @@ angular.module('app.controllers', [])
         console.log(kmlLayer);
         console.log(kmlLayer._layers);
         console.log(kmlLayer.getLayerId(0));
-        
+
         kmlLayer.on('ready', function (layer) {
             var count = 0;
             this.eachLayer(function (layer) {
@@ -146,7 +166,7 @@ angular.module('app.controllers', [])
                 } else {
                     layer.setStyle(style2);
                 }
-                
+
             });
         });
     });
@@ -399,7 +419,7 @@ angular.module('app.controllers', [])
                     //$scope.$broadcast('timer-reset');
                     $scope.$broadcast('profile-updated', "");
                     $state.go('completed');
-                    
+
                 } else {
                     console.log('Cancelled');
                 }
@@ -439,10 +459,10 @@ angular.module('app.controllers', [])
     //To test Broadcast after doing nested controller
     $scope.$on('profile-updated', function (event, profileObj) {
         alert("Test");
-        
+
     });
 
-    
+
     //$scope.$on('onCompleted', function (events, args) {
         //alert("Test On");
         var data = dataShare.getData();
@@ -476,7 +496,7 @@ angular.module('app.controllers', [])
             map.fitBounds($scope.paths.p1.latlngs);
         });
     //});
-    
+
 
     // A confirm dialog
     $scope.discard = function() {
@@ -531,7 +551,7 @@ angular.module('app.controllers', [])
         }
     });
 
-    
+
     leafletData.getMap("planRoute").then(function (map) {
         var placeAutoComplete = r360.photonPlaceAutoCompleteControl({
             serviceUrl: "https://service.route360.net/geocode/",
@@ -561,7 +581,7 @@ angular.module('app.controllers', [])
 
         if(validStartPoint(startPoint) && validEndPoint(endPoint)){
             leafletData.getMap("planRoute").then(function (map) {
-                
+
                 //map.locate({
                 //     setView: true,
                 //});

@@ -36,6 +36,16 @@ angular.module('app.routes', [])
         }
     })
 
+    .state('tabsController.pcn', {
+        url: '/pcn',
+        views: {
+            'tab5': {
+                templateUrl: 'templates/pcn.html',
+                controller: 'pcnCtrl'
+            }
+        }
+    })
+
     .state('tabsController.routes', {
         url: '/routes',
         views: {
