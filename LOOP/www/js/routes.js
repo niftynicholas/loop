@@ -46,28 +46,6 @@ angular.module('app.routes', [])
         }
     })
 
-    .state('tabsController.routes', {
-        url: '/routes',
-        views: {
-            'tab2': {
-                templateUrl: 'templates/routes.html',
-                controller: 'routesCtrl'
-            }
-        }
-    })
-
-    .state('viewRoute', {
-        url: '/viewRoute',
-        templateUrl: 'templates/viewRoute.html',
-        controller: 'viewRouteCtrl'
-    })
-
-    .state('selectRoute', {
-        url: '/selectRoute',
-        templateUrl: 'templates/selectRoute.html',
-        controller: 'selectRouteCtrl'
-    })
-
     .state('tabsController.cycle', {
         url: '/cycle',
         views: {
@@ -94,6 +72,28 @@ angular.module('app.routes', [])
         url: '/completed',
         templateUrl: 'templates/completed.html',
         controller: 'completedCtrl'
+    })
+
+    .state('tabsController.routes', {
+        url: '/routes',
+        views: {
+            'tab2': {
+                templateUrl: 'templates/routes.html',
+                controller: 'routesCtrl'
+            }
+        }
+    })
+
+    .state('viewRoute', {
+        url: '/viewRoute',
+        templateUrl: 'templates/viewRoute.html',
+        controller: 'viewRouteCtrl'
+    })
+
+    .state('selectRoute', {
+        url: '/selectRoute',
+        templateUrl: 'templates/selectRoute.html',
+        controller: 'selectRouteCtrl'
     })
 
     .state('findRoute', {
