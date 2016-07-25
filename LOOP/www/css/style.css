@@ -32,6 +32,7 @@ ion-list.manual-list-fullwidth div.list> .item, .list.card.manual-card-fullwidth
 .item-select:after {
     top: 60% !important;
 }*/
+
 #html, #body, #map-container {
     height: 100%;
 }
@@ -41,7 +42,10 @@ ion-list.manual-list-fullwidth div.list> .item, .list.card.manual-card-fullwidth
 .col .row {
     height: 70px;
 }
-
 .button-paragraph {
-line-height: 1.5em;
+    line-height: 1.5em;
+}
+.login {
+    background: url('../img/login-bg.jpg') no-repeat center;
+    background-size: auto 100%;
 }
