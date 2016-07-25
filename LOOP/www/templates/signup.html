@@ -1,23 +1,30 @@
-<ion-view title="Signup">
+<ion-view title="Sign Up">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
     <ion-nav-buttons side="left">
         <a class="button back-button buttons button-clear header-item" ui-sref="login">
-            <i class="icon ion-ios-arrow-back" style="color:white;">Back</i>
+            <i class="icon ion-ios-arrow-back" style="color:white;"> Back</i>
         </a>
     </ion-nav-buttons>
     <ion-content padding="true" class="has-header">
-        <form id="signup-form2" class="list ">
-            <ion-list id="signup-list2" class=" ">
-                <label class="item item-input " id="signup-input4">
-                    <span class="input-label">Username</span>
-                    <input type="text" placeholder="" ng-model="input.username">
+        <form class="list">
+            <ion-list>
+                <label class="item item-input">
+                    <input type="text" placeholder="Email" ng-model="input.email">
                 </label>
-                <label class="item item-input " id="signup-input5">
-                    <span class="input-label">Password</span>
-                    <input type="text" placeholder="" ng-model="input.password">
+                <label class="item item-input">
+                    <input type="text" placeholder="Name" ng-model="input.name">
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Username" ng-model="input.username">
+                </label>
+                <label class="item item-input">
+                    <input type="password" placeholder="Password" ng-model="input.password">
+                </label>
+                <label class="item item-input">
+                    <input type="password" placeholder="Confirm Password" ng-model="input.confirmpw">
                 </label>
             </ion-list>
-            <a ui-sref="login" id="signup-button3" class=" button button-dark  button-block " ng-click="signUp()">Sign Up</a>
+            <a ui-sref="login" class="button button-dark button-block" ng-click="signUp()">Sign Up</a>
         </form>
     </ion-content>
 </ion-view>

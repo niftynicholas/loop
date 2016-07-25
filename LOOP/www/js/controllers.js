@@ -26,16 +26,16 @@ angular.module('app.controllers', [])
     $scope.input = {};
     $scope.signUp = function() {
         $http({
-            url: 'http://backendpgsql-ywk93.rhcloud.com/register',
+            url: 'http://sgcycling-sgloop.rhcloud.com/api/users/accounts/signup',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             data: {
+                name: $scope.input.name,
                 username: $scope.input.username,
                 password: $scope.input.password,
-                height: 0,
-                weight: 0
+                emailAddress: $scope.input.email
             }
         }).then(function successCallback(response) {
             $state.go('login');

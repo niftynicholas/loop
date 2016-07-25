@@ -6,7 +6,6 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'leaflet-directive', 'timer'])
-
 .filter('digits', function() {
     return function(input) {
         if (input < 10) input = '0' + input;
