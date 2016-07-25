@@ -554,7 +554,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('planRouteCtrl', function($scope, leafletData) {
+.controller('planRouteCtrl', function($scope, leafletData, $http) {
     $scope.input = {};
 
     angular.extend($scope, {
@@ -576,6 +576,7 @@ angular.module('app.controllers', [])
     });
 
 
+    /*
     leafletData.getMap("planRoute").then(function(map) {
         var placeAutoComplete = r360.photonPlaceAutoCompleteControl({
             serviceUrl: "https://service.route360.net/geocode/",
@@ -597,6 +598,87 @@ angular.module('app.controllers', [])
             // remove the label and value from the autocomplete
             placeAutoComplete.reset();
         });
+    });*/
+    //http://www.onemap.sg/API/services.svc/getToken?accessKEY=2WpSB38gVk6Shp1NiEgk0eTAHRsv4jGu7cs4N1r8KipyJJyB7uN8+hl3LXNq2iX1c/wdJhIStL4a6kEacP8CT/HQfXmkWp25|mv73ZvjFcSo=
+   
+    /*
+    $http({
+        method: 'GET',
+        url: 'http://www.onemap.sg/API/services.svc/getToken', //?firstname=ong
+        params: {
+            accessKEY: '2WpSB38gVk6Shp1NiEgk0eTAHRsv4jGu7cs4N1r8KipyJJyB7uN8+hl3LXNq2iX1c/wdJhIStL4a6kEacP8CT/HQfXmkWp25|mv73ZvjFcSo='
+        }
+    }).then(function successCallback(response) {
+        console.log(response);
+        var test = response.data;
+        console.log(test);
+        //****Accessing Individual Properties****
+        //alert(test["firstName"]);
+        //alert(test.firstName);
+        //***************************************
+
+    }, function errorCallback(response) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+    });*/
+    
+
+    /*
+    $http({
+        url: "http://www.onemap.sg/API/services.svc/getToken?callback=?",
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            accessKEY: '2WpSB38gVk6Shp1NiEgk0eTAHRsv4jGu7cs4N1r8KipyJJyB7uN8+hl3LXNq2iX1c/wdJhIStL4a6kEacP8CT/HQfXmkWp25|mv73ZvjFcSo='
+        }
+    }).then(function successCallback(response) {
+        console.log(response.data);
+    }, function errorCallback(response) {
+        alert("Error");
+    });*/
+
+    /*
+    $.getJSON("http://www.onemap.sg/API/services.svc/getToken", {
+        'accessKEY': '2WpSB38gVk6Shp1NiEgk0eTAHRsv4jGu7cs4N1r8KipyJJyB7uN8+hl3LXNq2iX1c/wdJhIStL4a6kEacP8CT/HQfXmkWp25|mv73ZvjFcSo=',
+    }, function (data) {
+        console.log(data);
+    });*/
+
+    var searchLimit = 8;
+    
+    $('#address').keyup(function () {
+        var input = $('#address').val(),
+			searchVal = 'SEARCHVAL LIKE \'$' + input + '$\'', //xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi
+			token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi',
+            type = 'WGS84';
+        var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
+        $.getJSON(requestURL, {
+            'token': token,
+            'searchVal': input,
+            'projSys': type,
+        }, function (data) {
+            console.log(data);
+            $('#res').html("");
+            if (data.SearchResults.length > 2) {
+                console.log(data.SearchResults);
+                for (var i = 1; i < searchLimit; i++) {
+                    var searchVal = data.SearchResults[i].SEARCHVAL;
+                    if (searchVal != null) {
+                        $('#res').append('<div class="item">' + searchVal + '</div>');
+                    }
+
+                }
+                $('.item').click(function () {
+                    var text = $(this).html();
+                    $('#address').val(text);
+                    console.log("Lat:" + data.SearchResults[1].X + ", Long: " + data.SearchResults[1].Y);
+                });
+            } else {
+                $('#res').html("");
+            }
+        });
     });
 
     $scope.planRoute = function() {
@@ -609,6 +691,7 @@ angular.module('app.controllers', [])
                 //map.locate({
                 //     setView: true,
                 //});
+                /*
                 var latlons = {
                     src1: [1.301, 103.8198],
                     trg1: [1.331, 103.8197],
@@ -641,7 +724,7 @@ angular.module('app.controllers', [])
                     });
                 });
                 console.log(routeLayer);
-
+                */
             });
         } else {
             if (!validStartPoint(startPoint)) {
@@ -667,6 +750,8 @@ function validStartPoint(startPoint) {
     var valid = true;
     if (typeof startPoint === "undefined" || startPoint == "") {
         valid = false;
+    } else {
+        
     }
     return valid;
 }
