@@ -4,27 +4,26 @@
         <button class="button button-icon icon ion-android-locate" ng-click="locateMe()"></button>
     </ion-nav-buttons>
     <ion-content scroll="false">
-        <div style="text-align: center; color:white;">
-            <div class="col balanced-bg no_padding_margin">
-                <timer interval="1000">
-                    <h1 style="color:white;">{{hours|digits}}:{{minutes|digits}}:{{seconds|digits}}</h1></timer>
+        <div style="height:11%; padding:0px;">
+            <div style="text-align: center; color:white;">
+                <div class="col balanced-bg no_padding_margin">
+                    <timer interval="1000">
+                        <h1 style="color:white;">{{hours|digits}}:{{minutes|digits}}:{{seconds|digits}}</h1></timer>
+                </div>
+            </div>
+            <div class="row custom_grid" style="text-align: center; color:white; padding:0px">
+                <div class="col balanced-bg no_padding_margin">
+                    {{averageSpeed}}
+                    <br><b>Avg. km/h</b>
+                </div>
+                <div class="col balanced-bg no_padding_margin">
+                    {{calories}}
+                    <br> <b>Calories</b>
+                </div>
             </div>
         </div>
-        <div class="row custom_grid" style="text-align: center; color:white; padding:0px">
-            <div class="col balanced-bg no_padding_margin">
-                {{averageSpeed}}
-                <br><b>Avg. km/h</b>
-            </div>
-            <div class="col balanced-bg no_padding_margin">
-                {{calories}}
-                <br> <b>Calories</b>
-            </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="58%" width="100%"></leaflet>
-        <div class="row" style="text-align:center; padding: 0px;color:white;">
+        <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="79%" width="100%"></leaflet>
+        <div class="row" style="text-align:center; padding: 0px;color:white; height:10%;">
             <div class="col balanced-bg col-50">
                 {{distance}}
                 <br><b>km</b>
@@ -34,16 +33,13 @@
                 <br><b> Cur. km/h</b>
             </div>
         </div>
-        <div class="row" style="text-align:center;">
-            <div class="col col-50">
-                <button class="button button-block button-assertive" ng-click="showConfirm()">
-                    Stop
-                </button>
-            </div>
-            <div class="col col-50">
-                <button class="button button-block button-energized">
-                    Pause
-                </button>
-            </div>
+        <div class="bar bar-footer">
+            <button style="width:49%;" class="button button-assertive" ng-click="showConfirm()">
+                Stop
+            </button>
+            <button style="width:49%;" class="button button-energized">
+                Pause
+            </button>
+        </div>
     </ion-content>
 </ion-view>

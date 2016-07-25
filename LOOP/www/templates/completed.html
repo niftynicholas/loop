@@ -8,11 +8,11 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content scroll="false">
-        <div align="center" style="padding-top:5px;">
+        <div align="center" style="padding-top:5px; height:4.5%;">
             <h3 style="color:black;">{{today}}</h3>
         </div>
-        <leaflet id="completed" bounds="bounds" defaults="defaults" lf-center="center" tiles="tiles" paths="paths" height="60%" width="100%"></leaflet>
-        <div class="row balanced-bg" align="center" style="color:white;">
+        <leaflet id="completed" bounds="bounds" defaults="defaults" lf-center="center" tiles="tiles" paths="paths" height="50%" width="100%"></leaflet>
+        <div class="row balanced-bg" align="center" style="color:white;height:6%;">
             <div class="col col-25">
                 {{distance}}
                 <br><b>km</b>
@@ -30,21 +30,22 @@
                 <br><b>Calories</b>
             </div>
         </div>
-        <ul class="list">
-            <li class="item item-toggle">
-                Enable Sharing
-                <label class="toggle toggle-balanced">
-                    <input type="checkbox">
-                    <div class="track">
-                        <div class="handle"></div>
-                    </div>
+        <ion-scroll style="height:39.5%;">
+            <ul class="list">
+                <li class="item item-toggle">
+                    Enable Sharing
+                    <label class="toggle toggle-balanced">
+                        <input type="checkbox">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </li>
+                <label class="item item-input item-stacked-label">
+                    <span class="input-label">Comments</span>
+                    <input type="text" placeholder="Got anything to say?">
                 </label>
-            </li>
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">Comments</span>
-                <input type="text" placeholder="Got anything to say?">
-            </label>
-        </ul>
-
+            </ul>
+        </ion-scroll>
     </ion-content>
 </ion-view>
