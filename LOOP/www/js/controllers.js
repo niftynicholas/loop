@@ -423,7 +423,7 @@ angular.module('app.controllers', [])
                     console.log('Confirmed');
                     data = {
                         distance: $scope.distance,
-                        duration: $scope.duration,
+                        duration: moment().startOf('year').seconds($scope.duration).format('HH:mm:ss'), //moment().startOf('year').seconds(40888).format('HH:mm:ss')
                         averageSpeed: $scope.averageSpeed,
                         calories: $scope.calories,
                         path: $scope.paths.p1.latlngs
@@ -584,7 +584,6 @@ angular.module('app.controllers', [])
 })
 
 .controller('planRouteCtrl', function($scope, leafletData, $http) {
-    $scope.input = {};
 
     angular.extend($scope, {
         center: {
@@ -677,8 +676,8 @@ angular.module('app.controllers', [])
 
     var searchLimit = 8;
 
-    $('#address').keyup(function() {
-        var input = $('#address').val(),
+    $('#startPoint').keyup(function() {
+        var input = $('#startPoint').val(),
             searchVal = 'SEARCHVAL LIKE \'$' + input + '$\'', //xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi
             token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi',
             type = 'WGS84';
@@ -688,43 +687,67 @@ angular.module('app.controllers', [])
             'searchVal': input,
             'projSys': type,
         }, function(data) {
-            console.log(data);
-            $('#res').html("");
+            $('#startResult').html("");
             if (data.SearchResults.length > 2) {
-                console.log(data.SearchResults);
                 for (var i = 1; i < searchLimit; i++) {
                     var searchVal = data.SearchResults[i].SEARCHVAL;
+                    var lat = data.SearchResults[i].Y;
+                    var lng = data.SearchResults[i].X;
                     if (searchVal != null) {
-                        $('#res').append('<div class="item">' + searchVal + '</div>');
+                        $('#startResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'start\')">' + searchVal + '</div>');
                     }
 
                 }
-                $('.item').click(function() {
-                    var text = $(this).html();
-                    $('#address').val(text);
-                    console.log("Lat:" + data.SearchResults[1].X + ", Long: " + data.SearchResults[1].Y);
-                });
             } else {
-                $('#res').html("");
+                $('#startResult').html("");
             }
         });
     });
 
-    $scope.planRoute = function() {
-        var startPoint = $scope.input.startPoint;
-        var endPoint = $scope.input.endPoint;
+    $('#endPoint').keyup(function () {
+        var input = $('#endPoint').val(),
+            searchVal = 'SEARCHVAL LIKE \'$' + input + '$\'', //xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi
+            token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi',
+            type = 'WGS84';
+        var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
+        $.getJSON(requestURL, {
+            'token': token,
+            'searchVal': input,
+            'projSys': type,
+        }, function (data) {
+            $('#endResult').html("");
+            if (data.SearchResults.length > 2) {
+                for (var i = 1; i < searchLimit; i++) {
+                    var searchVal = data.SearchResults[i].SEARCHVAL;
+                    var lat = data.SearchResults[i].Y;
+                    var lng = data.SearchResults[i].X;
+                    if (searchVal != null) {
+                        $('#endResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'end\')">' + searchVal + '</div>');
+                    }
 
-        if (validStartPoint(startPoint) && validEndPoint(endPoint)) {
-            leafletData.getMap("planRoute").then(function(map) {
+                }
+            } else {
+                $('#endResult').html("");
+            }
+        });
+    });
 
-                //map.locate({
-                //     setView: true,
-                //});
-                /*
-                var latlons = {
-                    src1: [1.301, 103.8198],
-                    trg1: [1.331, 103.8197],
-                };
+    $scope.planRoute = function () {
+        var startInput = document.getElementById("startPoint");
+        var endInput = document.getElementById("endPoint");
+        var startLatLng = startInput.getAttribute("data-latlng");
+        var endLatLng = endInput.getAttribute("data-latlng");
+        
+        if (startLatLng != null && endLatLng != null) {
+            leafletData.getMap("planRoute").then(function (map) {
+                startLatLng = startLatLng.split(",");
+                endLatLng = endLatLng.split(",");
+
+                map.eachLayer(function (layer) { 
+                    if(layer._leaflet_id != 387){ //Clear all layers except tiles
+                        map.removeLayer(layer);
+                    }
+                });
 
                 r360.config.serviceKey = 'YWtKiQB7MiZETbCoVsG6'; //00AGI2VAF2HNS37EMMLV
                 r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
@@ -736,8 +759,8 @@ angular.module('app.controllers', [])
                     popupAnchor: [0, -35]
                 });
 
-                var sourceMarker1 = L.marker(latlons.src1).addTo(map);
-                var targetMarker1 = L.marker(latlons.trg1, {
+                var sourceMarker1 = L.marker(startLatLng).addTo(map);
+                var targetMarker1 = L.marker(endLatLng, {
                     icon: redIcon
                 }).addTo(map);
 
@@ -747,20 +770,24 @@ angular.module('app.controllers', [])
                 travelOptions.addTarget(targetMarker1);
                 travelOptions.setTravelType('bike');
 
-                r360.RouteService.getRoutes(travelOptions, function(routes) {
-                    _.each(routes, function(route) {
+                r360.RouteService.getRoutes(travelOptions, function (routes) {
+                    for (var i = 0; i < routes.length; i++) {
+                        var route = routes[i];
                         r360.LeafletUtil.fadeIn(routeLayer, route, 1000, "travelDistance");
-                    });
+                    }
                 });
+
+                map.fitBounds([startLatLng, endLatLng]);
+
                 console.log(routeLayer);
-                */
+                
             });
         } else {
-            if (!validStartPoint(startPoint)) {
-                alert("Please enter a start Point");
+            if (startLatLng == null) {
+                alert("Please enter a valid start point");
             }
-            if (!validEndPoint(endPoint)) {
-                alert("Please enter a end Point");
+            if (endLatLng == null) {
+                alert("Please enter a valid end Point");
             }
         }
     };
@@ -803,22 +830,8 @@ angular.module('app.controllers', [])
     $scope.weight = "50 kg";
 })
 
-function validStartPoint(startPoint) {
-    var valid = true;
-    if (typeof startPoint === "undefined" || startPoint == "") {
-        valid = false;
-    } else {
-
-    }
-    return valid;
-}
-
-function validEndPoint(endPoint) {
-    var valid = true;
-    if (typeof endPoint === "undefined" || endPoint == "") {
-        if (typeof endPoint === "undefined" || endPoint == "") {
-            valid = false;
-        }
-    }
-    return valid;
+function displayInfo(searchVal, lat, lng, type) {
+    $('#'+ type +'Point').val(searchVal);
+    $('#'+ type +'Point').attr('data-latlng', [lat, lng]);
+    $('#'+ type + 'Result').html("");
 }

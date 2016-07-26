@@ -9,14 +9,14 @@
         <ion-list>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Start Point</span>
-                <input type="text" placeholder="Start Point" ng-model="input.startPoint" id="address">
+                <input type="text" placeholder="Start Point" id="startPoint">
             </label>
-            <div id="res" style="width:100%;z-index:1000;position:absolute;"></div>
+            <div id="startResult" style="width:100%;z-index:1000;position:absolute;"></div>
             <label class="item item-input item-floating-label">
                 <span class="input-label">End Point</span>
-                <input type="text" placeholder="End Point" ng-model="input.endPoint">
+                <input type="text" placeholder="End Point" id="endPoint">
             </label>
-            </ion-item>
+            <div id="endResult" style="width:100%;z-index:1000;position:absolute;"></div>
         </ion-list>
         <a class="button button-block button-dark" ui-sref="cycle" ng-click="planRoute()">Plan</a>
         <div id="map-container" data-tap-disabled="true">
