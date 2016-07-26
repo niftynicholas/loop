@@ -3,8 +3,10 @@
     <ion-nav-buttons side="right">
         <button class="button button-icon icon ion-android-locate" ng-click="locateMe()"></button>
     </ion-nav-buttons>
+    <ion-floating-button click="geotag()" has-footer="true" button-color="#2E294E" icon="ion-ios-pricetag" icon-color="#fff">
+    </ion-floating-button>
     <ion-content scroll="false" padding="false">
-        <div class="balanced-bg" style="height:16%; padding:0px;">
+        <div class="balanced-bg" style="height:11%; padding:0px;">
             <div class="row custom_grid" style="text-align: center; color:white; padding:0px">
                 <div class="col balanced-bg no_padding_margin">
                     <timer interval="1000">
@@ -22,8 +24,8 @@
                 </div>
             </div>
         </div>
-        <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="66%" width="100%"></leaflet>
-        <div class="row" style="text-align:center; padding: 0px;color:white; height:11%;">
+        <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="77%" width="100%"></leaflet>
+        <div class="row" style="text-align:center; padding: 0px;color:white; height:8%;">
             <div class="col balanced-bg col-50">
                 <h4 style="color:white;">{{distance}}<br>
                 km</h4>

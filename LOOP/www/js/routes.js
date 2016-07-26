@@ -20,6 +20,18 @@ angular.module('app.routes', [])
         controller: 'signupCtrl'
     })
 
+    .state('verify', {
+        url: '/verify',
+        templateUrl: 'templates/verify.html',
+        controller: 'verifyCtrl'
+    })
+
+    .state('forgot', {
+        url: '/forgot',
+        templateUrl: 'templates/forgot.html',
+        controller: 'forgotCtrl'
+    })
+
     .state('tabsController', {
         url: '/tabs',
         templateUrl: 'templates/tabsController.html',

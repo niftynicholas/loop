@@ -451,6 +451,35 @@ angular.module('app.controllers', [])
         });
     };
 
+    $scope.geotag = function() {
+        $scope.data = {};
+
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.show({
+            template: '<input type="text" ng-model="data.geotag">',
+            title: "What's going on here?",
+            subTitle: 'Share it with other users.',
+            scope: $scope,
+            buttons: [{
+                text: 'Cancel'
+            }, {
+                text: '<b>Save</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                    if (!$scope.data.geotag) {
+                        //don't allow the user to close unless he enters wifi password
+
+                    } else {
+                        return $scope.data.geotag;
+                    }
+                }
+            }]
+        });
+
+        myPopup.then(function(res) {
+            console.log('Tapped!', res);
+        });
+    };
 })
 
 .controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare) {
@@ -600,7 +629,7 @@ angular.module('app.controllers', [])
         });
     });*/
     //http://www.onemap.sg/API/services.svc/getToken?accessKEY=2WpSB38gVk6Shp1NiEgk0eTAHRsv4jGu7cs4N1r8KipyJJyB7uN8+hl3LXNq2iX1c/wdJhIStL4a6kEacP8CT/HQfXmkWp25|mv73ZvjFcSo=
-   
+
     /*
     $http({
         method: 'GET',
@@ -621,7 +650,7 @@ angular.module('app.controllers', [])
         // called asynchronously if an error occurs
         // or server returns response with an error status.
     });*/
-    
+
 
     /*
     $http({
@@ -647,18 +676,18 @@ angular.module('app.controllers', [])
     });*/
 
     var searchLimit = 8;
-    
-    $('#address').keyup(function () {
+
+    $('#address').keyup(function() {
         var input = $('#address').val(),
-			searchVal = 'SEARCHVAL LIKE \'$' + input + '$\'', //xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi
-			token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi',
+            searchVal = 'SEARCHVAL LIKE \'$' + input + '$\'', //xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi
+            token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi',
             type = 'WGS84';
         var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
         $.getJSON(requestURL, {
             'token': token,
             'searchVal': input,
             'projSys': type,
-        }, function (data) {
+        }, function(data) {
             console.log(data);
             $('#res').html("");
             if (data.SearchResults.length > 2) {
@@ -670,7 +699,7 @@ angular.module('app.controllers', [])
                     }
 
                 }
-                $('.item').click(function () {
+                $('.item').click(function() {
                     var text = $(this).html();
                     $('#address').val(text);
                     console.log("Lat:" + data.SearchResults[1].X + ", Long: " + data.SearchResults[1].Y);
@@ -741,6 +770,34 @@ angular.module('app.controllers', [])
 
 })
 
+.controller('verifyCtrl', function($scope) {
+    $scope.init = function() {
+        $scope.passcode = "";
+    }
+
+    $scope.add = function(value) {
+        if($scope.passcode.length < 4) {
+            $scope.passcode = $scope.passcode + value;
+            if($scope.passcode.length == 4) {
+                $timeout(function() {
+                    console.log("The four digit code was entered");
+                }, 500);
+            }
+        }
+    }
+
+    $scope.delete = function() {
+        if($scope.passcode.length > 0) {
+            $scope.passcode = $scope.passcode.substring(0, $scope.passcode.length - 1);
+        }
+    }
+})
+
+.controller('forgotCtrl', function($scope) {
+
+})
+
+
 .controller('settingsCtrl', function($scope) {
     $scope.height = "165 cm";
     $scope.weight = "50 kg";
@@ -751,7 +808,7 @@ function validStartPoint(startPoint) {
     if (typeof startPoint === "undefined" || startPoint == "") {
         valid = false;
     } else {
-        
+
     }
     return valid;
 }

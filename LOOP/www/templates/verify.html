@@ -1,0 +1,74 @@
+<ion-view title="Verify Account" ng-init="init()">
+    <ion-nav-bar class="bar-balanced"></ion-nav-bar>
+    <ion-nav-buttons side="left">
+        <a class="button back-button buttons button-clear header-item" ui-sref="tabsController.profile">
+            <i class="icon ion-ios-arrow-back" style="color:white;"> Back</i>
+        </a>
+    </ion-nav-buttons>
+    <ion-content class="has-header center-vertical" scroll="false">
+        <div style="height:10%;"></div>
+        <div>
+            <div class="row" style="text-align: center">
+                <div class="col col-10 col-offset-15" style="border-bottom: 1px solid black">
+                    {{passcode.substring(0, 1)}}
+                </div>
+                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                    {{passcode.substring(1, 2)}}
+                </div>
+                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                    {{passcode.substring(2, 3)}}
+                </div>
+                <div class="col col-10 col-offset-10" style="border-bottom: 1px solid black">
+                    {{passcode.substring(3, 4)}}
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 50px">
+            <div class="row">
+                <div class="col col-20 col-offset-20">
+                    <button class="button button-light button-stretch" ng-click="add(1)">1</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-light button-stretch" ng-click="add(2)">2</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-light button-stretch" ng-click="add(3)">3</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-20 col-offset-20">
+                    <button class="button button-light button-stretch" ng-click="add(4)">4</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-light button-stretch" ng-click="add(5)">5</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-light button-stretch" ng-click="add(6)">6</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-20 col-offset-20">
+                    <button class="button button-light button-stretch" ng-click="add(7)">7</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-light button-stretch" ng-click="add(8)">8</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-light button-stretch" ng-click="add(9)">9</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-20 col-offset-20">
+                    <button class="button button-light button-stretch"></button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-light button-stretch" ng-click="add(0)">0</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button icon ion-arrow-left-a button-light button-stretch" ng-click="delete()"></button>
+                </div>
+            </div>
+        </div>
+        <a class="button button-block button-positive" ui-sref="login">Verify</a>
+    </ion-content>
+</ion-view>
