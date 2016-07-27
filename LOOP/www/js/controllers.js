@@ -740,6 +740,7 @@ angular.module('app.controllers', [])
         
         if (startLatLng != null && endLatLng != null) {
             leafletData.getMap("planRoute").then(function (map) {
+
                 startLatLng = startLatLng.split(",");
                 endLatLng = endLatLng.split(",");
 
@@ -759,10 +760,34 @@ angular.module('app.controllers', [])
                     popupAnchor: [0, -35]
                 });
 
-                var sourceMarker1 = L.marker(startLatLng).addTo(map);
+                var sourceMarker1 = L.marker(startLatLng, {
+                    draggable: true
+                }).addTo(map);
                 var targetMarker1 = L.marker(endLatLng, {
+                    draggable: true,
                     icon: redIcon
                 }).addTo(map);
+
+                var startPointName = $("#startPoint").val();
+                var endPointName = $("#endPoint").val();
+                sourceMarker1.bindPopup(startPointName, {
+                    closeOnClick: false
+                }).openPopup();
+
+                targetMarker1.bindPopup(endPointName, {
+                    closeOnClick: false
+                }).openPopup();
+
+                sourceMarker1.on('dragend', function() {
+                    //recalculate route
+                    console.log(sourceMarker1.getLatLng());
+                    
+                });
+
+                targetMarker1.on('dragend', function () {
+                    //recalculate route
+                    console.log(targetMarker1.getLatLng());
+                });
 
                 var routeLayer = L.featureGroup().addTo(map);
                 var travelOptions = r360.travelOptions();
