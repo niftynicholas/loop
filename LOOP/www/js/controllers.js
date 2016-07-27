@@ -277,7 +277,8 @@ angular.module('app.controllers', [])
     });
 })
 
-.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare) {
+.controller('inprogressCtrl', function ($scope, $state, $ionicPopup, $timeout, leafletData, dataShare) {
+
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
@@ -482,7 +483,8 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare) {
+.controller('completedCtrl', function ($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $ionicHistory) {
+    alert("test");
     angular.extend($scope, {
         tiles: {
             url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
@@ -510,11 +512,13 @@ angular.module('app.controllers', [])
     });
 
     //To test Broadcast after doing nested controller
-    $scope.$on('profile-updated', function(event, profileObj) {
-        alert("Test");
-
+    //$scope.$on('profile-updated', function(event, profileObj) {
+    //    alert("Test");
+    //});
+    
+    $scope.$on("$ionicView.beforeLeave", function () {
+        $ionicHistory.clearCache();
     });
-
 
     //$scope.$on('onCompleted', function (events, args) {
     //alert("Test On");
@@ -550,6 +554,7 @@ angular.module('app.controllers', [])
     });
     //});
 
+    
 
     // A confirm dialog
     $scope.discard = function() {
@@ -674,12 +679,10 @@ angular.module('app.controllers', [])
         console.log(data);
     });*/
 
-    var searchLimit = 8;
-
+    var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
+    var token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi';
     $('#startPoint').keyup(function() {
         var input = $('#startPoint').val(),
-            searchVal = 'SEARCHVAL LIKE \'$' + input + '$\'', //xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi
-            token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi',
             type = 'WGS84';
         var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
         $.getJSON(requestURL, {
@@ -689,7 +692,11 @@ angular.module('app.controllers', [])
         }, function(data) {
             $('#startResult').html("");
             if (data.SearchResults.length > 2) {
-                for (var i = 1; i < searchLimit; i++) {
+                var toLoopTill = searchLimit;
+                if (data.SearchResults.length < 11) {
+                    toLoopTill = data.SearchResults.length-1;
+                }
+                for (var i = 1; i <= toLoopTill; i++) {
                     var searchVal = data.SearchResults[i].SEARCHVAL;
                     var lat = data.SearchResults[i].Y;
                     var lng = data.SearchResults[i].X;
@@ -698,16 +705,17 @@ angular.module('app.controllers', [])
                     }
 
                 }
+            } else if (data.SearchResults.length == 2) {
+                $('#startPoint').attr('data-latlng', [data.SearchResults[1].Y, data.SearchResults[1].X]);
             } else {
                 $('#startResult').html("");
+                $('#startPoint').removeAttr("data-latlng");
             }
         });
     });
 
     $('#endPoint').keyup(function () {
         var input = $('#endPoint').val(),
-            searchVal = 'SEARCHVAL LIKE \'$' + input + '$\'', //xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi
-            token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi',
             type = 'WGS84';
         var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
         $.getJSON(requestURL, {
@@ -717,7 +725,11 @@ angular.module('app.controllers', [])
         }, function (data) {
             $('#endResult').html("");
             if (data.SearchResults.length > 2) {
-                for (var i = 1; i < searchLimit; i++) {
+                var toLoopTill = searchLimit;
+                if (data.SearchResults.length < 11) {
+                    toLoopTill = data.SearchResults.length - 1;
+                }
+                for (var i = 1; i <= toLoopTill; i++) {
                     var searchVal = data.SearchResults[i].SEARCHVAL;
                     var lat = data.SearchResults[i].Y;
                     var lng = data.SearchResults[i].X;
@@ -726,8 +738,12 @@ angular.module('app.controllers', [])
                     }
 
                 }
-            } else {
+            } else if (data.SearchResults.length == 2) {
+                $('#endPoint').attr('data-latlng', [data.SearchResults[1].Y, data.SearchResults[1].X]);
+            }
+            else {
                 $('#endResult').html("");
+                $('#endPoint').removeAttr("data-latlng");
             }
         });
     });
@@ -737,7 +753,7 @@ angular.module('app.controllers', [])
         var endInput = document.getElementById("endPoint");
         var startLatLng = startInput.getAttribute("data-latlng");
         var endLatLng = endInput.getAttribute("data-latlng");
-        
+
         if (startLatLng != null && endLatLng != null) {
             leafletData.getMap("planRoute").then(function (map) {
 
@@ -770,48 +786,119 @@ angular.module('app.controllers', [])
 
                 var startPointName = $("#startPoint").val();
                 var endPointName = $("#endPoint").val();
+
                 sourceMarker1.bindPopup(startPointName, {
-                    closeOnClick: false
+                    closeOnClick: false,
+                    autoPan: false
                 }).openPopup();
 
                 targetMarker1.bindPopup(endPointName, {
-                    closeOnClick: false
+                    closeOnClick: false,
+                    autoPan: false
                 }).openPopup();
 
-                sourceMarker1.on('dragend', function() {
-                    //recalculate route
-                    console.log(sourceMarker1.getLatLng());
-                    
+                findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng);
+
+                sourceMarker1.on('dragend', function () {
+                    var source = sourceMarker1;
+                    var target = targetMarker1;
+
+                    map.eachLayer(function (layer) {
+                        if (layer._leaflet_id != 387) { //Clear all layers except tiles
+                            map.removeLayer(layer);
+                        }
+                    });
+                    source.addTo(map);
+                    target.addTo(map);
+
+                    $.ajax({
+                        dataType: 'json',
+                        url: 'http://www.onemap.sg/API/services.svc/revgeocode?callback=?',
+                        data: {
+                            'token': token,
+                            'location': source.getLatLng().lat + "," + source.getLatLng().lng,
+                            'buffer': 0,
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            if (data.GeocodeInfo[0].ErrorMessage == "Invalid location") {
+                                startPointName = "Location Cannot Be Found";
+                            } else {
+                                startPointName = data.GeocodeInfo[0].ROAD;
+
+                            }
+                        }, complete: function () {
+
+                            source.bindPopup(startPointName, { //reverse geocode for startPointName
+                                closeOnClick: false,
+                                autoPan: false
+                            }).openPopup();
+                            target.bindPopup(endPointName, { //reverse geocode
+                                closeOnClick: false,
+                                autoPan: false
+                            }).openPopup();
+
+                            findRoute(map, source, target, startLatLng, endLatLng)
+                        }
+                    });
+
                 });
 
                 targetMarker1.on('dragend', function () {
-                    //recalculate route
-                    console.log(targetMarker1.getLatLng());
+                    var source = sourceMarker1;
+                    var target = targetMarker1;
+
+                    map.eachLayer(function (layer) {
+                        if (layer._leaflet_id != 387) { //Clear all layers except tiles
+                            map.removeLayer(layer);
+                        }
+                    });
+                    source.addTo(map);
+                    target.addTo(map);
+
+                    $.ajax({
+                        dataType: 'json',
+                        url: 'http://www.onemap.sg/API/services.svc/revgeocode?callback=?',
+                        data: {
+                            'token': token,
+                            'location': source.getLatLng().lat + "," + source.getLatLng().lng,
+                            'buffer': 0,
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            if (data.GeocodeInfo[0].ErrorMessage == "Invalid location") {
+                                endPointName = "Location Cannot Be Found";
+                            } else {
+                                endPointName = data.GeocodeInfo[0].ROAD;
+                                
+                            }
+                        }, complete: function () {
+
+                            source.bindPopup(startPointName, { //reverse geocode for startPointName
+                                closeOnClick: false,
+                                autoPan: false
+                            }).openPopup();
+                            target.bindPopup(endPointName, { //reverse geocode
+                                closeOnClick: false,
+                                autoPan: false
+                            }).openPopup();
+
+                            findRoute(map, source, target, startLatLng, endLatLng)
+                        }
+                    });
+
+
                 });
 
-                var routeLayer = L.featureGroup().addTo(map);
-                var travelOptions = r360.travelOptions();
-                travelOptions.addSource(sourceMarker1);
-                travelOptions.addTarget(targetMarker1);
-                travelOptions.setTravelType('bike');
 
-                r360.RouteService.getRoutes(travelOptions, function (routes) {
-                    for (var i = 0; i < routes.length; i++) {
-                        var route = routes[i];
-                        r360.LeafletUtil.fadeIn(routeLayer, route, 1000, "travelDistance");
-                    }
-                });
-
-                map.fitBounds([startLatLng, endLatLng]);
-
-                console.log(routeLayer);
+                //console.log(routeLayer);
                 
             });
         } else {
             if (startLatLng == null) {
-                alert("Please enter a valid start point");
+                alert("Please enter a valid start Point");
             }
-            if (endLatLng == null) {
+            if(endLatLng == null){
                 alert("Please enter a valid end Point");
             }
         }
@@ -859,4 +946,23 @@ function displayInfo(searchVal, lat, lng, type) {
     $('#'+ type +'Point').val(searchVal);
     $('#'+ type +'Point').attr('data-latlng', [lat, lng]);
     $('#'+ type + 'Result').html("");
+}
+
+function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng) {
+    var routeLayer = L.featureGroup().addTo(map);
+    var travelOptions = r360.travelOptions();
+    travelOptions.addSource(sourceMarker1);
+    travelOptions.addTarget(targetMarker1);
+    travelOptions.setTravelType('bike');
+
+    r360.RouteService.getRoutes(travelOptions, function (routes) {
+        for (var i = 0; i < routes.length; i++) {
+            var route = routes[i];
+            r360.LeafletUtil.fadeIn(routeLayer, route, 1000, "travelDistance");
+        }
+    });
+
+    map.fitBounds([startLatLng, endLatLng], {
+        padding: [20, 20]
+    });
 }
