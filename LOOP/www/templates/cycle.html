@@ -7,7 +7,8 @@
         <div class="row" style="overflow: auto;">
             <div class="col">
                 <button class="button button-clear button-balanced" style="width:100%;" ui-sref="selectRoute">
-                    <p class="button-paragraph"><b>Route ></b><br>None</p>
+                    <p class="button-paragraph"><b>Route ></b>
+                        <br>None</p>
                 </button>
             </div>
             <div class="col">
@@ -16,24 +17,9 @@
                 </button>
             </div>
         </div>
-
-            <leaflet id="cycle" lf-center="center" tiles="tiles" layers="layers" markers="markers" paths="paths" geojson="geojson" decorations="decorations" defaults="defaults" height="100%" width="100%"></leaflet>
-
-
-        <!-- Floating Button
-        <button style="position: absolute; bottom: 12px; z-index: 99;" class="button button-block button-balanced" ng-click="startActivity()">
-            Start Activity
-        </button>-->
+        <leaflet id="cycle" lf-center="center" tiles="tiles" layers="layers" markers="markers" paths="paths" geojson="geojson" decorations="decorations" defaults="defaults" height="100%" width="100%"></leaflet>
     </ion-content>
     <ion-footer-bar class="bar-balanced">
         <a class="title" ng-click="startActivity()">Start Activity</a>
     </ion-footer-bar>
 </ion-view>
-
-
-<!--<ion-scroll align="center">
-    <button class="button button button-dark" ng-click="start()">Cycle</button><br />
-    <button class="button button button-dark" ng-click="end()">End Cycle</button><br />
-    <button class="button button button-dark" ng-click="locate()">Locate Me!</button><br />
-    <button class="button button button-dark" ng-click="dbConnect()">Connect to DB</button>
-</ion-scroll>-->

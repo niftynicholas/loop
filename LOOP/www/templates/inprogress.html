@@ -1,53 +1,17 @@
-<ion-view title="In Progress" hide-back-button="true" cache-view="false">
+<ion-view title="In Progress" hide-back-button="true">>
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
     <ion-nav-buttons side="right">
         <button class="button button-icon icon ion-android-locate" ng-click="locateMe()"></button>
     </ion-nav-buttons>
-
     <ion-floating-button click="geotag()" has-footer="true" button-color="#2E294E" icon="ion-edit" icon-color="#fff">
     </ion-floating-button>
-
     <ion-content data-tab-disabled="true" scroll="false" padding="false">
-        <!-- Version 1
-        <div class="balanced-bg" style="height:11%; padding:0px;">
-            <div class="row custom_grid" style="text-align: center; color:white; padding:0px">
-                <div class="col balanced-bg no_padding_margin">
-                    <timer interval="1000">
-                        <h2 style="color:white; text-align:center;">{{hours|digits}}:{{minutes|digits}}:{{seconds|digits}}</h2></timer>
-                </div>
-            </div>
-            <div class="row custom_grid" style="text-align: center; color:white; padding:0px">
-                <div class="col balanced-bg no_padding_margin">
-                    <h4 style="color:white;">{{averageSpeed}}<br>
-                    Avg. km/h</h4>
-                </div>
-                <div class="col balanced-bg no_padding_margin">
-                    <h4 style="color:white;">{{calories}}<br>
-                    Calories</h4>
-                </div>
-            </div>
-        </div>
-
-        <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="77%" width="100%"></leaflet>
-
-        <div class="row" style="text-align:center; padding: 0px;color:white; height:8%;">
-            <div class="col balanced-bg col-50">
-                <h4 style="color:white;">{{distance}}<br>
-                km</h4>
-            </div>
-            <div class="col balanced-bg col-50">
-                <h4 style="color:white;">{{currentSpeed}}<br>
-                    Cur. km/h</h4>
-            </div>
-        </div>-->
         <div class="balanced-bg" style="text-align: center; height: 6%;">
             <timer interval="1000">
                 <h1 style="color:white;"><i class="icon ion-clock"></i> {{hours|digits}}:{{minutes|digits}}:{{seconds|digits}}</h1>
             </timer>
-
         </div>
-
-        <div class="balanced-bg" style="text-align: center; height:14%;">
+        <div class="balanced-bg" style="text-align: center; height:20%;">
             <ion-slides options="options" slider="data.slider">
                 <ion-slide-page>
                     <h4 style="color:white;">DISTANCE</h4>
@@ -67,10 +31,7 @@
                 </ion-slide-page>
             </ion-slides>
         </div>
-
-        <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="80%" width="100%"></leaflet>
-
-
+        <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="74%" width="100%"></leaflet>
     </ion-content>
     <ion-footer-bar class="bar-balanced">
         <button style="width:49%;" class="button button-assertive" ng-click="showConfirm()">

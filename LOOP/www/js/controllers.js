@@ -124,7 +124,7 @@ angular.module('app.controllers', [])
 })
 
 
-.controller('cycleCtrl', function ($scope, $state, leafletData, dataShare) {
+.controller('cycleCtrl', function($scope, $state, leafletData, dataShare) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
     $scope.timestamp = 0;
@@ -220,7 +220,7 @@ angular.module('app.controllers', [])
         });
     });
 
-    $scope.startActivity = function () {
+    $scope.startActivity = function() {
         var data = {
             currentLocation: $scope.currentLocation,
             time: $scope.timestamp
@@ -263,7 +263,7 @@ angular.module('app.controllers', [])
     });
 })
 
-.controller('inprogressCtrl', function ($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare) {
+.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare) {
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
@@ -282,16 +282,16 @@ angular.module('app.controllers', [])
         speed: 500
     }
 
-    $scope.$on("$ionicSlides.sliderInitialized", function (event, data) {
+    $scope.$on("$ionicSlides.sliderInitialized", function(event, data) {
         // data.slider is the instance of Swiper
         $scope.slider = data.slider;
     });
 
-    $scope.$on("$ionicSlides.slideChangeStart", function (event, data) {
+    $scope.$on("$ionicSlides.slideChangeStart", function(event, data) {
         console.log('Slide change is beginning');
     });
 
-    $scope.$on("$ionicSlides.slideChangeEnd", function (event, data) {
+    $scope.$on("$ionicSlides.slideChangeEnd", function(event, data) {
         // note: the indexes are 0-based
         $scope.activeIndex = data.activeIndex;
         $scope.previousIndex = data.previousIndex;
@@ -339,7 +339,7 @@ angular.module('app.controllers', [])
         }
     });
 
-    leafletData.getMap("inprogress").then(function (map) {
+    leafletData.getMap("inprogress").then(function(map) {
         if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
             //Pass currentLocation from cycle.html
             var data = dataShare.getData();
@@ -347,7 +347,7 @@ angular.module('app.controllers', [])
             var currentlat = $scope.currentLocation.lat;
             var currentlng = $scope.currentLocation.lng;
             $scope.paths.currentLoc.latlngs = [currentlat, currentlng];
-            
+
             $scope.paths.p1.latlngs.push({
                 lat: currentlat,
                 lng: currentlng
@@ -366,7 +366,7 @@ angular.module('app.controllers', [])
         $scope.$broadcast('timer-start');
         $scope.timerRunning = true;
 
-        map.on('locationfound', function (e) {
+        map.on('locationfound', function(e) {
             $scope.timerRunning = true;
             $scope.currentLocation = {
                 lat: e.latlng.lat,
@@ -401,7 +401,7 @@ angular.module('app.controllers', [])
                 $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
             }
             $scope.timerRunning = false;
-            $scope.$on('timer-tick', function (event, data) {
+            $scope.$on('timer-tick', function(event, data) {
                 if ($scope.timerRunning === false) {
                     $scope.duration = data.millis / 1000.0;
                     var avgSpd = $scope.distance / ($scope.duration / 3600.0);
@@ -587,6 +587,25 @@ angular.module('app.controllers', [])
     };
 
     /**
+     * Rating Stars
+     */
+    $scope.ratingsObject = {
+        iconOn: 'ion-ios-star',
+        iconOff: 'ion-ios-star-outline',
+        iconOnColor: 'rgb(255,186,73)',
+        iconOffColor: 'rgb(255,186,73)',
+        rating: 2,
+        minRating: 1,
+        callback: function(rating) {
+            $scope.ratingsCallback(rating);
+        }
+    };
+
+    $scope.ratingsCallback = function(rating) {
+        console.log('Selected rating is : ', rating);
+    };
+
+    /**
      * Save Button
      */
     $scope.save = function() {
@@ -636,13 +655,13 @@ angular.module('app.controllers', [])
         data: {
             'accessKEY': '2WpSB38gVk6Shp1NiEgk0eTAHRsv4jGu7cs4N1r8KipyJJyB7uN8+hl3LXNq2iX1c/wdJhIStL4a6kEacP8CT/HQfXmkWp25|mv73ZvjFcSo=',
         },
-        success: function (data) {
+        success: function(data) {
             token = data.GetToken[0].NewToken;
             console.log(token);
         }
     });
 
-    if (typeof(token) == "undefined"){
+    if (typeof(token) == "undefined") {
         token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi';
     }
 
@@ -789,7 +808,7 @@ angular.module('app.controllers', [])
                     var target = targetMarker1;
 
                     map.eachLayer(function(layer) {
-                        if (layer._leaflet_id != 387) { 
+                        if (layer._leaflet_id != 387) {
                             //Clear all layers except tiles
                             map.removeLayer(layer);
                         }
@@ -805,7 +824,7 @@ angular.module('app.controllers', [])
                             'location': source.getLatLng().lng + "," + source.getLatLng().lat,
                             'buffer': 0,
                         },
-                        success: function (data) {
+                        success: function(data) {
                             console.log("Start Point");
                             console.log(data);
                             if (data.GeocodeInfo[0].ErrorMessage == "Invalid location") {
@@ -851,7 +870,7 @@ angular.module('app.controllers', [])
                             'location': target.getLatLng().lng + "," + target.getLatLng().lat,
                             'buffer': 0,
                         },
-                        success: function (data) {
+                        success: function(data) {
                             console.log("End Point");
                             console.log(data);
                             if (data.GeocodeInfo[0].ErrorMessage == "Invalid location") {
