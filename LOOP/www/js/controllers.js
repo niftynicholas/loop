@@ -250,6 +250,7 @@ angular.module('app.controllers', [])
             time: $scope.timestamp
         };
         dataShare.sendData(data);
+        $scope.firstLoad = true;
         leafletData.getMap("inprogress").then(function(map) {
             map.locate({
                 setView: true,
