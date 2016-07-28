@@ -1,9 +1,3 @@
-/*
-$scope.checkEmailAvailability = function() {
-
-}
-*/
-
 angular.module('app.controllers', [])
 
 .controller('loginCtrl', function($scope, $state, $http) {
@@ -532,7 +526,7 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare) {
+.controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http) {
     angular.extend($scope, {
         tiles: {
             url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
@@ -634,8 +628,28 @@ angular.module('app.controllers', [])
      * Save Button
      */
     $scope.save = function() {
-        dataShare.clearData();
-        $state.go('tabsController.cycle');
+        var route = $scope.paths.p1.latlngs;
+        var data = dataShare.getData();
+        $http({
+            url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                distance:data.duration,
+                duration:data.duration,
+                averageSpeed:data.averageSpeed,
+                calories:data.calories,
+                ratings:$scope.ratingsObject.rating,
+                route:$scope.paths.p1.latlngs
+            }
+        }).then(function successCallback(response) {
+            dataShare.clearData();
+            $state.go('tabsController.cycle');
+        }, function errorCallback(response) {
+            alert("Error Saving to database");
+        });
     };
 
 })
