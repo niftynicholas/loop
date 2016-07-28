@@ -1,4 +1,4 @@
-<ion-view title='Save Activity on {{today}}'>
+<ion-view title='Save Activity on {{today}}' cache-view="false">
     <ion-nav-bar class="bar-balanced">
         <ion-nav-buttons side="left">
             <button class="button button-icon icon ion-trash-a" ng-click="discard()"></button>
@@ -8,58 +8,46 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content scroll="false">
-        <leaflet id="completed" bounds="bounds" defaults="defaults" lf-center="center" tiles="tiles" paths="paths" height="45%" width="100%"></leaflet>
-        <!--<div class="row balanced-bg" align="center" style="color:white;height:10%;">
-            <div class="col col-25">
-                {{distance}}
-                <br><b>km</b>
-            </div>
-            <div class="col col-25">
-                {{duration}}
-                <br><b>Time</b>
-            </div>
-            <div class="col col-25">
-                {{averageSpeed}}
-                <br><b>km/h</b>
-            </div>
-            <div class="col col-25">
-                {{calories}}
-                <br><b>Calories</b>
-            </div>
-        </div>-->
-        <div class="list card">
+        <leaflet id="completed" bounds="bounds" defaults="defaults" lf-center="center" tiles="tiles" paths="paths" height="40%" width="100%"></leaflet>
+        <ion-scroll style="height: 60%;">
+            <div class="list">
 
-            <a href="#" class="item item-icon-left">
-                <i class="icon ion-clock"></i> Duration: {{duration}}
-            </a>
-
-            <a href="#" class="item item-icon-left">
-                <i class="icon ion-ios-location"></i> Distance: {{distance}}
-            </a>
-
-            <a href="#" class="item item-icon-left">
-                <i class="icon ion-speedometer"></i> Average Speed: {{averageSpeed}}
-            </a>
-
-            <a href="#" class="item item-icon-left">
-                <i class="icon ion-ios-flame"></i> Calories: {{calories}}
-            </a>
-
-        </div>
-        <ul class="list">
-            <li class="item item-toggle">
-                Enable Sharing
-                <label class="toggle toggle-balanced">
-                    <input type="checkbox">
-                    <div class="track">
-                        <div class="handle"></div>
-                    </div>
+                <div class="item item-divider">
+                    Rate This Ride
+                </div>
+                <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
+                <div class="item item-divider">
+                    Summary
+                </div>
+                <a class="item item-icon-left" href="#">
+                    <i class="icon ion-clock"></i> Duration: {{duration}}
+                </a>
+                <a class="item item-icon-left" href="#">
+                    <i class="icon ion-ios-location"></i> Distance: {{distance}}
+                </a>
+                <a class="item item-icon-left" href="#">
+                    <i class="icon ion-speedometer"></i> Average Speed: {{averageSpeed}}
+                </a>
+                <a class="item item-icon-left" href="#">
+                    <i class="icon ion-ios-flame"></i> Calories: {{calories}}
+                </a>
+                <div class="item item-divider">
+                    Sharing
+                </div>
+                <li class="item item-toggle">
+                    Enable Sharing
+                    <label class="toggle toggle-balanced">
+                        <input type="checkbox">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </li>
+                <label class="item item-input item-stacked-label">
+                    <span class="input-label">Comments</span>
+                    <input type="text" placeholder="Got anything to say?">
                 </label>
-            </li>
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">Comments</span>
-                <input type="text" placeholder="Got anything to say?">
-            </label>
-        </ul>
+            </div>
+        </ion-scroll>
     </ion-content>
 </ion-view>
