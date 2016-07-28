@@ -11,9 +11,9 @@
                     <h4 style="text-align:center;">Forgotten your password?</h4>
                     <h5 style="text-align:center;">Enter your email address and we'll help you reset your password.</h5>
             <label class="item item-input">
-                <input type="text" placeholder="Email Address">
+                <input type="text" placeholder="Email Address" ng-model="input.emailAddress">
             </label>
         </div>
-        <a class="button button-block button-positive" ui-sref="login">Reset</a>
+        <a class="button button-block button-positive" ng-click="sendResetEmail()">Reset</a>
     </ion-content>
 </ion-view>

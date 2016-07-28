@@ -1,10 +1,16 @@
+/*
+$scope.checkEmailAvailability = function() {
+
+}
+*/
+
 angular.module('app.controllers', [])
 
 .controller('loginCtrl', function($scope, $state, $http) {
     $scope.input = {};
     $scope.login = function() {
         $http({
-            url: "http://backendpgsql-ywk93.rhcloud.com/login",
+            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/login",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -14,16 +20,34 @@ angular.module('app.controllers', [])
                 password: $scope.input.password
             }
         }).then(function successCallback(response) {
-            alert("Success");
             $state.go('tabsController.home');
         }, function errorCallback(response) {
-            alert("Error");
+            alert("Invalid password/username entered");
         });
     }
 })
 
 .controller('signupCtrl', function($scope, $state, $http) {
-
+    $scope.input = {};
+    $scope.signup = function() {
+        $http({
+            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/signup",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                username: $scope.input.username,
+                password: $scope.input.password,
+                name: $scope.input.name,
+                email: $scope.input.email
+            }
+        }).then(function successCallback(response) {
+            $state.go('verify');
+        }, function errorCallback(response) {
+            alert("Error in signup details");
+        });
+    }
 })
 
 .controller('homeCtrl', function($scope) {
@@ -912,11 +936,26 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('verifyCtrl', function($scope) {
+.controller('verifyCtrl', function($scope, $state, $http) {
     $scope.init = function() {
         $scope.passcode = "";
-    }
-
+    };
+    $scope.verify = function() {
+        $http({
+            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/verify",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                verificationCode: $scope.passcode
+            }
+        }).then(function successCallback(response) {
+            $state.go('login');
+        }, function errorCallback(response) {
+            alert("Invalid Verification Code Entered");
+        });
+    };
     $scope.add = function(value) {
         if ($scope.passcode.length < 4) {
             $scope.passcode = $scope.passcode + value;
@@ -926,7 +965,7 @@ angular.module('app.controllers', [])
                 }, 500);
             }
         }
-    }
+    };
 
     $scope.delete = function() {
         if ($scope.passcode.length > 0) {
@@ -935,8 +974,26 @@ angular.module('app.controllers', [])
     }
 })
 
-.controller('forgotCtrl', function($scope) {
-
+.controller('forgotCtrl', function($scope, $state, $http) {
+  $scope.input = {};
+  // Need to prevent empty string and improper email address format
+  // No way to verify resetting of password
+  $scope.sendResetEmail = function() {
+      $http({
+          url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/sendResetPasswordEmail",
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          data: {
+              emailAddress: $scope.input.emailAddress
+          }
+      }).then(function successCallback(response) {
+          $state.go('login');
+      }, function errorCallback(response) {
+          alert("Email Address Not Found");
+      });
+  }
 })
 
 
