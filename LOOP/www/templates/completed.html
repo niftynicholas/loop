@@ -1,18 +1,15 @@
-<ion-view title="Save Activity">
+<ion-view title='Save Activity on {{today}}'>
     <ion-nav-bar class="bar-balanced">
         <ion-nav-buttons side="left">
             <button class="button button-icon icon ion-trash-a" ng-click="discard()"></button>
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
-            <button class="button button-icon icon ion-checkmark" ng-click="save()"></button>
+            <button class="button" ng-click="save()">SAVE</button>
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content scroll="false">
-        <div align="center" style="padding-top:5px; height:4.5%;">
-            <h3 style="color:black;">{{today}}</h3>
-        </div>
-        <leaflet id="completed" bounds="bounds" defaults="defaults" lf-center="center" tiles="tiles" paths="paths" height="50%" width="100%"></leaflet>
-        <div class="row balanced-bg" align="center" style="color:white;height:6%;">
+        <leaflet id="completed" bounds="bounds" defaults="defaults" lf-center="center" tiles="tiles" paths="paths" height="45%" width="100%"></leaflet>
+        <!--<div class="row balanced-bg" align="center" style="color:white;height:10%;">
             <div class="col col-25">
                 {{distance}}
                 <br><b>km</b>
@@ -29,23 +26,40 @@
                 {{calories}}
                 <br><b>Calories</b>
             </div>
+        </div>-->
+        <div class="list card">
+
+            <a href="#" class="item item-icon-left">
+                <i class="icon ion-clock"></i> Duration: {{duration}}
+            </a>
+
+            <a href="#" class="item item-icon-left">
+                <i class="icon ion-ios-location"></i> Distance: {{distance}}
+            </a>
+
+            <a href="#" class="item item-icon-left">
+                <i class="icon ion-speedometer"></i> Average Speed: {{averageSpeed}}
+            </a>
+
+            <a href="#" class="item item-icon-left">
+                <i class="icon ion-ios-flame"></i> Calories: {{calories}}
+            </a>
+
         </div>
-        <ion-scroll style="height:39.5%;">
-            <ul class="list">
-                <li class="item item-toggle">
-                    Enable Sharing
-                    <label class="toggle toggle-balanced">
-                        <input type="checkbox">
-                        <div class="track">
-                            <div class="handle"></div>
-                        </div>
-                    </label>
-                </li>
-                <label class="item item-input item-stacked-label">
-                    <span class="input-label">Comments</span>
-                    <input type="text" placeholder="Got anything to say?">
+        <ul class="list">
+            <li class="item item-toggle">
+                Enable Sharing
+                <label class="toggle toggle-balanced">
+                    <input type="checkbox">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
                 </label>
-            </ul>
-        </ion-scroll>
+            </li>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Comments</span>
+                <input type="text" placeholder="Got anything to say?">
+            </label>
+        </ul>
     </ion-content>
 </ion-view>

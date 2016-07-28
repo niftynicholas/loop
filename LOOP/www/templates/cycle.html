@@ -16,13 +16,19 @@
                 </button>
             </div>
         </div>
-        <div id="map-container" data-tap-disabled="true">
+        
+        <ion-pane data-tap-disabled="true">
             <leaflet id="cycle" lf-center="center" tiles="tiles" layers="layers" markers="markers" paths="paths" geojson="geojson" decorations="decorations" defaults="defaults" height="100%" width="100%"></leaflet>
-        </div>
+        </ion-pane>
+
+        <!-- Floating Button
         <button style="position: absolute; bottom: 12px; z-index: 99;" class="button button-block button-balanced" ng-click="startActivity()">
             Start Activity
-        </button>
+        </button>-->
     </ion-content>
+    <ion-footer-bar class="bar-balanced">
+        <a class="title" ng-click="startActivity()">Start Activity</a>
+    </ion-footer-bar>
 </ion-view>
 
 
