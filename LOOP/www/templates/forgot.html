@@ -6,14 +6,15 @@
         </a>
     </ion-nav-buttons>
     <ion-content class="has-header" padding="true" scroll="false">
-
-                <div class="list list-inset">
-                    <h4 style="text-align:center;">Forgotten your password?</h4>
-                    <h5 style="text-align:center;">Enter your email address and we'll help you reset your password.</h5>
-            <label class="item item-input">
-                <input type="text" placeholder="Email Address" ng-model="input.emailAddress">
-            </label>
+        <div class="list list-inset">
+            <h4 style="text-align:center;">Forgotten your password?</h4>
+            <h5 style="text-align:center;">Enter your email address and we'll help you reset your password.</h5>
+            <form>
+                <label class="item item-input">
+                    <input type="text" placeholder="Email Address" ng-model="input.emailAddress">
+                </label>
+                <button class="button button-block button-positive" type="submit" ng-click="sendResetEmail()">Reset</button>
+            </form>
         </div>
-        <a class="button button-block button-positive" ng-click="sendResetEmail()">Reset</a>
     </ion-content>
 </ion-view>
