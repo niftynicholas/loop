@@ -649,7 +649,7 @@ angular.module('app.controllers', [])
                 'Content-Type': 'application/json'
             },
             data: {
-                distance: data.duration,
+                distance: data.distance,
                 duration: data.duration,
                 averageSpeed: data.averageSpeed,
                 calories: data.calories,
