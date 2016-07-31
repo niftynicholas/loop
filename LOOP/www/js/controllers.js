@@ -1,41 +1,41 @@
 angular.module('app.controllers', [])
 
-.controller('loginCtrl', function($scope, $state, $http, $ionicPopup) {
+.controller('loginCtrl', function ($scope, $state, $http, $ionicPopup) {
     $scope.input = {};
-    $scope.login = function() {
-            $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/login",
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: {
-                    username: $scope.input.username,
-                    password: $scope.input.password
-                }
-            }).then(function successCallback(response) {
-                $state.go('tabsController.home');
-            }, function errorCallback(response) {
-                $scope.showAlert();
-            });
-        }
+    $scope.login = function () {
+        $http({
+            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/login",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                username: $scope.input.username,
+                password: $scope.input.password
+            }
+        }).then(function successCallback(response) {
+            $state.go('tabsController.home');
+        }, function errorCallback(response) {
+            $scope.showAlert();
+        });
+    }
 
     // Invalid username/password
-    $scope.showAlert = function() {
+    $scope.showAlert = function () {
         var alertPopup = $ionicPopup.alert({
             title: 'Login Failed!',
             template: 'Invalid username or password. Please try again.'
         });
 
-        alertPopup.then(function(res) {
+        alertPopup.then(function (res) {
             console.log('Thank you for not eating my delicious ice cream cone');
         });
     };
 })
 
-.controller('signupCtrl', function($scope, $state, $http) {
+.controller('signupCtrl', function ($scope, $state, $http) {
     $scope.input = {};
-    $scope.signup = function() {
+    $scope.signup = function () {
         $http({
             url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/signup",
             method: 'POST',
@@ -56,30 +56,30 @@ angular.module('app.controllers', [])
     }
 })
 
-.controller('homeCtrl', function($scope) {
+.controller('homeCtrl', function ($scope) {
     $scope.options = {
         loop: true,
         effect: 'slide',
         autoplay: 2200,
     }
 
-    $scope.$on("$ionicSlides.sliderInitialized", function(event, data) {
+    $scope.$on("$ionicSlides.sliderInitialized", function (event, data) {
         // data.slider is the instance of Swiper
         $scope.slider = data.slider;
     });
 
-    $scope.$on("$ionicSlides.slideChangeStart", function(event, data) {
+    $scope.$on("$ionicSlides.slideChangeStart", function (event, data) {
         console.log('Slide change is beginning');
     });
 
-    $scope.$on("$ionicSlides.slideChangeEnd", function(event, data) {
+    $scope.$on("$ionicSlides.slideChangeEnd", function (event, data) {
         // note: the indexes are 0-based
         $scope.activeIndex = data.activeIndex;
         $scope.previousIndex = data.previousIndex;
     });
 })
 
-.controller('pcnCtrl', function($scope, leafletData) {
+.controller('pcnCtrl', function ($scope, leafletData) {
     angular.extend($scope, {
         center: {
             lat: 1.3521,
@@ -95,7 +95,7 @@ angular.module('app.controllers', [])
         }
     });
 
-    leafletData.getMap("pcn").then(function(map) {
+    leafletData.getMap("pcn").then(function (map) {
         // var track = new L.KML("js/Park_Connector_Loop.kml", {
         //     async: true
         // });
@@ -109,7 +109,7 @@ angular.module('app.controllers', [])
 
         var customLayer = L.geoJson(null, {
             // http://leafletjs.com/reference.html#geojson-style
-            style: function(feature) {
+            style: function (feature) {
                 return {
                     color: '#0d5e4e'
                 };
@@ -124,15 +124,15 @@ angular.module('app.controllers', [])
     });
 })
 
-.controller('routesCtrl', function($scope) {
+.controller('routesCtrl', function ($scope) {
 
 })
 
-.controller('selectRouteCtrl', function($scope) {
+.controller('selectRouteCtrl', function ($scope) {
 
 })
 
-.controller('viewRouteCtrl', function($scope, leafletData) {
+.controller('viewRouteCtrl', function ($scope, leafletData) {
     angular.extend($scope, {
         center: {
             lat: 1.3521,
@@ -153,8 +153,7 @@ angular.module('app.controllers', [])
 
 })
 
-
-.controller('cycleCtrl', function($scope, $state, leafletData, dataShare) {
+.controller('cycleCtrl', function ($scope, $state, leafletData, dataShare) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
     $scope.timestamp = 0;
@@ -166,12 +165,6 @@ angular.module('app.controllers', [])
             zoom: 11
         },
         paths: {
-            p1: {
-                color: '#008000',
-                weight: 8,
-                latlngs: [], //{ lat: 51.50, lng: -0.082 }
-                coordinates: [],
-            },
             currentLoc: {
                 type: 'circleMarker',
                 fillColor: '#4183D7', //DarkSlateGray
@@ -184,10 +177,6 @@ angular.module('app.controllers', [])
                 latlngs: [0, 0], //1.2997810230344622, 103.90907790873663
                 radius: 10
             },
-            toGEOJson: {
-                "type": "Point",
-                "coordinates": []
-            }
         },
         tiles: {
             url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
@@ -197,16 +186,18 @@ angular.module('app.controllers', [])
         },
         defaults: {
             scrollWheelZoom: false,
-            zoomControl: false
+            zoomControl: false,
+            minZoom: 11,
+            maxZoom: 20
         }
     });
 
-    leafletData.getMap("cycle").then(function(map) {
+    leafletData.getMap("cycle").then(function (map) {
         map.locate({
             watch: true,
             enableHighAccuracy: false
         });
-        map.on('locationfound', function(e) {
+        map.on('locationfound', function (e) {
             $scope.currentLocation = {
                 lat: e.latlng.lat,
                 lng: e.latlng.lng
@@ -220,11 +211,11 @@ angular.module('app.controllers', [])
             $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
             $scope.timestamp = e.timestamp;
         });
-        map.on('locationerror', function(e) {
+        map.on('locationerror', function (e) {
             console.log('Location access denied.');
         });
 
-
+        /* KML LAYER
         var kmlLayer = omnivore.kml("js/Park_Connector_Loop.kml").addTo(map);
         var style = {
             color: 'black'
@@ -247,19 +238,18 @@ angular.module('app.controllers', [])
                 }
 
             });
-        });
+        });*/
     });
 
-    $scope.startActivity = function() {
+    $scope.startActivity = function () {
         var data = {
             currentLocation: $scope.currentLocation,
             time: $scope.timestamp
         };
         dataShare.sendData(data);
         $scope.firstLoad = true;
-        leafletData.getMap("inprogress").then(function(map) {
+        leafletData.getMap("inprogress").then(function (map) {
             map.locate({
-                setView: true,
                 watch: true,
                 enableHighAccuracy: false
             });
@@ -267,8 +257,8 @@ angular.module('app.controllers', [])
         $state.go("inprogress");
     }
 
-    $scope.locateMe = function() {
-        leafletData.getMap("cycle").then(function(map) {
+    $scope.locateMe = function () {
+        leafletData.getMap("cycle").then(function (map) {
             map.setView($scope.currentLocation);
         });
     }
@@ -278,23 +268,23 @@ angular.module('app.controllers', [])
         effect: 'slide',
     }
 
-    $scope.$on("$ionicSlides.sliderInitialized", function(event, data) {
+    $scope.$on("$ionicSlides.sliderInitialized", function (event, data) {
         // data.slider is the instance of Swiper
         $scope.slider = data.slider;
     });
 
-    $scope.$on("$ionicSlides.slideChangeStart", function(event, data) {
+    $scope.$on("$ionicSlides.slideChangeStart", function (event, data) {
         console.log('Slide change is beginning');
     });
 
-    $scope.$on("$ionicSlides.slideChangeEnd", function(event, data) {
+    $scope.$on("$ionicSlides.slideChangeEnd", function (event, data) {
         // note: the indexes are 0-based
         $scope.activeIndex = data.activeIndex;
         $scope.previousIndex = data.previousIndex;
     });
 })
 
-.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare) {
+.controller('inprogressCtrl', function ($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare) {
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
@@ -313,16 +303,16 @@ angular.module('app.controllers', [])
         speed: 500
     }
 
-    $scope.$on("$ionicSlides.sliderInitialized", function(event, data) {
+    $scope.$on("$ionicSlides.sliderInitialized", function (event, data) {
         // data.slider is the instance of Swiper
         $scope.slider = data.slider;
     });
 
-    $scope.$on("$ionicSlides.slideChangeStart", function(event, data) {
+    $scope.$on("$ionicSlides.slideChangeStart", function (event, data) {
         console.log('Slide change is beginning');
     });
 
-    $scope.$on("$ionicSlides.slideChangeEnd", function(event, data) {
+    $scope.$on("$ionicSlides.slideChangeEnd", function (event, data) {
         // note: the indexes are 0-based
         $scope.activeIndex = data.activeIndex;
         $scope.previousIndex = data.previousIndex;
@@ -370,8 +360,8 @@ angular.module('app.controllers', [])
         }
     });
 
-    leafletData.getMap("inprogress").then(function(map) {
-        if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
+    leafletData.getMap("inprogress").then(function (map) {
+        if (dataShare.data != false && typeof (dataShare.getData().currentLocation.lat) != "undefined") {
             //Pass currentLocation from cycle.html
             var data = dataShare.getData();
             $scope.currentLocation = data.currentLocation;
@@ -397,7 +387,7 @@ angular.module('app.controllers', [])
         $scope.$broadcast('timer-start');
         $scope.timerRunning = true;
 
-        map.on('locationfound', function(e) {
+        map.on('locationfound', function (e) {
             $scope.timerRunning = true;
             $scope.currentLocation = {
                 lat: e.latlng.lat,
@@ -432,7 +422,7 @@ angular.module('app.controllers', [])
                 $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
             }
             $scope.timerRunning = false;
-            $scope.$on('timer-tick', function(event, data) {
+            $scope.$on('timer-tick', function (event, data) {
                 if ($scope.timerRunning === false) {
                     $scope.duration = data.millis / 1000.0;
                     var avgSpd = $scope.distance / ($scope.duration / 3600.0);
@@ -461,21 +451,19 @@ angular.module('app.controllers', [])
         });
     });
 
-
-
-    $scope.locateMe = function() {
-        leafletData.getMap("inprogress").then(function(map) {
+    $scope.locateMe = function () {
+        leafletData.getMap("inprogress").then(function (map) {
             map.setView($scope.currentLocation);
         });
     }
 
-    $scope.showConfirm = function() {
-        leafletData.getMap("inprogress").then(function(map) {
+    $scope.showConfirm = function () {
+        leafletData.getMap("inprogress").then(function (map) {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Stop Activity',
                 template: 'Are you sure you want to stop this activity?'
             });
-            confirmPopup.then(function(res) {
+            confirmPopup.then(function (res) {
                 if (res) {
                     map.stopLocate();
                     console.log('Confirmed');
@@ -507,7 +495,7 @@ angular.module('app.controllers', [])
         });
     };
 
-    $scope.geotag = function() {
+    $scope.geotag = function () {
         $scope.data = {};
 
         // An elaborate, custom popup
@@ -521,7 +509,7 @@ angular.module('app.controllers', [])
             }, {
                 text: '<b>Save</b>',
                 type: 'button-positive',
-                onTap: function(e) {
+                onTap: function (e) {
                     if (!$scope.data.geotag) {
                         //don't allow the user to close unless he enters wifi password
 
@@ -532,13 +520,13 @@ angular.module('app.controllers', [])
             }]
         });
 
-        myPopup.then(function(res) {
+        myPopup.then(function (res) {
             console.log('Tapped!', res);
         });
     };
 })
 
-.controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http) {
+.controller('completedCtrl', function ($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http) {
     angular.extend($scope, {
         tiles: {
             url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
@@ -592,7 +580,7 @@ angular.module('app.controllers', [])
 
     $scope.paths.p1.latlngs = data.path;
 
-    leafletData.getMap("completed").then(function(map) {
+    leafletData.getMap("completed").then(function (map) {
         map.fitBounds($scope.paths.p1.latlngs);
     });
 
@@ -600,13 +588,13 @@ angular.module('app.controllers', [])
     /**
      * Confirm Dialog
      */
-    $scope.discard = function() {
+    $scope.discard = function () {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Discard Activity',
             template: 'Are you sure you want to eat discard this activity?'
         });
 
-        confirmPopup.then(function(res) {
+        confirmPopup.then(function (res) {
             if (res) {
                 console.log('You are sure');
                 dataShare.clearData();
@@ -627,19 +615,19 @@ angular.module('app.controllers', [])
         iconOffColor: 'rgb(255,186,73)',
         rating: 2,
         minRating: 1,
-        callback: function(rating) {
+        callback: function (rating) {
             $scope.ratingsCallback(rating);
         }
     };
 
-    $scope.ratingsCallback = function(rating) {
+    $scope.ratingsCallback = function (rating) {
         console.log('Selected rating is : ', rating);
     };
 
     /**
      * Save Button
      */
-    $scope.save = function() {
+    $scope.save = function () {
         var route = $scope.paths.p1.latlngs;
         var data = dataShare.getData();
         $http({
@@ -666,35 +654,18 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('freeRouteCtrl', function($scope) {
+.controller('freeRouteCtrl', function ($scope) {
 
 })
 
-.controller('findRouteCtrl', function($scope) {
+.controller('findRouteCtrl', function ($scope) {
 
 })
 
-.controller('planRouteCtrl', function($scope, leafletData, $http) {
+.controller('planRouteCtrl', function ($scope, leafletData, $http, $state) {
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
-
-    angular.extend($scope, {
-        center: {
-            lat: 1.3521,
-            lng: 103.8198,
-            zoom: 11
-        },
-        tiles: {
-            url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-            options: {
-                attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
-            }
-        },
-        defaults: {
-            scrollWheelZoom: false,
-            zoomControl: false
-        }
-    });
+    $scope.routeLayer = new L.FeatureGroup();
 
     /**
      * Ajax call to get token from OneMap
@@ -706,20 +677,20 @@ angular.module('app.controllers', [])
         data: {
             'accessKEY': '2WpSB38gVk6Shp1NiEgk0eTAHRsv4jGu7cs4N1r8KipyJJyB7uN8+hl3LXNq2iX1c/wdJhIStL4a6kEacP8CT/HQfXmkWp25|mv73ZvjFcSo=',
         },
-        success: function(data) {
+        success: function (data) {
             token = data.GetToken[0].NewToken;
             console.log(token);
         }
     });
 
-    if (typeof(token) == "undefined") {
+    if (typeof (token) == "undefined") {
         token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi';
     }
 
     /**
      * Populate Search Results for Start Point
      */
-    $('#startPoint').keyup(function() {
+    $('#startPoint').keyup(function () {
         var input = $('#startPoint').val(),
             type = 'WGS84';
         var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
@@ -727,7 +698,7 @@ angular.module('app.controllers', [])
             'token': token,
             'searchVal': input,
             'projSys': type,
-        }, function(data) {
+        }, function (data) {
             $('#startResult').html("");
             //If data is length > 2 means there are multiple results
             if (data.SearchResults.length > 2) {
@@ -748,6 +719,7 @@ angular.module('app.controllers', [])
                 }
             } else if (data.SearchResults.length == 2) {
                 //If data length == 2 means there is only 1 result
+                $('#startPoint').attr('data-val', data.SearchResults[1].SEARCHVAL);
                 $('#startPoint').attr('data-latlng', [data.SearchResults[1].Y, data.SearchResults[1].X]);
             } else {
                 //No results were found
@@ -760,7 +732,7 @@ angular.module('app.controllers', [])
     /**
      * Populate Search Results for End Point
      */
-    $('#endPoint').keyup(function() {
+    $('#endPoint').keyup(function () {
         var input = $('#endPoint').val(),
             type = 'WGS84';
         var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
@@ -768,7 +740,7 @@ angular.module('app.controllers', [])
             'token': token,
             'searchVal': input,
             'projSys': type,
-        }, function(data) {
+        }, function (data) {
             $('#endResult').html("");
             //If data is length > 2 means there are multiple results
             if (data.SearchResults.length > 2) {
@@ -789,6 +761,7 @@ angular.module('app.controllers', [])
                 }
             } else if (data.SearchResults.length == 2) {
                 //If data length == 2 means there is only 1 result
+                $('#endPoint').attr('data-val', data.SearchResults[1].SEARCHVAL);
                 $('#endPoint').attr('data-latlng', [data.SearchResults[1].Y, data.SearchResults[1].X]);
             } else {
                 //No results were found
@@ -801,25 +774,24 @@ angular.module('app.controllers', [])
     /**
      * Calculate Route based on Start & End Points
      */
-    $scope.planRoute = function() {
+    $scope.planRoute = function () {
         var startInput = document.getElementById("startPoint");
         var endInput = document.getElementById("endPoint");
         var startLatLng = startInput.getAttribute("data-latlng");
         var endLatLng = endInput.getAttribute("data-latlng");
 
         if (startLatLng != null && endLatLng != null) {
-            leafletData.getMap("planRoute").then(function(map) {
+            leafletData.getMap("cycle").then(function (map) {
 
                 //LatLng is "lat, lng" after utilising getAttribute so spliting it gives us our array [lat, lng]
                 startLatLng = startLatLng.split(",");
                 endLatLng = endLatLng.split(",");
 
-                map.eachLayer(function(layer) {
-                    if (layer._leaflet_id != 387) {
-                        //Clear all layers except tileLayer
-                        map.removeLayer(layer);
-                    }
-                });
+                //$scope.routeLayer.clearLayers();
+                if (map.hasLayer($scope.routeLayer)) {
+                    map.removeLayer($scope.routeLayer);
+                    $scope.routeLayer.clearLayers();
+                }
 
                 r360.config.serviceKey = '00AGI2VAF2HNS37EMMLV'; //My Key: 00AGI2VAF2HNS37EMMLV         Website Key: YWtKiQB7MiZETbCoVsG6
                 r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
@@ -831,41 +803,36 @@ angular.module('app.controllers', [])
                     popupAnchor: [0, -35]
                 });
 
+                var startPointName = startInput.getAttribute("data-val");
+                var endPointName = endInput.getAttribute("data-val");
+
                 var sourceMarker1 = L.marker(startLatLng, {
                     draggable: true
-                }).addTo(map);
+                }).addTo($scope.routeLayer).bindPopup(startPointName, {
+                    closeOnClick: false,
+                    autoPan: false
+                }); //.openPopup()
+
                 var targetMarker1 = L.marker(endLatLng, {
                     draggable: true,
                     icon: redIcon
-                }).addTo(map);
-
-                var startPointName = $("#startPoint").val();
-                var endPointName = $("#endPoint").val();
-
-                sourceMarker1.bindPopup(startPointName, {
+                }).addTo($scope.routeLayer).bindPopup(endPointName, {
                     closeOnClick: false,
                     autoPan: false
-                }).openPopup();
+                }); //.openPopup()
 
-                targetMarker1.bindPopup(endPointName, {
-                    closeOnClick: false,
-                    autoPan: false
-                }).openPopup();
+                findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope);
+                targetMarker1.openPopup();
+                sourceMarker1.openPopup();
 
-                findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng);
-
-                sourceMarker1.on('dragend', function() {
+                sourceMarker1.on('dragend', function () {
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
-                    map.eachLayer(function(layer) {
-                        if (layer._leaflet_id != 387) {
-                            //Clear all layers except tiles
-                            map.removeLayer(layer);
-                        }
-                    });
-                    source.addTo(map);
-                    target.addTo(map);
+                    if (map.hasLayer($scope.routeLayer)) {
+                        map.removeLayer($scope.routeLayer);
+                        $scope.routeLayer.clearLayers();
+                    }
 
                     $.ajax({
                         dataType: 'json',
@@ -875,43 +842,40 @@ angular.module('app.controllers', [])
                             'location': source.getLatLng().lng + "," + source.getLatLng().lat,
                             'buffer': 0,
                         },
-                        success: function(data) {
-                            console.log("Start Point");
-                            console.log(data);
+                        success: function (data) {
                             if (data.GeocodeInfo[0].ErrorMessage == "Invalid location") {
                                 startPointName = "Location Cannot Be Found";
                             } else {
                                 startPointName = data.GeocodeInfo[0].ROAD;
                             }
                         },
-                        complete: function() {
-                            source.bindPopup(startPointName, {
+                        complete: function () {
+                            source.addTo($scope.routeLayer).bindPopup(startPointName, {
                                 closeOnClick: false,
                                 autoPan: false
-                            }).openPopup();
-                            target.bindPopup(endPointName, {
-                                closeOnClick: false,
-                                autoPan: false
-                            }).openPopup();
+                            }); //.openPopup()
 
-                            findRoute(map, source, target, startLatLng, endLatLng)
+                            target.addTo($scope.routeLayer).bindPopup(endPointName, {
+                                closeOnClick: false,
+                                autoPan: false
+                            }); //.openPopup()
+
+                            findRoute(map, source, target, startLatLng, endLatLng, $scope);
+                            source.openPopup();
+                            target.openPopup();
                         }
                     });
 
-                });
+                });//End sourceMarker dragend
 
-                targetMarker1.on('dragend', function() {
+                targetMarker1.on('dragend', function () {
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
-                    map.eachLayer(function(layer) {
-                        if (layer._leaflet_id != 387) {
-                            //Clear all layers except tiles
-                            map.removeLayer(layer);
-                        }
-                    });
-                    source.addTo(map);
-                    target.addTo(map);
+                    if (map.hasLayer($scope.routeLayer)) {
+                        map.removeLayer($scope.routeLayer);
+                        $scope.routeLayer.clearLayers();
+                    }
 
                     $.ajax({
                         dataType: 'json',
@@ -921,34 +885,33 @@ angular.module('app.controllers', [])
                             'location': target.getLatLng().lng + "," + target.getLatLng().lat,
                             'buffer': 0,
                         },
-                        success: function(data) {
-                            console.log("End Point");
-                            console.log(data);
+                        success: function (data) {
                             if (data.GeocodeInfo[0].ErrorMessage == "Invalid location") {
                                 endPointName = "Location Cannot Be Found";
                             } else {
                                 endPointName = data.GeocodeInfo[0].ROAD;
                             }
                         },
-                        complete: function() {
-
-                            source.bindPopup(startPointName, {
+                        complete: function () {
+                            source.addTo($scope.routeLayer).bindPopup(startPointName, {
                                 closeOnClick: false,
                                 autoPan: false
-                            }).openPopup();
-                            target.bindPopup(endPointName, {
+                            }); //.openPopup()
+
+                            target.addTo($scope.routeLayer).bindPopup(endPointName, {
                                 closeOnClick: false,
                                 autoPan: false
-                            }).openPopup();
+                            }); //.openPopup()
 
-                            findRoute(map, source, target, startLatLng, endLatLng)
+                            findRoute(map, source, target, startLatLng, endLatLng, $scope);
+                            source.openPopup();
+                            target.openPopup();
                         }
                     });
+                }); //End targetMarker dragend
 
-
-                });
                 //console.log(routeLayer);
-
+                $state.go('tabsController.cycle');
             });
         } else {
             if (startLatLng == null) {
@@ -961,34 +924,34 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('profileCtrl', function($scope) {
+.controller('profileCtrl', function ($scope) {
 
 })
 
-.controller('verifyCtrl', function($scope, $state, $http) {
-    $scope.init = function() {
+.controller('verifyCtrl', function ($scope, $state, $http) {
+    $scope.init = function () {
         $scope.passcode = "";
     };
 
 
-    $scope.add = function(value) {
+    $scope.add = function (value) {
         if ($scope.passcode.length < 4) {
             $scope.passcode = $scope.passcode + value;
             if ($scope.passcode.length == 4) {
-                $timeout(function() {
+                $timeout(function () {
                     console.log("The four digit code was entered");
                 }, 500);
             }
         }
     };
 
-    $scope.delete = function() {
+    $scope.delete = function () {
         if ($scope.passcode.length > 0) {
             $scope.passcode = $scope.passcode.substring(0, $scope.passcode.length - 1);
         }
     };
 
-    $scope.verify = function() {
+    $scope.verify = function () {
         $http({
             url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/verify",
             method: 'POST',
@@ -1006,11 +969,11 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('forgotCtrl', function($scope, $state, $http) {
+.controller('forgotCtrl', function ($scope, $state, $http) {
     $scope.input = {};
     // Need to prevent empty string and improper email address format
     // No way to verify resetting of password
-    $scope.sendResetEmail = function() {
+    $scope.sendResetEmail = function () {
         $http({
             url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/sendResetPasswordEmail",
             method: 'POST',
@@ -1029,32 +992,32 @@ angular.module('app.controllers', [])
 })
 
 
-.controller('settingsCtrl', function($scope) {
+.controller('settingsCtrl', function ($scope) {
     $scope.height = "165 cm";
     $scope.weight = "50 kg";
 })
 
 function displayInfo(searchVal, lat, lng, type) {
     $('#' + type + 'Point').val(searchVal);
+    $('#' + type + 'Point').attr('data-val', searchVal);
     $('#' + type + 'Point').attr('data-latlng', [lat, lng]);
     $('#' + type + 'Result').html("");
 }
 
-function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng) {
-    var routeLayer = L.featureGroup().addTo(map);
+function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope) {
+    map.addLayer($scope.routeLayer);
+
     var travelOptions = r360.travelOptions();
     travelOptions.addSource(sourceMarker1);
     travelOptions.addTarget(targetMarker1);
     travelOptions.setTravelType('bike');
 
-    r360.RouteService.getRoutes(travelOptions, function(routes) {
+    r360.RouteService.getRoutes(travelOptions, function (routes) {
         for (var i = 0; i < routes.length; i++) {
             var route = routes[i];
-            r360.LeafletUtil.fadeIn(routeLayer, route, 1000, "travelDistance");
+            r360.LeafletUtil.fadeIn($scope.routeLayer, route, 1000, "travelDistance");
         }
     });
 
-    map.fitBounds([startLatLng, endLatLng], {
-        padding: [20, 20]
-    });
+    map.fitBounds([startLatLng, endLatLng]);
 }
