@@ -131,6 +131,10 @@ angular.module('app.controllers', [])
         },
         tiles: {
             url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
+            // url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
+            // options: {
+            //     attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+            // }
         },
         defaults: {
             scrollWheelZoom: false,
@@ -159,8 +163,8 @@ angular.module('app.controllers', [])
             }
         });
 
-        omnivore.kml('js/Park_Connector_Loop.kml', null, customLayer).addTo(map);
-
+        omnivore.geojson('js/Park_Connector_Loop.geojson', null, customLayer).addTo(map);
+        
         map.addControl(new L.Control.Layers({}, {
             'Park Connector Network': customLayer
         }));

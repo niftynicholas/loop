@@ -33,24 +33,31 @@
                     <div ng-messages-include="error-list.html"></div>
                 </div>
                 <!-- Password -->
-                <label class="item item-input" ng-class="{ 'has-errors' : signupForm.password.$invalid && signupForm.$submitted, 'no-errors' : signupForm.password.$valid  && signupForm.$submitted}">
-                    <span class="input-label">Password</span>
-                    <input type="password" name="password" ng-model="input.password" ng-minlength="8" required>
+                <label class="item item-input item-icon-right" ng-class="{ 'has-errors' : signupForm.password.$invalid && signupForm.$submitted, 'no-errors' : signupForm.password.$valid  && signupForm.$submitted}">
+                    <span class="input-label">Password</span><i class="icon ion-eye" on-touch="showPassword = !showPassword"></i>
+                    <input type="password" name="password" id="password" placeholder=" " ng-model="input.password" ng-hide="showPassword" required>
+                    <input type="text" name="password" id="passwordRaw" placeholder=" " ng-model="input.password" ng-show="showPassword" required>
                 </label>
                 <div class="error-container" ng-show="signupForm.password.$error && signupForm.$submitted" ng-messages="signupForm.password.$error">
-                    <div ng-messages-include="error-list.html"></div>
-                </div>
-                <!-- Confirm Password -->
-                <label class="item item-input" ng-class="{ 'has-errors' : signupForm.password.$invalid && signupForm.$submitted, 'no-errors' : signupForm.password.$valid  && signupForm.$submitted}">
-                    <span class="input-label">Confirm Password</span>
-                    <input type="password" name="confirmpw" ng-model="input.confirmpw" ng-minlength="8" required>
-                </label>
-                <div class="error-container" ng-show="signupForm.confirmpw.$error && signupForm.$submitted" ng-messages="signupForm.confirmpw.$error">
                     <div ng-messages-include="error-list.html"></div>
                 </div>
             </div>
             <button type="submit" class="button button-positive button-block">Sign Up</button>
         </form>
+
+        <!-- <form name="userForm">
+            <div class="field">
+                <label for="emailAddress">Enter your email address:</label>
+                <input type="email" name="emailAddress" ng-model="data.email" ng-minlength="5" ng-maxlength="30" record-availability-validator="http://sgcycling-sgloop.rhcloud.com/api/users/accounts/checkEmailAvailability" required />
+
+                <div ng-messages="userForm.emailAddress.$error" id="error-messages.html">
+                    <div ng-message="recordLoading">Checking database...</div>
+                    <div ng-message="recordAvailable">The email address is already in use...</div>
+                </div>
+            </div>
+
+            <input type="submit" />
+        </form> -->
     </ion-content>
 </ion-view>
 
