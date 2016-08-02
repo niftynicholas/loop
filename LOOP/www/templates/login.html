@@ -18,7 +18,7 @@
                     <span class="input-label">Password</span>
                     <input type="password" name="password" ng-model="authorization.password" required>
                 </label>
-                <div class="error-container last-error-container" ng-show="authorizationForm.password.$error && authorizationForm.$submitted" ng-messages="authorizationForm.password.$error">
+                <div class="error-container" ng-show="authorizationForm.password.$error && authorizationForm.$submitted" ng-messages="authorizationForm.password.$error">
                     <div ng-messages-include="error-list.html"></div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
 </script>
 <script id="error-list.html" type="text/ng-template">
     <div class="error" ng-message="required">
-        <i class="ion-information-circled"></i> This field is required!
+        <i class="ion-information-circled"></i>  This field is required!
     </div>
     </div>
 </script>
