@@ -1,32 +1,51 @@
-<ion-view title="Login" id="page5">
+<ion-view title="Login" cache-view="false">
     <ion-content padding="true" class="login" scroll="false">
         <div>
             <img src="img/LOOP.png" width="60%" height="50%" style="display: block; margin-top: 20%; margin-left: auto; margin-right: auto;">
         </div>
-        <form id="login-form1" class="list ">
-            <ion-list id="login-list1" class=" ">
-                <label class="item item-input " id="login-input1">
-                    <input type="text" placeholder="Username" ng-model="input.username">
+        <form name="authorizationForm" novalidate="" ng-submit="login(authorizationForm)">
+            <div class="list">
+                <!-- Username -->
+                <label class="item item-input" ng-class="{ 'has-errors' : authorizationForm.username.$invalid && authorizationForm.$submitted, 'no-errors' : authorizationForm.username.$valid && authorizationForm.$submitted}">
+                    <span class="input-label">Username</span>
+                    <input type="text" name="username" ng-model="authorization.username" required>
                 </label>
-                <label class="item item-input " id="login-input2">
-                    <input type="password" placeholder="Password" ng-model="input.password">
-                </label>
-            </ion-list>
-            <div class="spacer" style="height: 5%;"></div>
-            <button class=" button button-block button-positive" type="submit" ng-click="login()">Log In</button>
-            <button class="button button-block button-dark" ui-sref="signup">Sign Up</button>
-            <div class="row custom_grid no_padding_margin" style="text-align:center;">
-                <div class="col custom_grid no_padding_margin">
-                    <button class="button button-clear button-positive" ui-sref="forgot">
-                        <b>Forgot Password?</b>
-                    </button>
+                <div class="error-container" ng-show="authorizationForm.username.$error && authorizationForm.$submitted" ng-messages="authorizationForm.username.$error">
+                    <div ng-messages-include="error-list.html"></div>
                 </div>
-                <div class="col custom_grid no_padding_margin">
-                    <button class="button button-clear button-positive" ui-sref="verify">
-                        <b>Verify Account</b>
-                    </button>
+                <!-- Password -->
+                <label class="item item-input" ng-class="{ 'has-errors' : authorizationForm.password.$invalid && authorizationForm.$submitted, 'no-errors' : authorizationForm.password.$valid  && authorizationForm.$submitted}">
+                    <span class="input-label">Password</span>
+                    <input type="password" name="password" ng-model="authorization.password" required>
+                </label>
+                <div class="error-container last-error-container" ng-show="authorizationForm.password.$error && authorizationForm.$submitted" ng-messages="authorizationForm.password.$error">
+                    <div ng-messages-include="error-list.html"></div>
                 </div>
             </div>
+            <button class="button button-full button-positive" type="submit">
+                Sign In
+            </button>
         </form>
+        <button class="button button-block button-dark" ui-sref="signup">Sign Up</button>
+        <div class="row custom_grid no_padding_margin" style="text-align:center;">
+            <div class="col custom_grid no_padding_margin">
+                <button class="button button-light" ui-sref="forgot">
+                    <b>Forgot Password?</b>
+                </button>
+            </div>
+            <div class="col custom_grid no_padding_margin">
+                <button class="button button-light" ui-sref="verify">
+                    <b>Verify Account</b>
+                </button>
+            </div>
+        </div>
     </ion-content>
+</ion-view>
+</script>
+<script id="error-list.html" type="text/ng-template">
+    <div class="error" ng-message="required">
+        <i class="ion-information-circled"></i> This field is required!
+    </div>
+    </div>
+</script>
 </ion-view>

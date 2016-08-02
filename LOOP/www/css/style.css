@@ -46,7 +46,7 @@ ion-list.manual-list-fullwidth div.list> .item, .list.card.manual-card-fullwidth
     line-height: 1.5em;
 }
 .login {
-    background: url('../img/login-bg-op60.jpg') no-repeat center;
+    background: url('../img/123.jpg') no-repeat center;
     background-size: auto 100%;
 }
 .center-vertical> * {
@@ -72,4 +72,32 @@ ion-list.manual-list-fullwidth div.list> .item, .list.card.manual-card-fullwidth
 }
 .ionic_ratings .icon {
     font-size: 50px;
+}
+.error-container {
+    margin: 5px 0;
+}
+.error-container:last-child {
+    margin: 5px 0 0;
+}
+.error {
+    padding: 10px 16px;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #555;
+    vertical-align: middle;
+}
+.error i {
+    font-size: 24px;
+    color: #93032E;
+    vertical-align: middle;
+}
+.last-error-container> .error {
+    padding: 10px 16px 0;
+}
+.has-errors {
+    border-bottom: 3px solid #93032E;
+}
+.no-errors {
+    border-bottom: 3px solid green;
 }
