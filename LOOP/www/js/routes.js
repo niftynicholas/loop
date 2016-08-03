@@ -130,10 +130,10 @@ angular.module('app.routes', [])
         }
     })
 
-    .state('settings', {
-        url: '/settings',
-        templateUrl: 'templates/settings.html',
-        controller: 'settingsCtrl'
+    .state('editProfile', {
+        url: '/editProfile',
+        templateUrl: 'templates/editProfile.html',
+        controller: 'editProfileCtrl'
     })
 
     $urlRouterProvider.otherwise('/login')

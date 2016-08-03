@@ -1,13 +1,15 @@
 <ion-view title="Profile" hide-back-button="true">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
-        <ion-nav-buttons side="right">
-            <button class="button button-icon ion-gear-a" ui-sref="settings"></button>
-        </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button" ui-sref="editProfile">EDIT</button>
+    </ion-nav-buttons>
     <ion-content padding="true" class="has-header">
         <ion-list id="profile-list8" class=" ">
             <ion-item class="item-thumbnail-left  " id="profile-list-item9">
-                <img src="img/8E1o9Ox6TeGfC0tQXiMu_placeholder-hi.png">
-                <h2>John Smith</h2>
+                <img src="img/placeholder-man-grid-240x268.png">
+                <h2><b>John Smith<b></h2>
+                <h3><i class="icon ion-arrow-up-a"></i> Height: 165 cm</h3>
+                <h3><i class="icon ion-speedometer"></i> Weight: 50 kg</h3>
             </ion-item>
         </ion-list>
         <div class="item item-body " id="profile-list-item-container2">
@@ -27,5 +29,6 @@
                     <i class="icon ion-android-bicycle"></i>983 Calories Burned</ion-item>
             </ion-list>
         </div>
+        <button class="button button-block button-assertive" ui-sref="login">Log Out</button>
     </ion-content>
 </ion-view>

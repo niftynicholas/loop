@@ -131,10 +131,10 @@ angular.module('app.controllers', [])
         },
         tiles: {
             url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
-            // url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-            // options: {
-            //     attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
-            // }
+                // url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
+                // options: {
+                //     attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                // }
         },
         defaults: {
             scrollWheelZoom: false,
@@ -164,7 +164,7 @@ angular.module('app.controllers', [])
         });
 
         omnivore.geojson('js/Park_Connector_Loop.geojson', null, customLayer).addTo(map);
-        
+
         map.addControl(new L.Control.Layers({}, {
             'Park Connector Network': customLayer
         }));
@@ -709,7 +709,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('planRouteCtrl', function($scope, leafletData, $http, $state) {
+.controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup) {
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
     $scope.routeLayer = new L.FeatureGroup();
@@ -961,13 +961,50 @@ angular.module('app.controllers', [])
                 $state.go('tabsController.cycle');
             });
         } else {
-            if (startLatLng == null) {
-                alert("Please enter a valid start Point");
-            }
-            if (endLatLng == null) {
-                alert("Please enter a valid end Point");
+            if (startLatLng == null && endLatLng == null) {
+                $scope.showAlert();
+            } else if (startLatLng == null) {
+                $scope.showInvalidStartAlert();
+            } else if (endLatLng == null) {
+                $scope.showInvalidEndAlert();
             }
         }
+    };
+    // Invalid Start Point
+    $scope.showAlert = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Invalid Start & End Points',
+            template: 'Please select a valid start and end point.'
+        });
+
+        alertPopup.then(function(res) {
+
+        });
+    };
+
+
+    // Invalid Start Point
+    $scope.showInvalidStartAlert = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Invalid Start Point',
+            template: 'Please select a valid start point and try again.'
+        });
+
+        alertPopup.then(function(res) {
+
+        });
+    };
+
+    // Invalid End Point
+    $scope.showInvalidEndAlert = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Invalid End Point',
+            template: 'Please select a valid end point and try again.'
+        });
+
+        alertPopup.then(function(res) {
+
+        });
     };
 })
 
@@ -1039,14 +1076,8 @@ angular.module('app.controllers', [])
 })
 
 
-.controller('settingsCtrl', function($scope, $state, $ionicHistory) {
-    $scope.height = "165 cm";
-    $scope.weight = "50 kg";
+.controller('editProfileCtrl', function($scope, $state, $ionicHistory) {
 
-    $scope.logout = function() {
-        $ionicHistory.clearCache();
-        $state.go("login");
-    }
 })
 
 function displayInfo(searchVal, lat, lng, type) {

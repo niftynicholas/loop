@@ -1,0 +1,40 @@
+<ion-view title="Edit Profile">
+    <ion-nav-bar class="bar-balanced">
+        <ion-nav-buttons side="left">
+            <button class="button button-icon icon ion-close" ui-sref="tabsController.profile"></button>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <button class="button" ui-sref="tabsController.profile">SAVE</button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-content padding="true" class="has-header">
+        <ion-list>
+            <label class="item item-input">
+                <span class="input-label">Name</span>
+                <input type="text" placeholder="John Smith">
+            </label>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Gender
+                </div>
+                <select>
+                    <option selected>Male</option>
+                    <option>Female</option>
+                </select>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Birth Date</span>
+                <input type="date" placeholder="01/01/1991">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Height</span>
+                <input type="text" placeholder="165 cm">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Weight</span>
+                <input type="text" placeholder="50 kg">
+            </label>
+
+        </ion-list>
+    </ion-content>
+</ion-view>
