@@ -26,12 +26,34 @@ angular.module('app.controllers', [])
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
-                $scope.hide();
-                $state.go('tabsController.home');
-            }, function errorCallback(response) {
-                $scope.hide();
-                $scope.showAlert();
-            });
+                    $http({
+                        url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/getAccountDetails",
+                        method: 'POST',
+                        data: {
+                            username: $scope.authorization.username
+                        }
+                    }).then(function mySuccess(response) {
+                            console.log(response.data);
+                            localStorage.setItem("dateOfBirth", response.data.dateOfBirth);
+                            localStorage.setItem("email", response.data.email);
+                            localStorage.setItem("height", response.data.height);
+                            localStorage.setItem("name", response.data.name);
+                            localStorage.setItem("username", response.data.username);
+                            localStorage.setItem("weight", response.data.weight);
+                            // $scope.token = localStorage.getItem("token");
+                            console.log(localStorage);
+                            console.log("Success in retrieving account details.");
+                        },
+                        function myError(response) {
+                            console.log("Error in retrieving account details.");
+                        })
+                    $scope.hide();
+                    $state.go('tabsController.home');
+                },
+                function errorCallback(response) {
+                    $scope.hide();
+                    $scope.showAlert();
+                });
         }
     }
 
@@ -1077,7 +1099,14 @@ angular.module('app.controllers', [])
 
 
 .controller('editProfileCtrl', function($scope, $state, $ionicHistory) {
-
+    console.log(localStorage);
+    $scope.input = {};
+    input.dateOfBirth = localStorage.getItem("dateOfBirth");
+    input.email = localStorage.getItem("email");
+    input.height = localStorage.getItem("height");
+    input.name = localStorage.getItem("name");
+    input.username = localStorage.getItem("username");
+    input.weight = localStorage.getItem("weight");
 })
 
 function displayInfo(searchVal, lat, lng, type) {
