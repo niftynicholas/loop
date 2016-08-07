@@ -34,7 +34,6 @@ angular.module('app.controllers', [])
                             username: $scope.authorization.username
                         }
                     }).then(function mySuccess(response) {
-                            console.log(response.data);
                             localStorage.setItem("dateOfBirth", response.data.dateOfBirth);
                             localStorage.setItem("email", response.data.email);
                             localStorage.setItem("height", response.data.height);
@@ -1134,7 +1133,6 @@ angular.module('app.controllers', [])
     $scope.input.weight = parseFloat(localStorage.getItem("weight"));
     //tabsController.profile
     $scope.save = function() {
-      console.log("uid is " + localStorage.getItem("uid"));
       $http({
           url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
           method: 'POST',
@@ -1144,16 +1142,20 @@ angular.module('app.controllers', [])
           data: {
               uid : localStorage.getItem("uid"),
               name : $scope.input.name,
-              gender : $scope.input.gender,
+              gender : $scope.input.gender.name,
               dateOfBirth : $scope.input.dateOfBirth,
               height :  $scope.input.height,
               weight : $scope.input.weight
           }
       }).then(function successCallback(response) {
+          localStorage.setItem("name", $scope.input.name);
+          localStorage.setItem("gender", $scope.input.gender.name);
+          localStorage.setItem("dateOfBirth", $scope.input.dateOfBirth);
+          localStorage.setItem("height", $scope.input.height);
+          localStorage.setItem("weight", $scope.input.weight);
           $state.go('tabsController.profile');
       }, function errorCallback(response) {
           alert("Error Updating Account Details");
-          alert(JSON.stringify(response));
       });
     }
 })
