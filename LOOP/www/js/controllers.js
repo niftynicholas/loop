@@ -26,6 +26,7 @@ angular.module('app.controllers', [])
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
+                    localStorage.setItem("uid", response.data.uid);
                     $http({
                         url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/getAccountDetails",
                         method: 'POST',
@@ -1119,15 +1120,42 @@ angular.module('app.controllers', [])
 })
 
 
-.controller('editProfileCtrl', function($scope, $state, $ionicHistory) {
-    console.log(localStorage);
-    $scope.input = {};
-    input.dateOfBirth = localStorage.getItem("dateOfBirth");
-    input.email = localStorage.getItem("email");
-    input.height = localStorage.getItem("height");
-    input.name = localStorage.getItem("name");
-    input.username = localStorage.getItem("username");
-    input.weight = localStorage.getItem("weight");
+.controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http) {
+    $scope.input = new Object();
+    $scope.input.dateOfBirth = new Date(localStorage.getItem("dateOfBirth"));
+    $scope.genders = [{name:"male", id:1},{name:"female",id:2}];
+    if (localStorage.getItem("gender") === "male") {
+      $scope.input.gender = $scope.genders[0];
+    } else {
+      $scope.input.gender = $scope.genders[1];
+    }
+    $scope.input.name = localStorage.getItem("name");
+    $scope.input.height = parseFloat(localStorage.getItem("height"));
+    $scope.input.weight = parseFloat(localStorage.getItem("weight"));
+    //tabsController.profile
+    $scope.save = function() {
+      console.log("uid is " + localStorage.getItem("uid"));
+      $http({
+          url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          data: {
+              uid : localStorage.getItem("uid"),
+              name : $scope.input.name,
+              gender : $scope.input.gender,
+              dateOfBirth : $scope.input.dateOfBirth,
+              height :  $scope.input.height,
+              weight : $scope.input.weight
+          }
+      }).then(function successCallback(response) {
+          $state.go('tabsController.profile');
+      }, function errorCallback(response) {
+          alert("Error Updating Account Details");
+          alert(JSON.stringify(response));
+      });
+    }
 })
 
 function displayInfo(searchVal, lat, lng, type) {
@@ -1151,7 +1179,7 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
             r360.LeafletUtil.fadeIn($scope.routeLayer, route, 1000, "travelDistance");
         }
     });
-    
+
     if ($scope.currentLocation == "undefined") {
         map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
             animate: false,
@@ -1170,5 +1198,5 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
     } else {
         map.setView(startLatLng, 11);
     }*/
-    
+
 }

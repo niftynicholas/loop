@@ -4,7 +4,7 @@
             <button class="button button-icon icon ion-close" ui-sref="tabsController.profile"></button>
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
-            <button class="button" ui-sref="tabsController.profile">SAVE</button>
+            <button class="button" ng-click="save()"/>SAVE</button>
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content padding="true" class="has-header">
@@ -17,10 +17,7 @@
                 <div class="input-label">
                     Gender
                 </div>
-                <select ng-model="input.gender">
-                    <option selected>Male</option>
-                    <option>Female</option>
-                </select>
+                <select ng-options="option.name for option in genders" ng-model="input.gender"></select>
             </label>
             <label class="item item-input">
                 <span class="input-label">Birth Date</span>
@@ -28,11 +25,11 @@
             </label>
             <label class="item item-input">
                 <span class="input-label">Height</span>
-                <input type="text" ng-model="input.height">
+                <input type="number" ng-model="input.height">
             </label>
             <label class="item item-input">
                 <span class="input-label">Weight</span>
-                <input type="text" ng-model="input.weight">
+                <input type="number" ng-model="input.weight">
             </label>
         </ion-list>
     </ion-content>
