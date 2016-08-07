@@ -33,6 +33,7 @@ angular.module('app.controllers', [])
                     localStorage.setItem("name", response.data.name);
                     localStorage.setItem("username", response.data.username);
                     localStorage.setItem("weight", response.data.weight);
+                    localStorage.setItem("gender", response.data.gender);
                     $scope.hide();
                     $state.go('tabsController.home');
                 },
