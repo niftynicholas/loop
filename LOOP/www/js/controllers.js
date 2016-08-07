@@ -159,8 +159,8 @@ angular.module('app.controllers', [])
                 // }
         },
         defaults: {
-            scrollWheelZoom: false,
-            zoomControl: false
+            scrollWheelZoom: true,
+            zoomControl: true
         }
     });
 
@@ -215,8 +215,8 @@ angular.module('app.controllers', [])
             }
         },
         defaults: {
-            scrollWheelZoom: false,
-            zoomControl: false
+            scrollWheelZoom: true,
+            zoomControl: true
         }
     });
 
@@ -247,21 +247,29 @@ angular.module('app.controllers', [])
                 radius: 10
             },
         },
+        /*
         tiles: {
             url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
             options: {
                 attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
             }
-        },
+        },*/
         defaults: {
-            scrollWheelZoom: false,
-            zoomControl: false,
+            scrollWheelZoom: true,
+            zoomControl: true,
             minZoom: 11,
             maxZoom: 20
         }
     });
 
-    leafletData.getMap("cycle").then(function(map) {
+    leafletData.getMap("cycle").then(function (map) {
+        var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
+            attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+            //edgeBufferTiles: 2
+            //subdomains: ['a', 'b', 'c'],
+            //buffer: 8
+        }).addTo(map);
+
         map.locate({
             watch: true,
             enableHighAccuracy: false
@@ -272,7 +280,7 @@ angular.module('app.controllers', [])
                 lng: e.latlng.lng
             };
             if ($scope.firstLoad) {
-                map.setView($scope.currentLocation, 18);
+                map.setView($scope.currentLocation, 16);
                 $scope.firstLoad = false;
             }
             $scope.paths.currentLoc.latlngs = [];
@@ -315,6 +323,7 @@ angular.module('app.controllers', [])
             currentLocation: $scope.currentLocation,
             time: $scope.timestamp
         };
+        dataShare.clearData();
         dataShare.sendData(data);
         $scope.firstLoad = true;
         leafletData.getMap("inprogress").then(function(map) {
@@ -324,6 +333,15 @@ angular.module('app.controllers', [])
             });
         });
         $state.go("inprogress");
+    }
+
+    $scope.planRoute = function () {
+        var data = {
+            currentLocation: $scope.currentLocation,
+        };
+        dataShare.clearData();
+        dataShare.sendData(data);
+        $state.go("planRoute");
     }
 
     $scope.locateMe = function() {
@@ -400,8 +418,8 @@ angular.module('app.controllers', [])
             }
         },
         defaults: {
-            scrollWheelZoom: false,
-            zoomControl: false
+            scrollWheelZoom: true,
+            zoomControl: true
         },
         paths: {
             p1: {
@@ -610,8 +628,8 @@ angular.module('app.controllers', [])
         },
         bounds: {},
         defaults: {
-            scrollWheelZoom: false,
-            zoomControl: false
+            scrollWheelZoom: true,
+            zoomControl: true
         },
         paths: {
             p1: {
@@ -731,7 +749,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup) {
+.controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare) {
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
     $scope.routeLayer = new L.FeatureGroup();
@@ -843,7 +861,11 @@ angular.module('app.controllers', [])
     /**
      * Calculate Route based on Start & End Points
      */
-    $scope.planRoute = function() {
+    $scope.planRoute = function () {
+        if (dataShare.data != false && typeof (dataShare.getData().currentLocation.lat) != "undefined") {
+            $scope.currentLocation = [dataShare.getData().currentLocation.lat, dataShare.getData().currentLocation.lng];
+            dataShare.clearData();
+        }
         var startInput = document.getElementById("startPoint");
         var endInput = document.getElementById("endPoint");
         var startLatLng = startInput.getAttribute("data-latlng");
@@ -891,8 +913,8 @@ angular.module('app.controllers', [])
                 }); //.openPopup()
 
                 findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope);
-                targetMarker1.openPopup();
-                sourceMarker1.openPopup();
+                //targetMarker1.openPopup();
+                //sourceMarker1.openPopup();
 
                 sourceMarker1.on('dragend', function() {
                     var source = sourceMarker1;
@@ -979,7 +1001,6 @@ angular.module('app.controllers', [])
                     });
                 }); //End targetMarker dragend
 
-                //console.log(routeLayer);
                 $state.go('tabsController.cycle');
             });
         } else {
@@ -1130,6 +1151,24 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
             r360.LeafletUtil.fadeIn($scope.routeLayer, route, 1000, "travelDistance");
         }
     });
-
-    map.fitBounds([startLatLng, endLatLng]);
+    
+    if ($scope.currentLocation == "undefined") {
+        map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
+            animate: false,
+            reset: true,
+            maxZoom: 16
+        });
+    } else {
+        map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
+            animate: false,
+            reset: true,
+            maxZoom: 16
+        });
+    }
+    /*if ($scope.currentLocation == "undefined") {
+        map.setView(startLatLng, 11);
+    } else {
+        map.setView(startLatLng, 11);
+    }*/
+    
 }
