@@ -37,6 +37,7 @@ angular.module('app.controllers', [])
                     $state.go('tabsController.home');
                 },
                 function errorCallback(response) {
+                    alert(JSON.stringify(response));
                     $scope.hide();
                     $scope.showAlert();
                 });
