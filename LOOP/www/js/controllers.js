@@ -27,26 +27,12 @@ angular.module('app.controllers', [])
                 }
             }).then(function successCallback(response) {
                     localStorage.setItem("uid", response.data.uid);
-                    $http({
-                        url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/getAccountDetails",
-                        method: 'POST',
-                        data: {
-                            username: $scope.authorization.username
-                        }
-                    }).then(function mySuccess(response) {
-                            localStorage.setItem("dateOfBirth", response.data.dateOfBirth);
-                            localStorage.setItem("email", response.data.email);
-                            localStorage.setItem("height", response.data.height);
-                            localStorage.setItem("name", response.data.name);
-                            localStorage.setItem("username", response.data.username);
-                            localStorage.setItem("weight", response.data.weight);
-                            // $scope.token = localStorage.getItem("token");
-                            console.log(localStorage);
-                            console.log("Success in retrieving account details.");
-                        },
-                        function myError(response) {
-                            console.log("Error in retrieving account details.");
-                        })
+                    localStorage.setItem("dateOfBirth", response.data.dateOfBirth);
+                    localStorage.setItem("email", response.data.email);
+                    localStorage.setItem("height", response.data.height);
+                    localStorage.setItem("name", response.data.name);
+                    localStorage.setItem("username", response.data.username);
+                    localStorage.setItem("weight", response.data.weight);
                     $scope.hide();
                     $state.go('tabsController.home');
                 },
@@ -1052,7 +1038,9 @@ angular.module('app.controllers', [])
 })
 
 .controller('profileCtrl', function($scope) {
-
+    $scope.height = parseFloat(localStorage.getItem("height"));
+    $scope.weight = parseFloat(localStorage.getItem("weight"));
+    $scope.name = localStorage.getItem("name");
 })
 
 .controller('verifyCtrl', function($scope, $state, $http) {
