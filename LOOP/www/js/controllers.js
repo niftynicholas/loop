@@ -1040,8 +1040,16 @@ angular.module('app.controllers', [])
 })
 
 .controller('profileCtrl', function($scope) {
+    //console.log("reading height and weight in the profile page");
+    //console.log("height is now " + localStorage.getItem("height"));
     $scope.height = parseFloat(localStorage.getItem("height"));
+    if (isNaN($scope.height)) {
+      $scope.height = 0;
+    }
     $scope.weight = parseFloat(localStorage.getItem("weight"));
+    if (isNaN($scope.weight)) {
+      $scope.weight = 0;
+    }
     $scope.name = localStorage.getItem("name");
 })
 
@@ -1123,6 +1131,13 @@ angular.module('app.controllers', [])
     $scope.input.weight = parseFloat(localStorage.getItem("weight"));
     //tabsController.profile
     $scope.save = function() {
+      //console.log("saving to the localStoage height " + $scope.input.height);
+      localStorage.setItem("name", $scope.input.name);
+      localStorage.setItem("gender", $scope.input.gender.name);
+      localStorage.setItem("dateOfBirth", $scope.input.dateOfBirth);
+      localStorage.setItem("height", $scope.input.height);
+      localStorage.setItem("weight", $scope.input.weight);
+      //console.log(localStorage.getItem("height"));
       $http({
           url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
           method: 'POST',
@@ -1138,11 +1153,6 @@ angular.module('app.controllers', [])
               weight : $scope.input.weight
           }
       }).then(function successCallback(response) {
-          localStorage.setItem("name", $scope.input.name);
-          localStorage.setItem("gender", $scope.input.gender.name);
-          localStorage.setItem("dateOfBirth", $scope.input.dateOfBirth);
-          localStorage.setItem("height", $scope.input.height);
-          localStorage.setItem("weight", $scope.input.weight);
           $state.go('tabsController.profile');
       }, function errorCallback(response) {
           alert("Error Updating Account Details");
