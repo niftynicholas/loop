@@ -130,6 +130,12 @@ angular.module('app.routes', [])
         }
     })
 
+    .state('changePassword', {
+        url: '/changePassword',
+        templateUrl: 'templates/changePassword.html',
+        controller: 'changePasswordCtrl'
+    })
+
     .state('editProfile', {
         url: '/editProfile',
         templateUrl: 'templates/editProfile.html',

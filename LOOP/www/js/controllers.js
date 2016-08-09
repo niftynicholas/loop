@@ -1116,6 +1116,9 @@ angular.module('app.controllers', [])
     }
 })
 
+.controller('changePasswordCtrl', function($scope, $state) {
+
+})
 
 .controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http) {
     $scope.input = new Object();
