@@ -3,7 +3,7 @@ angular.module('app.controllers', [])
 .controller('loginCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup) {
     $scope.show = function() {
         $ionicLoading.show({
-            template: '<p>Loading...</p><ion-spinner></ion-spinner>'
+            template: '<p>Loading...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
         });
     };
 
@@ -61,7 +61,7 @@ angular.module('app.controllers', [])
 .controller('signupCtrl', function($scope, $ionicLoading, $ionicPopup, $state, $http) {
     $scope.show = function() {
         $ionicLoading.show({
-            template: '<p>Loading...</p><ion-spinner></ion-spinner>'
+            template: '<p>Loading...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
         });
     };
 
