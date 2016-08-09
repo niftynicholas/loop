@@ -26,6 +26,7 @@ angular.module('app.controllers', [])
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
+                    localStorage.setItem("login_state", "true");
                     localStorage.setItem("uid", response.data.uid);
                     localStorage.setItem("dateOfBirth", response.data.dateOfBirth);
                     localStorage.setItem("email", response.data.email);
@@ -38,7 +39,7 @@ angular.module('app.controllers', [])
                     $state.go('tabsController.home');
                 },
                 function errorCallback(response) {
-                    alert(JSON.stringify(response));
+                    console.log(JSON.stringify(response));
                     $scope.hide();
                     $scope.showAlert();
                 });
@@ -140,45 +141,45 @@ angular.module('app.controllers', [])
             zoom: 11
         },
         tiles: {
-            url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
-                // url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-                // options: {
-                //     attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
-                // }
+            //url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
+            url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
+            options: {
+                attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+            }
         },
         defaults: {
             scrollWheelZoom: true,
             zoomControl: true
         }
     });
-
-    leafletData.getMap("pcn").then(function(map) {
-        // var track = new L.KML("js/Park_Connector_Loop.kml", {
-        //     async: true
-        // });
-        // track.on("loaded", function(e) {
-        //     map.fitBounds(e.target.getBounds());
-        // });
-        // map.addLayer(track);
-        // map.addControl(new L.Control.Layers({}, {
-        //     'Park Connector Network': track
-        // }));
-
-        var customLayer = L.geoJson(null, {
-            // http://leafletjs.com/reference.html#geojson-style
-            style: function(feature) {
-                return {
-                    color: '#0d5e4e'
-                };
-            }
-        });
-
-        omnivore.geojson('js/Park_Connector_Loop.geojson', null, customLayer).addTo(map);
-
-        map.addControl(new L.Control.Layers({}, {
-            'Park Connector Network': customLayer
-        }));
-    });
+    //
+    // leafletData.getMap("pcn").then(function(map) {
+    //     // var track = new L.KML("js/Park_Connector_Loop.kml", {
+    //     //     async: true
+    //     // });
+    //     // track.on("loaded", function(e) {
+    //     //     map.fitBounds(e.target.getBounds());
+    //     // });
+    //     // map.addLayer(track);
+    //     // map.addControl(new L.Control.Layers({}, {
+    //     //     'Park Connector Network': track
+    //     // }));
+    //
+    //     var customLayer = L.geoJson(null, {
+    //         // http://leafletjs.com/reference.html#geojson-style
+    //         style: function(feature) {
+    //             return {
+    //                 color: '#0d5e4e'
+    //             };
+    //         }
+    //     });
+    //
+    //     omnivore.geojson('js/Park_Connector_Loop.geojson', null, customLayer).addTo(map);
+    //
+    //     map.addControl(new L.Control.Layers({}, {
+    //         'Park Connector Network': customLayer
+    //     }));
+    // });
 })
 
 .controller('routesCtrl', function($scope) {
@@ -210,7 +211,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('cycleCtrl', function($scope, $state, leafletData, dataShare) {
+.controller('cycleCtrl', function($scope, $state, leafletData, dataShare, $ionicHistory) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
     $scope.timestamp = 0;
@@ -250,7 +251,7 @@ angular.module('app.controllers', [])
         }
     });
 
-    leafletData.getMap("cycle").then(function (map) {
+    leafletData.getMap("cycle").then(function(map) {
         var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
             attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
             //edgeBufferTiles: 2
@@ -320,10 +321,14 @@ angular.module('app.controllers', [])
                 enableHighAccuracy: false
             });
         });
+        $ionicHistory.nextViewOptions({
+            disableBack: true,
+            historyRoot: true
+        });
         $state.go("inprogress");
     }
 
-    $scope.planRoute = function () {
+    $scope.planRoute = function() {
         var data = {
             currentLocation: $scope.currentLocation,
         };
@@ -849,8 +854,8 @@ angular.module('app.controllers', [])
     /**
      * Calculate Route based on Start & End Points
      */
-    $scope.planRoute = function () {
-        if (dataShare.data != false && typeof (dataShare.getData().currentLocation.lat) != "undefined") {
+    $scope.planRoute = function() {
+        if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
             $scope.currentLocation = [dataShare.getData().currentLocation.lat, dataShare.getData().currentLocation.lng];
             dataShare.clearData();
         }
@@ -1039,18 +1044,37 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('profileCtrl', function($scope) {
+.controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window) {
     //console.log("reading height and weight in the profile page");
     //console.log("height is now " + localStorage.getItem("height"));
     $scope.height = parseFloat(localStorage.getItem("height"));
     if (isNaN($scope.height)) {
-      $scope.height = 0;
+        $scope.height = 0;
     }
     $scope.weight = parseFloat(localStorage.getItem("weight"));
     if (isNaN($scope.weight)) {
-      $scope.weight = 0;
+        $scope.weight = 0;
     }
     $scope.name = localStorage.getItem("name");
+
+    $scope.logOut = function() {
+        $ionicLoading.show({
+            template: '<p>Logging Out...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        });
+        localStorage.setItem('loggin_state', 'false');
+
+        $timeout(function() {
+            $window.localStorage.clear();
+            $ionicLoading.hide();
+            $ionicHistory.clearCache();
+            $ionicHistory.clearHistory();
+            $ionicHistory.nextViewOptions({
+                disableBack: true,
+                historyRoot: true
+            });
+            $state.go('login');
+        }, 30);
+    }
 })
 
 .controller('verifyCtrl', function($scope, $state, $http) {
@@ -1116,50 +1140,141 @@ angular.module('app.controllers', [])
     }
 })
 
-.controller('changePasswordCtrl', function($scope, $state) {
+.controller('changePasswordCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading, $ionicHistory, $timeout, $window) {
+    $scope.input = {};
+    $scope.changePW = function(form) {
+        if (form.$valid) {
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/login",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    username: localStorage.getItem("username"),
+                    password: $scope.input.password
+                }
+            }).then(function successCallback(response) {
+                    if ($scope.input.newPassword.length >= 8) {
+                        $http({
+                            url: "http://sgcycling-sgloop.rhcloud.com/api/users/accounts/updatePassword",
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            data: {
+                                uid: localStorage.getItem("uid"),
+                                password: $scope.input.newPassword
+                            }
+                        }).then(function successCallback(response) {
+                                console.log(response);
+                                $scope.showAlertPWSuccess();
+                            },
+                            function errorCallback(response) {
+                                console.log("Error in updating password.");
+                            });
+                    } else {
+                        $scope.showAlertPWShort();
+                    }
+                },
+                function errorCallback(response) {
+                    $scope.showAlertPWMismatch();
+                });
+        }
+    }
 
+    $scope.showAlertPWMismatch = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Old Password Mismatch',
+            template: 'The Old Password you entered did not match our records. Please try again.'
+        });
+
+        alertPopup.then(function(res) {
+
+        });
+    };
+
+    $scope.showAlertPWShort = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'New Password Too Short',
+            template: 'Please ensure that your new password is at least 8 character long and try again.'
+        });
+
+        alertPopup.then(function(res) {});
+    };
+
+    $scope.showAlertPWSuccess = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Password Changed',
+            template: 'Your password has been changed successfully. Please log in with your new password.'
+        });
+
+        alertPopup.then(function(res) {
+            $ionicLoading.show({
+                template: '<p>Logging Out...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+            });
+
+            $timeout(function() {
+                $window.localStorage.clear();
+                $ionicLoading.hide();
+                $ionicHistory.clearCache();
+                $ionicHistory.clearHistory();
+                $ionicHistory.nextViewOptions({
+                    disableBack: true,
+                    historyRoot: true
+                });
+                $state.go('login');
+            }, 30);
+        });
+    };
 })
 
-.controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http) {
+.controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http, $timeout) {
     $scope.input = new Object();
     $scope.input.dateOfBirth = new Date(localStorage.getItem("dateOfBirth"));
-    $scope.genders = [{name:"male", id:1},{name:"female",id:2}];
-    if (localStorage.getItem("gender") === "male") {
-      $scope.input.gender = $scope.genders[0];
+    $scope.genders = [{
+        name: "Male",
+        id: 1
+    }, {
+        name: "Female",
+        id: 2
+    }];
+    if (localStorage.getItem("gender") === "Male") {
+        $scope.input.gender = $scope.genders[0];
     } else {
-      $scope.input.gender = $scope.genders[1];
+        $scope.input.gender = $scope.genders[1];
     }
     $scope.input.name = localStorage.getItem("name");
     $scope.input.height = parseFloat(localStorage.getItem("height"));
     $scope.input.weight = parseFloat(localStorage.getItem("weight"));
     //tabsController.profile
     $scope.save = function() {
-      //console.log("saving to the localStoage height " + $scope.input.height);
-      localStorage.setItem("name", $scope.input.name);
-      localStorage.setItem("gender", $scope.input.gender.name);
-      localStorage.setItem("dateOfBirth", $scope.input.dateOfBirth);
-      localStorage.setItem("height", $scope.input.height);
-      localStorage.setItem("weight", $scope.input.weight);
-      //console.log(localStorage.getItem("height"));
-      $http({
-          url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          data: {
-              uid : localStorage.getItem("uid"),
-              name : $scope.input.name,
-              gender : $scope.input.gender.name,
-              dateOfBirth : $scope.input.dateOfBirth,
-              height :  $scope.input.height,
-              weight : $scope.input.weight
-          }
-      }).then(function successCallback(response) {
-          $state.go('tabsController.profile');
-      }, function errorCallback(response) {
-          alert("Error Updating Account Details");
-      });
+        //console.log("saving to the localStoage height " + $scope.input.height);
+        localStorage.setItem("name", $scope.input.name);
+        localStorage.setItem("gender", $scope.input.gender.name);
+        localStorage.setItem("dateOfBirth", $scope.input.dateOfBirth);
+        localStorage.setItem("height", $scope.input.height);
+        localStorage.setItem("weight", $scope.input.weight);
+        //console.log(localStorage.getItem("height"));
+        $http({
+            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                uid: localStorage.getItem("uid"),
+                name: $scope.input.name,
+                gender: $scope.input.gender.name,
+                dateOfBirth: $scope.input.dateOfBirth,
+                height: $scope.input.height,
+                weight: $scope.input.weight
+            }
+        }).then(function successCallback(response) {
+            $state.go('tabsController.profile');
+        }, function errorCallback(response) {
+            alert("Error Updating Account Details");
+        });
     }
 })
 
