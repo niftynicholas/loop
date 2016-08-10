@@ -321,10 +321,6 @@ angular.module('app.controllers', [])
                 enableHighAccuracy: false
             });
         });
-        $ionicHistory.nextViewOptions({
-            disableBack: true,
-            historyRoot: true
-        });
         $state.go("inprogress");
     }
 
@@ -1229,7 +1225,7 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http, $timeout) {
+.controller('editProfileCtrl', function ($scope, $state, $ionicHistory, $http, $timeout) {
     $scope.input = new Object();
     $scope.input.dateOfBirth = new Date(localStorage.getItem("dateOfBirth"));
     $scope.genders = [{

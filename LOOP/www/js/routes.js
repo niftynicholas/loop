@@ -9,6 +9,7 @@ angular.module('app.routes', [])
     $stateProvider
 
         .state('login', {
+        cache: false,
         url: '/login',
         templateUrl: 'templates/login.html',
         controller: 'loginCtrl'
@@ -75,12 +76,14 @@ angular.module('app.routes', [])
     })
 
     .state('inprogress', {
+        cache: false,
         url: '/inprogress',
         templateUrl: 'templates/inprogress.html',
         controller: 'inprogressCtrl'
     })
 
     .state('completed', {
+        cache: false,
         url: '/completed',
         templateUrl: 'templates/completed.html',
         controller: 'completedCtrl'
@@ -121,6 +124,7 @@ angular.module('app.routes', [])
     })
 
     .state('tabsController.profile', {
+        cache: false,
         url: '/profile',
         views: {
             'tab4': {
@@ -137,6 +141,7 @@ angular.module('app.routes', [])
     })
 
     .state('editProfile', {
+        cache: false,
         url: '/editProfile',
         templateUrl: 'templates/editProfile.html',
         controller: 'editProfileCtrl'
