@@ -647,9 +647,8 @@ angular.module('app.controllers', [])
         },
         bounds: {},
         defaults: {
-            scrollWheelZoom: false,
-            zoomControl: false,
-            dragging: false
+            scrollWheelZoom: true,
+            zoomControl: true
         },
         paths: {
             p1: {
