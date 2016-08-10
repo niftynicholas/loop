@@ -8,10 +8,10 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content scroll="false">
-            <leaflet id="completed" bounds="bounds" defaults="defaults" lf-center="center" tiles="tiles" paths="paths" height="40%" width="100%"></leaflet>
-        <ion-scroll style="height: 60%;">
+        <ion-fixed>
+            <leaflet id="completed" defaults="defaults" bounds="bounds" lf-center="center" tiles="tiles" paths="paths" height="40%" width="100%"></leaflet>
+        </ion-fixed>
             <div class="list">
-
                 <div class="item item-divider">
                     Rate This Ride
                 </div>
@@ -31,8 +31,7 @@
                 <a class="item item-icon-left" href="#">
                     <i class="icon ion-ios-flame"></i> Calories: {{calories}}
                 </a>
-                <div class="item item-divider">
-                    Sharing
+                <div class="item item-divider"> Sharing
                 </div>
                 <li class="item item-toggle">
                     Enable Sharing
@@ -48,6 +47,5 @@
                     <input type="text" placeholder="Got anything to say?" ng-model="input.comment">
                 </label>
             </div>
-        </ion-scroll>
     </ion-content>
 </ion-view>
