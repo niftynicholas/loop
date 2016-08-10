@@ -37,7 +37,7 @@
                 <li class="item item-toggle">
                     Enable Sharing
                     <label class="toggle toggle-balanced">
-                        <input type="checkbox" ng-model="isShared">
+                        <input type="checkbox" ng-model="input.isShared">
                         <div class="track">
                             <div class="handle"></div>
                         </div>
@@ -45,7 +45,7 @@
                 </li>
                 <label class="item item-input item-stacked-label">
                     <span class="input-label">Comments</span>
-                    <input type="text" ng-model="comment" placeholder="Got anything to say?">
+                    <input type="text" placeholder="Got anything to say?" ng-model="input.comment">
                 </label>
             </div>
         </ion-scroll>

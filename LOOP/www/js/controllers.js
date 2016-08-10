@@ -629,6 +629,10 @@ angular.module('app.controllers', [])
 })
 
 .controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http) {
+    $scope.input = {
+      isShared : false,
+      comment : ""
+    };
     angular.extend($scope, {
         tiles: {
             url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
@@ -731,6 +735,8 @@ angular.module('app.controllers', [])
      */
     $scope.save = function() {
         var route = $scope.paths.p1.latlngs;
+        alert($scope.input.isShared);
+        alert($scope.input.comment);
         var data = dataShare.getData();
         $http({
             url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
@@ -739,14 +745,15 @@ angular.module('app.controllers', [])
                 'Content-Type': 'application/json'
             },
             data: {
+                uid : localStorage.getItem("uid"),
                 distance: data.distance,
                 duration: data.duration,
                 averageSpeed: data.averageSpeed,
                 calories: data.calories,
                 ratings: $scope.ratingsObject.rating,
                 route: $scope.paths.p1.latlngs,
-                comment: $scope.comment,
-                isShared : $scope.isShared
+                comment: $scope.input.comment,
+                isShared : $scope.input.isShared
             }
         }).then(function successCallback(response) {
             dataShare.clearData();
