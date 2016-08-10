@@ -728,6 +728,7 @@ angular.module('app.controllers', [])
 
     $scope.ratingsCallback = function(rating) {
         console.log('Selected rating is : ', rating);
+        $scope.rating = rating;
     };
 
     /**
@@ -735,8 +736,6 @@ angular.module('app.controllers', [])
      */
     $scope.save = function() {
         var route = $scope.paths.p1.latlngs;
-        alert($scope.input.isShared);
-        alert($scope.input.comment);
         var data = dataShare.getData();
         $http({
             url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
@@ -750,7 +749,7 @@ angular.module('app.controllers', [])
                 duration: data.duration,
                 averageSpeed: data.averageSpeed,
                 calories: data.calories,
-                ratings: $scope.ratingsObject.rating,
+                ratings: $scope.rating,
                 route: $scope.paths.p1.latlngs,
                 comment: $scope.input.comment,
                 isShared : $scope.input.isShared
