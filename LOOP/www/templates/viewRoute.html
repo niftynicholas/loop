@@ -6,18 +6,33 @@
             </a>
         </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-content padding="true" scroll="false">
-            <leaflet lf-center="center" tiles="tiles" defaults="defaults" height="50%" width="100%"></leaflet>
-            <div class="row balanced-bg" align="center" style="color:white;">
-                <div class="col">
-                    <b>Distance: </b> 0.00 km
+    <ion-content>
+            <div data-tap-disabled="true" style="height:30vh;">
+                <leaflet id="viewRoute" lf-center="center" tiles="tiles" defaults="defaults" height="100%" width="100%"></leaflet>
+            </div>
+            <div class="list">
+                <div class="item item-divider">
+                    Rate This Activity
                 </div>
-                <div class="col">
-                    <b>Estimated Duration: </b> 00:00:00
+                <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
+                <div class="item item-divider">
+                    Summary
                 </div>
+                <a class="item item-icon-left" href="#">
+                    <i class="icon ion-clock"></i>Estimated Duration: {{estimateDuration}}
+                </a>
+                <a class="item item-icon-left" href="#">
+                    <i class="icon ion-ios-location"></i> Distance: {{distance}}
+                </a>
+                <div class="item item-divider">
+                    Comments
+                </div>
+                <label class="item item-input item-stacked-label">
+                    <input type="text" placeholder="Got anything to say?" ng-model="input.comment">
+                </label>
             </div>
             <button class="button button-block icon-left ion-bookmark button-positive">Bookmark</button>
-            <button class="button button-block icon-left ion-android-bicycle button-balanced" ui-sref="tabsController.cycle">Ride</button>        
-        </div>
+            <button class="button button-block icon-left ion-android-bicycle button-balanced" ui-sref="tabsController.cycle">Cycle</button>
+
     </ion-content>
 </ion-view>

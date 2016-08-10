@@ -209,6 +209,26 @@ angular.module('app.controllers', [])
         }
     });
 
+    /**
+     * Rating Stars
+     */
+    $scope.ratingsObject = {
+        iconOn: 'ion-ios-star',
+        iconOff: 'ion-ios-star-outline',
+        iconOnColor: 'rgb(255,186,73)',
+        iconOffColor: 'rgb(255,186,73)',
+        rating: 2,
+        minRating: 1,
+        callback: function(rating) {
+            $scope.ratingsCallback(rating);
+        }
+    };
+
+    $scope.ratingsCallback = function(rating) {
+        console.log('Selected rating is : ', rating);
+        $scope.rating = rating;
+    };
+
 })
 
 .controller('cycleCtrl', function($scope, $state, leafletData, dataShare, $ionicHistory) {
