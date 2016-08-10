@@ -745,7 +745,8 @@ angular.module('app.controllers', [])
                 calories: data.calories,
                 ratings: $scope.ratingsObject.rating,
                 route: $scope.paths.p1.latlngs,
-                comment: $scope.comment
+                comment: $scope.comment,
+                isShared : $scope.isShared
             }
         }).then(function successCallback(response) {
             dataShare.clearData();
