@@ -7,47 +7,47 @@
             <button class="button" ng-click="save()">SAVE</button>
         </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-content scroll="false">
+    <ion-content>
+        <ion-fixed-content>
             <leaflet id="completed" bounds="bounds" defaults="defaults" lf-center="center" tiles="tiles" paths="paths" height="40%" width="100%"></leaflet>
-        <ion-scroll style="height: 60%;">
-            <div class="list">
+        </ion-fixed-content>
 
-                <div class="item item-divider">
-                    Rate This Ride
-                </div>
-                <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
-                <div class="item item-divider">
-                    Summary
-                </div>
-                <a class="item item-icon-left" href="#">
-                    <i class="icon ion-clock"></i> Duration: {{duration}}
-                </a>
-                <a class="item item-icon-left" href="#">
-                    <i class="icon ion-ios-location"></i> Distance: {{distance}}
-                </a>
-                <a class="item item-icon-left" href="#">
-                    <i class="icon ion-speedometer"></i> Average Speed: {{averageSpeed}}
-                </a>
-                <a class="item item-icon-left" href="#">
-                    <i class="icon ion-ios-flame"></i> Calories: {{calories}}
-                </a>
-                <div class="item item-divider">
-                    Sharing
-                </div>
-                <li class="item item-toggle">
-                    Enable Sharing
-                    <label class="toggle toggle-balanced">
-                        <input type="checkbox" ng-model="input.isShared">
-                        <div class="track">
-                            <div class="handle"></div>
-                        </div>
-                    </label>
-                </li>
-                <label class="item item-input item-stacked-label">
-                    <span class="input-label">Comments</span>
-                    <input type="text" placeholder="Got anything to say?" ng-model="input.comment">
-                </label>
+        <div class="list">
+            <div class="item item-divider">
+                Rate This Ride
             </div>
-        </ion-scroll>
+            <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
+            <div class="item item-divider">
+                Summary
+            </div>
+            <a class="item item-icon-left" href="#">
+                <i class="icon ion-clock"></i> Duration: {{duration}}
+            </a>
+            <a class="item item-icon-left" href="#">
+                <i class="icon ion-ios-location"></i> Distance: {{distance}}
+            </a>
+            <a class="item item-icon-left" href="#">
+                <i class="icon ion-speedometer"></i> Average Speed: {{averageSpeed}}
+            </a>
+            <a class="item item-icon-left" href="#">
+                <i class="icon ion-ios-flame"></i> Calories: {{calories}}
+            </a>
+            <div class="item item-divider">
+                Sharing
+            </div>
+            <li class="item item-toggle">
+                Enable Sharing
+                <label class="toggle toggle-balanced">
+                    <input type="checkbox" ng-model="input.isShared">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Comments</span>
+                <input type="text" placeholder="Got anything to say?" ng-model="input.comment">
+            </label>
+        </div>
     </ion-content>
 </ion-view>
