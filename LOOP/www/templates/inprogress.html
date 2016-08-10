@@ -33,12 +33,15 @@
         </div>
         <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="74%" width="100%"></leaflet>
     </ion-content>
-    <ion-footer-bar class="bar-balanced">
+    <!-- <ion-footer-bar class="bar-balanced">
         <button style="width:49%;" class="button button-assertive" ng-click="showConfirm()">
             Stop
         </button>
         <button style="width:49%;" class="button button-positive">
             Pause
         </button>
+    </ion-footer-bar> -->
+    <ion-footer-bar class="bar-assertive">
+        <a class="title" ng-click="showConfirm()">Complete Activity</a>
     </ion-footer-bar>
 </ion-view>
