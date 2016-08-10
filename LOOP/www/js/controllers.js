@@ -360,7 +360,7 @@ angular.module('app.controllers', [])
     });
 })
 
-.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare) {
+.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare, $ionicPlatform) {
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
@@ -600,6 +600,32 @@ angular.module('app.controllers', [])
             console.log('Tapped!', res);
         });
     };
+
+    // prevent backbutton
+    var deregisterSecond = $ionicPlatform.registerBackButtonAction(
+        function() {
+            $scope.showCancel();
+        }, 100
+    );
+    $scope.$on('$destroy', deregisterSecond);
+
+    // Back button triggered: cancel
+    $scope.showCancel = function() {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Discard Activity',
+            template: 'Are you sure you want to stop and discard this activity?'
+        });
+
+        confirmPopup.then(function(res) {
+            if (res) {
+                console.log('You are sure');
+                $state.go("tabsController.cycle")
+
+            } else {
+                console.log('You are not sure');
+            }
+        });
+    };
 })
 
 .controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http) {
@@ -718,7 +744,8 @@ angular.module('app.controllers', [])
                 averageSpeed: data.averageSpeed,
                 calories: data.calories,
                 ratings: $scope.ratingsObject.rating,
-                route: $scope.paths.p1.latlngs
+                route: $scope.paths.p1.latlngs,
+                comment: $scope.comment
             }
         }).then(function successCallback(response) {
             dataShare.clearData();
@@ -1225,7 +1252,7 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('editProfileCtrl', function ($scope, $state, $ionicHistory, $http, $timeout) {
+.controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http, $timeout) {
     $scope.input = new Object();
     $scope.input.dateOfBirth = new Date(localStorage.getItem("dateOfBirth"));
     $scope.genders = [{
