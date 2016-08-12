@@ -43,10 +43,28 @@
                     </div>
                 </label>
             </li>
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">Comments</span>
-                <input type="text" placeholder="Got anything to say?" ng-model="input.comment">
-            </label>
+            <div class="item item-divider">
+                Comments
+            </div>
+            <!-- If there is no comment -->
+            <a class="item" href="#">There are no comments yet.</a>
+
+            <!-- If there are comments -->
+            <a class="item item-avatar" href="#">
+                <img src="\img\placeholder-man-grid-240x268.png">
+                <h2>Me</h2>
+                <p>I love the view here!</p>
+            </a>
+
+
+            <div class="item item-input-inset">
+                <label class="item-input-wrapper">
+                    <input type="text" placeholder="Write something...">
+                </label>
+                <button class="button button-small">
+                    Post
+                </button>
+            </div>
         </div>
     </ion-content>
 </ion-view>
