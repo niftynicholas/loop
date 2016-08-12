@@ -256,13 +256,12 @@ angular.module('app.controllers', [])
                 radius: 10
             },
         },
-        /*
         tiles: {
             url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
             options: {
                 attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
             }
-        },*/
+        },
         defaults: {
             scrollWheelZoom: true,
             zoomControl: true,
@@ -272,12 +271,12 @@ angular.module('app.controllers', [])
     });
 
     leafletData.getMap("cycle").then(function(map) {
-        var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
-            attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
-            //edgeBufferTiles: 2
-            //subdomains: ['a', 'b', 'c'],
-            //buffer: 8
-        }).addTo(map);
+        // var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
+        //     attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+        //     //edgeBufferTiles: 2
+        //     //subdomains: ['a', 'b', 'c'],
+        //     //buffer: 8
+        // }).addTo(map);
 
         map.locate({
             watch: true,
@@ -650,8 +649,8 @@ angular.module('app.controllers', [])
 
 .controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http) {
     $scope.input = {
-      isShared : false,
-      comment : ""
+        isShared: false,
+        comment: ""
     };
     angular.extend($scope, {
         tiles: {
@@ -764,7 +763,7 @@ angular.module('app.controllers', [])
                 'Content-Type': 'application/json'
             },
             data: {
-                uid : localStorage.getItem("uid"),
+                uid: localStorage.getItem("uid"),
                 distance: data.distance,
                 duration: data.duration,
                 averageSpeed: data.averageSpeed,
@@ -772,7 +771,7 @@ angular.module('app.controllers', [])
                 ratings: $scope.rating,
                 route: $scope.paths.p1.latlngs,
                 comment: $scope.input.comment,
-                isShared : $scope.input.isShared
+                isShared: $scope.input.isShared
             }
         }).then(function successCallback(response) {
             dataShare.clearData();
@@ -955,7 +954,7 @@ angular.module('app.controllers', [])
                     autoPan: false
                 }); //.openPopup()
 
-                findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope);
+                findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope);
                 //targetMarker1.openPopup();
                 //sourceMarker1.openPopup();
 
@@ -977,7 +976,7 @@ angular.module('app.controllers', [])
                             'buffer': 0,
                         },
                         success: function(data) {
-                            if (data.GeocodeInfo[0].ErrorMessage == "Invalid location") {
+                            if (data.GeocodeInfo[0].ErrorMessage == "Invalid location" || data.GeocodeInfo[0].ErrorMessage == "No building found") {
                                 startPointName = "Location Cannot Be Found";
                             } else {
                                 startPointName = data.GeocodeInfo[0].ROAD;
@@ -994,7 +993,7 @@ angular.module('app.controllers', [])
                                 autoPan: false
                             }); //.openPopup()
 
-                            findRoute(map, source, target, startLatLng, endLatLng, $scope);
+                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope);
                             source.openPopup();
                             target.openPopup();
                         }
@@ -1020,7 +1019,7 @@ angular.module('app.controllers', [])
                             'buffer': 0,
                         },
                         success: function(data) {
-                            if (data.GeocodeInfo[0].ErrorMessage == "Invalid location") {
+                            if (data.GeocodeInfo[0].ErrorMessage == "Invalid location" || data.GeocodeInfo[0].ErrorMessage == "No building found") {
                                 endPointName = "Location Cannot Be Found";
                             } else {
                                 endPointName = data.GeocodeInfo[0].ROAD;
@@ -1037,7 +1036,7 @@ angular.module('app.controllers', [])
                                 autoPan: false
                             }); //.openPopup()
 
-                            findRoute(map, source, target, startLatLng, endLatLng, $scope);
+                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope);
                             source.openPopup();
                             target.openPopup();
                         }
@@ -1343,12 +1342,22 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
     travelOptions.addTarget(targetMarker1);
     travelOptions.setTravelType('bike');
 
-    r360.RouteService.getRoutes(travelOptions, function(routes) {
+    // define what happens if everything goes smoothly
+    var successCallBack = function (routes) {
         for (var i = 0; i < routes.length; i++) {
             var route = routes[i];
-            r360.LeafletUtil.fadeIn($scope.routeLayer, route, 1000, "travelDistance");
+            r360.LeafletUtil.fadeIn($scope.routeLayer, route, 2000, "travelDistance");
         }
-    });
+    };
+
+    var errorCallBack = function (status, message) {
+        console.log("MY STATUS: ");
+        console.log(status);
+        console.log("MY ERROR MESSAGE: ");
+        console.log(message);
+    };
+
+    r360.RouteService.getRoutes(travelOptions, successCallBack, errorCallBack);
 
     if ($scope.currentLocation == "undefined") {
         map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]

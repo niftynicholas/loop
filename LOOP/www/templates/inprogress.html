@@ -31,7 +31,9 @@
                 </ion-slide-page>
             </ion-slides>
         </div>
-        <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="74%" width="100%"></leaflet>
+        <div data-tap-disabled="true" style="height:100%;">
+            <leaflet id="inprogress" lf-center="center" tiles="tiles" paths="paths" defaults="defaults" height="74%" width="100%"></leaflet>
+        </div>
     </ion-content>
     <!-- <ion-footer-bar class="bar-balanced">
         <button style="width:49%;" class="button button-assertive" ng-click="showConfirm()">
@@ -42,6 +44,6 @@
         </button>
     </ion-footer-bar> -->
     <ion-footer-bar class="bar-assertive">
-        <a class="title" ng-click="showConfirm()">Complete Activity</a>
+        <a class="title" ng-click="showConfirm()">End Activity</a>
     </ion-footer-bar>
 </ion-view>
