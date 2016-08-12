@@ -954,7 +954,7 @@ angular.module('app.controllers', [])
                     autoPan: false
                 }); //.openPopup()
 
-                findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope);
+                findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope, $state, $ionicPopup);
                 //targetMarker1.openPopup();
                 //sourceMarker1.openPopup();
 
@@ -977,7 +977,7 @@ angular.module('app.controllers', [])
                         },
                         success: function(data) {
                             if (data.GeocodeInfo[0].ErrorMessage == "Invalid location" || data.GeocodeInfo[0].ErrorMessage == "No building found") {
-                                startPointName = "Location Cannot Be Found";
+                                startPointName = "Invalid Location";
                             } else {
                                 startPointName = data.GeocodeInfo[0].ROAD;
                             }
@@ -993,7 +993,7 @@ angular.module('app.controllers', [])
                                 autoPan: false
                             }); //.openPopup()
 
-                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope);
+                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup);
                             source.openPopup();
                             target.openPopup();
                         }
@@ -1020,7 +1020,7 @@ angular.module('app.controllers', [])
                         },
                         success: function(data) {
                             if (data.GeocodeInfo[0].ErrorMessage == "Invalid location" || data.GeocodeInfo[0].ErrorMessage == "No building found") {
-                                endPointName = "Location Cannot Be Found";
+                                endPointName = "Invalid Location";
                             } else {
                                 endPointName = data.GeocodeInfo[0].ROAD;
                             }
@@ -1036,7 +1036,7 @@ angular.module('app.controllers', [])
                                 autoPan: false
                             }); //.openPopup()
 
-                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope);
+                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup);
                             source.openPopup();
                             target.openPopup();
                         }
@@ -1334,7 +1334,7 @@ function displayInfo(searchVal, lat, lng, type) {
     $('#' + type + 'Result').html("");
 }
 
-function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope) {
+function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope, $state, $ionicPopup) {
     map.addLayer($scope.routeLayer);
 
     var travelOptions = r360.travelOptions();
@@ -1343,18 +1343,31 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
     travelOptions.setTravelType('bike');
 
     // define what happens if everything goes smoothly
-    var successCallBack = function (routes) {
+    var successCallBack = function(routes) {
         for (var i = 0; i < routes.length; i++) {
             var route = routes[i];
-            r360.LeafletUtil.fadeIn($scope.routeLayer, route, 2000, "travelDistance");
+            r360.LeafletUtil.fadeIn($scope.routeLayer, route, 1000, "travelDistance");
         }
     };
 
-    var errorCallBack = function (status, message) {
+    var errorCallBack = function(status, message) {
         console.log("MY STATUS: ");
         console.log(status);
         console.log("MY ERROR MESSAGE: ");
         console.log(message);
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Invalid Location(s)',
+            template: 'You have selected invalid start/end point(s). Do you want to replan your route?'
+        });
+
+        confirmPopup.then(function(res) {
+            if (res) {
+                console.log('Yes');
+                $state.go('planRoute');
+            } else {
+                console.log('No');
+            }
+        });
     };
 
     r360.RouteService.getRoutes(travelOptions, successCallBack, errorCallBack);
@@ -1363,12 +1376,14 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
         map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
             animate: false,
             reset: true,
+            padding: [25,25],
             maxZoom: 16
         });
     } else {
         map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
             animate: false,
             reset: true,
+            padding: [25,25],
             maxZoom: 16
         });
     }
