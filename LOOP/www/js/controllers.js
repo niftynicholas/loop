@@ -353,7 +353,7 @@ angular.module('app.controllers', [])
     }
 
     $scope.locateMe = function() {
-        leafletData.getMap("cycle").then(function(map) {
+        leafletData.getMap("cycle").then(function (map) {
             map.setView($scope.currentLocation);
         });
     }
@@ -379,7 +379,7 @@ angular.module('app.controllers', [])
     });
 })
 
-.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare, $ionicPlatform) {
+.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare, $ionicPlatform, sharedRoute) {
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
@@ -431,7 +431,7 @@ angular.module('app.controllers', [])
         },
         paths: {
             p1: {
-                color: '#008000',
+                color: '#1abc9c',
                 weight: 8,
                 latlngs: [], //{ lat: 51.50, lng: -0.082 }
                 coordinates: [],
@@ -455,7 +455,14 @@ angular.module('app.controllers', [])
         }
     });
 
-    leafletData.getMap("inprogress").then(function(map) {
+    leafletData.getMap("inprogress").then(function (map) {
+        var planned_route = sharedRoute.getData();
+        if (sharedRoute.data != false && planned_route != null && planned_route != "undefined") {
+            if (map.hasLayer(planned_route)) {
+                map.removeLayer(planned_route);
+            }
+            map.addLayer(planned_route);
+        }
         if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
             //Pass currentLocation from cycle.html
             var data = dataShare.getData();
@@ -808,7 +815,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare) {
+.controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare, sharedRoute) {
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
     $scope.routeLayer = new L.FeatureGroup();
@@ -931,17 +938,23 @@ angular.module('app.controllers', [])
         var endLatLng = endInput.getAttribute("data-latlng");
 
         if (startLatLng != null && endLatLng != null) {
-            leafletData.getMap("cycle").then(function(map) {
-
+            leafletData.getMap("cycle").then(function (map) {
+                console.log("*******CYCLE MAP OBJECT *******");
+                console.log(map);
                 //LatLng is "lat, lng" after utilising getAttribute so spliting it gives us our array [lat, lng]
                 startLatLng = startLatLng.split(",");
                 endLatLng = endLatLng.split(",");
 
-                //$scope.routeLayer.clearLayers();
+                var planned_route = sharedRoute.getData();
+                if (sharedRoute.data != false && planned_route != null && planned_route != "undefined") {
+                    planned_route.clearLayers();
+                    sharedRoute.clearData();
+                }
+                /*
                 if (map.hasLayer($scope.routeLayer)) {
                     map.removeLayer($scope.routeLayer);
                     $scope.routeLayer.clearLayers();
-                }
+                }*/
 
                 r360.config.serviceKey = '00AGI2VAF2HNS37EMMLV'; //My Key: 00AGI2VAF2HNS37EMMLV         Website Key: YWtKiQB7MiZETbCoVsG6
                 r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
@@ -971,7 +984,7 @@ angular.module('app.controllers', [])
                     autoPan: false
                 }); //.openPopup()
 
-                findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope, $state, $ionicPopup);
+                findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
                 //targetMarker1.openPopup();
                 //sourceMarker1.openPopup();
 
@@ -979,10 +992,16 @@ angular.module('app.controllers', [])
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
+                    var planned_route = sharedRoute.getData();
+                    if (sharedRoute.data != false && planned_route != null && planned_route != "undefined") {
+                        planned_route.clearLayers();
+                        sharedRoute.clearData();
+                    }
+                    /*
                     if (map.hasLayer($scope.routeLayer)) {
                         map.removeLayer($scope.routeLayer);
                         $scope.routeLayer.clearLayers();
-                    }
+                    }*/
 
                     $.ajax({
                         dataType: 'json',
@@ -1010,7 +1029,7 @@ angular.module('app.controllers', [])
                                 autoPan: false
                             }); //.openPopup()
 
-                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup);
+                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
                             source.openPopup();
                             target.openPopup();
                         }
@@ -1022,10 +1041,16 @@ angular.module('app.controllers', [])
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
+                    var planned_route = sharedRoute.getData();
+                    if (sharedRoute.data != false && planned_route != null && planned_route != "undefined") {
+                        planned_route.clearLayers();
+                        sharedRoute.clearData();
+                    }
+                    /*
                     if (map.hasLayer($scope.routeLayer)) {
                         map.removeLayer($scope.routeLayer);
                         $scope.routeLayer.clearLayers();
-                    }
+                    }*/
 
                     $.ajax({
                         dataType: 'json',
@@ -1053,7 +1078,7 @@ angular.module('app.controllers', [])
                                 autoPan: false
                             }); //.openPopup()
 
-                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup);
+                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
                             source.openPopup();
                             target.openPopup();
                         }
@@ -1351,9 +1376,10 @@ function displayInfo(searchVal, lat, lng, type) {
     $('#' + type + 'Result').html("");
 }
 
-function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope, $state, $ionicPopup) {
+function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope, $state, $ionicPopup, sharedRoute) {
     map.addLayer($scope.routeLayer);
 
+    sharedRoute.sendData($scope.routeLayer);
     var travelOptions = r360.travelOptions();
     travelOptions.addSource(sourceMarker1);
     travelOptions.addTarget(targetMarker1);
