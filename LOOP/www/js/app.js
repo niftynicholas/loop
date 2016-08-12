@@ -29,21 +29,6 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     return service;
 })
 
-.factory('sharedRoute', function () {
-    var service = {};
-    service.data = false;
-    service.sendData = function (data) {
-        this.data = data;
-    };
-    service.getData = function () {
-        return this.data;
-    };
-    service.clearData = function () {
-        this.data = false;
-    };
-    return service;
-})
-
 .config(function($ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
     $ionicConfigProvider.navBar.alignTitle('center')

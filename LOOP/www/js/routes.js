@@ -118,7 +118,6 @@ angular.module('app.routes', [])
     })
 
     .state('planRoute', {
-        cache: false,
         url: '/planRoute',
         templateUrl: 'templates/planRoute.html',
         controller: 'planRouteCtrl'
