@@ -749,29 +749,44 @@ angular.module('app.controllers', [])
         console.log('Selected rating is : ', rating);
         $scope.rating = rating;
     };
-
-    /**
-     * Save Button
-     */
-    $scope.save = function() {
-        var route = $scope.paths.p1.latlngs;
-        var data = dataShare.getData();
-        $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                uid: localStorage.getItem("uid"),
-                distance: data.distance,
-                duration: data.duration,
-                averageSpeed: data.averageSpeed,
-                calories: data.calories,
-                ratings: $scope.rating,
-                route: $scope.paths.p1.latlngs,
-                comment: $scope.input.comment,
-                isShared: $scope.input.isShared
+    $scope.input = {comment:""};
+        $scope.OtherUserComments = [
+          {
+            owner:"Nicholas Lim",
+            comment: "I love the view here!"
+          }
+        ];
+        $scope.comments = [];
+        $scope.postComment = function() {
+          $scope.comments.push({
+              dateTimeStamp:new Date().toLocaleString(),
+              comment:$scope.input.comment
+          });
+          $scope.input.comment = "";
+        }
+        /**
+         * Save Button
+         */
+        $scope.save = function() {
+            var route = $scope.paths.p1.latlngs;
+            var data = dataShare.getData();
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    uid: localStorage.getItem("uid"),
+                    startDateTimeStamp : new date().tolocalestring(),//Need the datetimestamp from the start of clicking the start activity
+                    distance: data.distance,
+                    duration: data.duration,
+                    averageSpeed: data.averageSpeed,
+                    calories: data.calories,
+                    ratings: $scope.rating,
+                    route: $scope.paths.p1.latlngs,
+                    generalComments: comments,
+                    isShared: $scope.input.isShared
             }
         }).then(function successCallback(response) {
             dataShare.clearData();
