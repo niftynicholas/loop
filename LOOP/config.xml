@@ -20,7 +20,6 @@
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="8000"/>
   <preference name="ShowSplashScreenSpinner" value="false"/>
-  <preference name="Fullscreen" value="true" />
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>
