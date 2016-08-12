@@ -758,11 +758,13 @@ angular.module('app.controllers', [])
         ];
         $scope.comments = [];
         $scope.postComment = function() {
-          $scope.comments.push({
-              dateTimeStamp:new Date().toLocaleString(),
-              comment:$scope.input.comment
-          });
-          $scope.input.comment = "";
+          if ($scope.input.comment.length > 0) {
+            $scope.comments.push({
+                dateTimeStamp:new Date().toLocaleString(),
+                comment:$scope.input.comment
+            });
+            $scope.input.comment = "";
+          }
         }
         /**
          * Save Button
