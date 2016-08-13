@@ -780,14 +780,14 @@ angular.module('app.controllers', [])
                 },
                 data: {
                     uid: localStorage.getItem("uid"),
-                    startDateTimeStamp : new date().tolocalestring(),//Need the datetimestamp from the start of clicking the start activity
+                    startDateTimeStamp : new Date().toLocaleString(),//Need the datetimestamp from the start of clicking the start activity
                     distance: data.distance,
                     duration: data.duration,
                     averageSpeed: data.averageSpeed,
                     calories: data.calories,
                     ratings: $scope.rating,
                     route: $scope.paths.p1.latlngs,
-                    generalComments: comments,
+                    generalComments: $scope.comments,
                     isShared: $scope.input.isShared
             }
         }).then(function successCallback(response) {
