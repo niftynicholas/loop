@@ -379,7 +379,7 @@ angular.module('app.controllers', [])
     });
 })
 
-.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare, $ionicPlatform) {
+.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, leafletData, dataShare, $ionicPlatform, sharedRoute) {
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
@@ -431,7 +431,7 @@ angular.module('app.controllers', [])
         },
         paths: {
             p1: {
-                color: '#008000',
+                color: '#1abc9c',
                 weight: 8,
                 latlngs: [], //{ lat: 51.50, lng: -0.082 }
                 coordinates: [],
@@ -455,7 +455,11 @@ angular.module('app.controllers', [])
         }
     });
 
-    leafletData.getMap("inprogress").then(function(map) {
+    leafletData.getMap("inprogress").then(function (map) {
+        if (map.hasLayer(sharedRoute.data)) {
+            map.removeLayer(sharedRoute.data);
+        }
+        map.addLayer(sharedRoute.data);
         if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
             //Pass currentLocation from cycle.html
             var data = dataShare.getData();
@@ -647,7 +651,7 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http) {
+.controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http, sharedRoute) {
     $scope.input = {
         isShared: false,
         comment: ""
@@ -678,6 +682,8 @@ angular.module('app.controllers', [])
         }
     });
 
+    sharedRoute.sendData(new L.FeatureGroup());
+    
     var data = dataShare.getData();
     $scope.distance = data.distance;
     $scope.duration = data.duration;
@@ -750,12 +756,7 @@ angular.module('app.controllers', [])
         $scope.rating = rating;
     };
     $scope.input = {comment:""};
-        $scope.OtherUserComments = [
-          {
-            owner:"Nicholas Lim",
-            comment: "I love the view here!"
-          }
-        ];
+        $scope.OtherUserComments = [];
         $scope.comments = [];
         $scope.postComment = function() {
           if ($scope.input.comment.length > 0) {
@@ -808,11 +809,10 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare) {
+.controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare, sharedRoute) {
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
-    $scope.routeLayer = new L.FeatureGroup();
-
+    
     /**
      * Ajax call to get token from OneMap
      */
@@ -931,17 +931,18 @@ angular.module('app.controllers', [])
         var endLatLng = endInput.getAttribute("data-latlng");
 
         if (startLatLng != null && endLatLng != null) {
+            
+
             leafletData.getMap("cycle").then(function(map) {
 
                 //LatLng is "lat, lng" after utilising getAttribute so spliting it gives us our array [lat, lng]
                 startLatLng = startLatLng.split(",");
                 endLatLng = endLatLng.split(",");
 
-                //$scope.routeLayer.clearLayers();
-                if (map.hasLayer($scope.routeLayer)) {
-                    map.removeLayer($scope.routeLayer);
-                    $scope.routeLayer.clearLayers();
+                if (map.hasLayer(sharedRoute.data)) {
+                    map.removeLayer(sharedRoute.data);
                 }
+                sharedRoute.sendData(new L.FeatureGroup());
 
                 r360.config.serviceKey = '00AGI2VAF2HNS37EMMLV'; //My Key: 00AGI2VAF2HNS37EMMLV         Website Key: YWtKiQB7MiZETbCoVsG6
                 r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
@@ -958,20 +959,14 @@ angular.module('app.controllers', [])
 
                 var sourceMarker1 = L.marker(startLatLng, {
                     draggable: true
-                }).addTo($scope.routeLayer).bindPopup(startPointName, {
-                    closeOnClick: false,
-                    autoPan: false
-                }); //.openPopup()
+                }).addTo(sharedRoute.data); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
 
                 var targetMarker1 = L.marker(endLatLng, {
                     draggable: true,
                     icon: redIcon
-                }).addTo($scope.routeLayer).bindPopup(endPointName, {
-                    closeOnClick: false,
-                    autoPan: false
-                }); //.openPopup()
+                }).addTo(sharedRoute.data); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
 
-                findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope, $state, $ionicPopup);
+                findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
                 //targetMarker1.openPopup();
                 //sourceMarker1.openPopup();
 
@@ -979,9 +974,9 @@ angular.module('app.controllers', [])
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
-                    if (map.hasLayer($scope.routeLayer)) {
-                        map.removeLayer($scope.routeLayer);
-                        $scope.routeLayer.clearLayers();
+                    if (map.hasLayer(sharedRoute.data)) {
+                        map.removeLayer(sharedRoute.data);
+                        sharedRoute.sendData(new L.FeatureGroup());
                     }
 
                     $.ajax({
@@ -1000,19 +995,11 @@ angular.module('app.controllers', [])
                             }
                         },
                         complete: function() {
-                            source.addTo($scope.routeLayer).bindPopup(startPointName, {
-                                closeOnClick: false,
-                                autoPan: false
-                            }); //.openPopup()
-
-                            target.addTo($scope.routeLayer).bindPopup(endPointName, {
-                                closeOnClick: false,
-                                autoPan: false
-                            }); //.openPopup()
-
-                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup);
-                            source.openPopup();
-                            target.openPopup();
+                            source.addTo(sharedRoute.data); //.bindPopup(startPointName, { closeOnClick: false,autoPan: false}).openPopup()
+                            target.addTo(sharedRoute.data); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
+                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
+                            //source.openPopup();
+                            //target.openPopup();
                         }
                     });
 
@@ -1022,9 +1009,9 @@ angular.module('app.controllers', [])
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
-                    if (map.hasLayer($scope.routeLayer)) {
-                        map.removeLayer($scope.routeLayer);
-                        $scope.routeLayer.clearLayers();
+                    if (map.hasLayer(sharedRoute.data)) {
+                        map.removeLayer(sharedRoute.data);
+                        sharedRoute.sendData(new L.FeatureGroup());
                     }
 
                     $.ajax({
@@ -1043,19 +1030,11 @@ angular.module('app.controllers', [])
                             }
                         },
                         complete: function() {
-                            source.addTo($scope.routeLayer).bindPopup(startPointName, {
-                                closeOnClick: false,
-                                autoPan: false
-                            }); //.openPopup()
-
-                            target.addTo($scope.routeLayer).bindPopup(endPointName, {
-                                closeOnClick: false,
-                                autoPan: false
-                            }); //.openPopup()
-
-                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup);
-                            source.openPopup();
-                            target.openPopup();
+                            source.addTo(sharedRoute.data); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
+                            target.addTo(sharedRoute.data); //.bindPopup(endPointName, { closeOnClick: false, autoPan: false}).openPopup()
+                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
+                            //source.openPopup();
+                            //target.openPopup();
                         }
                     });
                 }); //End targetMarker dragend
@@ -1351,9 +1330,8 @@ function displayInfo(searchVal, lat, lng, type) {
     $('#' + type + 'Result').html("");
 }
 
-function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope, $state, $ionicPopup) {
-    map.addLayer($scope.routeLayer);
-
+function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope, $state, $ionicPopup, sharedRoute) {
+    map.addLayer(sharedRoute.data);
     var travelOptions = r360.travelOptions();
     travelOptions.addSource(sourceMarker1);
     travelOptions.addTarget(targetMarker1);
@@ -1363,10 +1341,10 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
     var successCallBack = function(routes) {
         for (var i = 0; i < routes.length; i++) {
             var route = routes[i];
-            r360.LeafletUtil.fadeIn($scope.routeLayer, route, 1000, "travelDistance");
+            r360.LeafletUtil.fadeIn(sharedRoute.data, route, 1000, "travelDistance");
         }
     };
-
+    
     var errorCallBack = function(status, message) {
         console.log("MY STATUS: ");
         console.log(status);

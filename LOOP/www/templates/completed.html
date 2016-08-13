@@ -60,16 +60,17 @@
                 <h2>Me</h2>
                 <p>{{c.comment}}</p>
             </a>
-
+            <form>
 
             <div class="item item-input-inset">
                 <label class="item-input-wrapper">
                     <input type="text" placeholder="Write something..." ng-model="input.comment">
                 </label>
-                <button class="button button-small" ng-click="postComment()">
+                <button class="button button-small button-positive" type="submit" ng-click="postComment()">
                     Post
                 </button>
             </div>
+                </form>
         </div>
     </ion-content>
 </ion-view>
