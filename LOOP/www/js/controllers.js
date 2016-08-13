@@ -190,7 +190,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('viewRouteCtrl', function($scope, leafletData) {
+.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory) {
     angular.extend($scope, {
         center: {
             lat: 1.3521,
@@ -229,6 +229,9 @@ angular.module('app.controllers', [])
         $scope.rating = rating;
     };
 
+    $scope.goBack = function() {
+      $ionicHistory.goBack();
+    };
 })
 
 .controller('cycleCtrl', function($scope, $state, leafletData, dataShare, $ionicHistory) {
@@ -789,9 +792,11 @@ angular.module('app.controllers', [])
                     isShared: $scope.input.isShared
             }
         }).then(function successCallback(response) {
+            console.log(JSON.stringify(response));
             dataShare.clearData();
             $state.go('tabsController.cycle');
         }, function errorCallback(response) {
+            console.log(JSON.stringify(response));
             alert("Error Saving to database");
         });
     };
@@ -1084,6 +1089,15 @@ angular.module('app.controllers', [])
 
         });
     };
+
+    $scope.buttons = [
+  {icon: '', text: 'Shortest'},
+  {icon: '', text: 'Safest'}
+];
+$scope.activeButton = 0;
+$scope.setActiveButton = function(index) {
+  $scope.activeButton = index;
+};
 })
 
 .controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window) {

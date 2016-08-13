@@ -1,7 +1,7 @@
 <ion-view title="North Eastern Riverine Loop" hide-back-button="true">
     <ion-nav-bar class="bar-balanced">
         <ion-nav-buttons side="left">
-            <a class="button back-button buttons button-clear header-item" ui-sref="tabsController.home">
+            <a class="button back-button buttons button-clear header-item" ng-click="goBack()">
                 <i class="icon ion-ios-arrow-back" style="color:white;"> Back</i>
             </a>
         </ion-nav-buttons>
@@ -29,7 +29,7 @@
             </div>
             <div class="list">
                 <!-- If there is no comment -->
-                <a class="item" href="#">There are no comments yet.</a>
+                <a class="item" href="#" ng-if="comments.length === 0">There are no comments yet.</a>
 
                 <!-- If there are comments -->
 
@@ -49,7 +49,7 @@
                     <label class="item-input-wrapper">
                         <input type="text" placeholder="Write something...">
                     </label>
-                    <button class="button button-small">
+                    <button class="button button-small button-positive">
                         Post
                     </button>
                 </div>

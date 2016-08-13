@@ -34,7 +34,7 @@
             <div class="item item-divider">
                 Sharing
             </div>
-            <li class="item item-toggle">
+            <!-- <li class="item item-toggle">
                 Enable Sharing
                 <label class="toggle toggle-balanced">
                     <input type="checkbox" ng-model="input.isShared">
@@ -42,7 +42,9 @@
                         <div class="handle"></div>
                     </div>
                 </label>
-            </li>
+            </li> -->
+
+            <ion-toggle ng-model="input.isShared" toggle-class="toggle-balanced">Enable Sharing</ion-toggle>
             <div class="item item-divider">
                 Comments
             </div>

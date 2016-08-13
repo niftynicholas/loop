@@ -18,11 +18,10 @@
                     <input type="text" placeholder="End Point" id="endPoint">
                 </label>
                 <div id="endResult" style="width:100%;z-index:10000;position:absolute;"></div>
+                <div class="button-bar bar-stable">
+                    <button ng-repeat="button in buttons" class="button icon ion-{{button.icon}}" ng-class="{'active': activeButton == $index}" ng-click="setActiveButton($index)"> {{button.text}}</button>
+                </div>
             </ion-list>
-            <div class="item range range-positive">
-                Shortest
-                <input type="range" name="volume" min="0" max="1" value=""> Safest
-            </div>
             <button class="button button-block button-positive" type="submit" ng-click="planRoute()">Plan</button>
         </form>
     </ion-content>
