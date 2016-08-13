@@ -49,30 +49,29 @@
                 Comments
             </div>
             <!-- If there is no comment -->
-            <a class="item" href="#" ng-if="comments.length === 0">There are no comments yet.</a>
+            <a class="item" href="#" ng-if="!(OtherUserComments.length !== 0 || comments.length !== 0)">There are no comments yet.</a>
 
             <!-- If there are comments -->
             <a class="item item-avatar" href="#" ng-repeat="c in OtherUserComments">
                 <img src="img/placeholder-man-grid-240x268.png">
-                <h2>{{c.owner}}</h2>
-                <p>{{c.comment}}</p>
+                <h2>{{c[0]}}</h2>
+                <p>{{c[1]}}</p>
             </a>
             <a class="item item-avatar" href="#" ng-repeat="c in comments">
                 <img src="img/placeholder-man-grid-240x268.png">
                 <h2>Me</h2>
                 <p>{{c[1]}}</p>
-            </a>
+            </a>>
             <form>
-
-            <div class="item item-input-inset">
-                <label class="item-input-wrapper">
-                    <input type="text" placeholder="Write something..." ng-model="input.comment">
-                </label>
-                <button class="button button-small button-positive" type="submit" ng-click="postComment()">
-                    Post
-                </button>
-            </div>
-                </form>
+              <div class="item item-input-inset">
+                  <label class="item-input-wrapper">
+                      <input type="text" placeholder="Write something..." ng-model="input.comment">
+                  </label>
+                  <button class="button button-small button-positive" type="submit" ng-click="postComment()">
+                      Post
+                  </button>
+              </div>
+            </form>
         </div>
     </ion-content>
 </ion-view>

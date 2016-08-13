@@ -207,8 +207,17 @@ angular.module('app.controllers', [])
             scrollWheelZoom: true,
             zoomControl: true
         }
-    });
 
+    });
+    $scope.input={comment:""};
+    $scope.OtherUserComments = [["Venkman", "Well Lited at night."],["Melanie", "I love the people here!"]];
+    $scope.comments = [];
+    $scope.postComment = function(){
+      if ($scope.input.comment.length > 0) {
+        $scope.comments.push([new Date().getTime(),$scope.input.comment]);
+        $scope.input.comment = "";
+      }
+    };
     /**
      * Rating Stars
      */
