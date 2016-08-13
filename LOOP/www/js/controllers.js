@@ -683,7 +683,7 @@ angular.module('app.controllers', [])
     });
 
     sharedRoute.sendData(new L.FeatureGroup());
-    
+
     var data = dataShare.getData();
     $scope.distance = data.distance;
     $scope.duration = data.duration;
@@ -760,10 +760,7 @@ angular.module('app.controllers', [])
         $scope.comments = [];
         $scope.postComment = function() {
           if ($scope.input.comment.length > 0) {
-            $scope.comments.push({
-                dateTimeStamp:new Date().toLocaleString(),
-                comment:$scope.input.comment
-            });
+            $scope.comments.push([new Date().getTime(),$scope.input.comment]);
             $scope.input.comment = "";
           }
         }
@@ -781,7 +778,7 @@ angular.module('app.controllers', [])
                 },
                 data: {
                     uid: localStorage.getItem("uid"),
-                    startDateTimeStamp : new Date().toLocaleString(),//Need the datetimestamp from the start of clicking the start activity
+                    startDateTimeStamp : new Date().getTime(),//Need the datetimestamp from the start of clicking the start activity
                     distance: data.distance,
                     duration: data.duration,
                     averageSpeed: data.averageSpeed,
@@ -812,7 +809,7 @@ angular.module('app.controllers', [])
 .controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare, sharedRoute) {
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
-    
+
     /**
      * Ajax call to get token from OneMap
      */
@@ -931,7 +928,7 @@ angular.module('app.controllers', [])
         var endLatLng = endInput.getAttribute("data-latlng");
 
         if (startLatLng != null && endLatLng != null) {
-            
+
 
             leafletData.getMap("cycle").then(function(map) {
 
@@ -1276,7 +1273,7 @@ angular.module('app.controllers', [])
 
 .controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http, $timeout) {
     $scope.input = new Object();
-    $scope.input.dateOfBirth = new Date(localStorage.getItem("dateOfBirth"));
+    $scope.input.dateOfBirth = new Date(parseInt(localStorage.getItem("dateOfBirth")));
     $scope.genders = [{
         name: "Male",
         id: 1
@@ -1297,7 +1294,7 @@ angular.module('app.controllers', [])
         //console.log("saving to the localStoage height " + $scope.input.height);
         localStorage.setItem("name", $scope.input.name);
         localStorage.setItem("gender", $scope.input.gender.name);
-        localStorage.setItem("dateOfBirth", $scope.input.dateOfBirth);
+        localStorage.setItem("dateOfBirth", new Date($scope.input.dateOfBirth).getTime());
         localStorage.setItem("height", $scope.input.height);
         localStorage.setItem("weight", $scope.input.weight);
         //console.log(localStorage.getItem("height"));
@@ -1311,14 +1308,16 @@ angular.module('app.controllers', [])
                 uid: localStorage.getItem("uid"),
                 name: $scope.input.name,
                 gender: $scope.input.gender.name,
-                dateOfBirth: $scope.input.dateOfBirth,
+                dateOfBirth: new Date($scope.input.dateOfBirth).getTime(),
                 height: $scope.input.height,
-                weight: $scope.input.weight
+                weight: $scope.input.weight,
+                dateTimeStamp: new Date().getTime()
             }
         }).then(function successCallback(response) {
             $state.go('tabsController.profile');
         }, function errorCallback(response) {
             alert("Error Updating Account Details");
+            alert(JSON.stringify(response));
         });
     }
 })
@@ -1344,7 +1343,7 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
             r360.LeafletUtil.fadeIn(sharedRoute.data, route, 1000, "travelDistance");
         }
     };
-    
+
     var errorCallBack = function(status, message) {
         console.log("MY STATUS: ");
         console.log(status);
