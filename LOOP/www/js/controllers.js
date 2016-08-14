@@ -210,11 +210,23 @@ angular.module('app.controllers', [])
 
     });
     $scope.input={comment:""};
-    $scope.OtherUserComments = [["Venkman", "Well Lited at night."],["Melanie", "I love the people here!"]];
+    $scope.OtherUserComments = [
+      {
+          user:"Venkman",
+          comment:"Well Lited at night."
+      },
+      {
+          user:"Melanie",
+          comment:"I love the people here!"
+      }
+    ];
     $scope.comments = [];
     $scope.postComment = function(){
       if ($scope.input.comment.length > 0) {
-        $scope.comments.push([new Date().getTime(),$scope.input.comment]);
+        $scope.comments.push({
+          dateTimeStamp:new Date().getTime(),
+          comment: $scope.input.comment
+        });
         $scope.input.comment = "";
       }
     };
@@ -772,7 +784,10 @@ angular.module('app.controllers', [])
         $scope.comments = [];
         $scope.postComment = function() {
           if ($scope.input.comment.length > 0) {
-            $scope.comments.push([new Date().getTime(),$scope.input.comment]);
+            $scope.comments.push({
+              dateTimeStamp:new Date().getTime(),
+              comment: $scope.input.comment
+            });
             $scope.input.comment = "";
           }
         }

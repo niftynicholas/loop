@@ -35,13 +35,13 @@
 
                 <a class="item item-avatar" href="#" ng-repeat="c in OtherUserComments">
                     <img src="img/placeholder-man-grid-240x268.png">
-                    <h2>{{c[0]}}</h2>
-                    <p>{{c[1]}}</p>
+                    <h2>{{c.user}}</h2>
+                    <p>{{c.comment}}</p>
                 </a>
                 <a class="item item-avatar" href="#" ng-repeat="c in comments">
                     <img src="img/placeholder-man-grid-240x268.png">
                     <h2>Me</h2>
-                    <p>{{c[1]}}</p>
+                    <p>{{c.comment}}</p>
                 </a>
 
 
