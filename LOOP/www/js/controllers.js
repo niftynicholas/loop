@@ -319,6 +319,7 @@ angular.module('app.controllers', [])
             $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
             $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
             $scope.timestamp = e.timestamp;
+            map.invalidateSize();
         });
         map.on('locationerror', function(e) {
             console.log('Location access denied.');
