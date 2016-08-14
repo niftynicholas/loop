@@ -764,7 +764,7 @@ angular.module('app.controllers', [])
     };
 
     $scope.ratingsCallback = function(rating) {
-        console.log('Selected rating is : ', rating);
+        //console.log('Selected rating is : ', rating);
         $scope.rating = rating;
     };
     $scope.input = {comment:""};
@@ -782,32 +782,35 @@ angular.module('app.controllers', [])
         $scope.save = function() {
             var route = $scope.paths.p1.latlngs;
             var data = dataShare.getData();
-            $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: {
-                    uid: localStorage.getItem("uid"),
-                    startDateTimeStamp : new Date().getTime(),//Need the datetimestamp from the start of clicking the start activity
-                    distance: data.distance,
-                    duration: data.duration,
-                    averageSpeed: data.averageSpeed,
-                    calories: data.calories,
-                    ratings: $scope.rating,
-                    route: $scope.paths.p1.latlngs,
-                    generalComments: $scope.comments,
-                    isShared: $scope.input.isShared
-            }
-        }).then(function successCallback(response) {
-            console.log(JSON.stringify(response));
-            dataShare.clearData();
-            $state.go('tabsController.cycle');
-        }, function errorCallback(response) {
-            console.log(JSON.stringify(response));
-            alert("Error Saving to database");
-        });
+            if (route.length === 0) {
+              alert("No GPS Data was received");
+            } else {
+              $http({
+                  url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  data: {
+                      uid: localStorage.getItem("uid"),
+                      startDateTimeStamp : new Date().getTime(),//Need the datetimestamp from the start of clicking the start activity
+                      distance: data.distance,
+                      duration: data.duration,
+                      averageSpeed: data.averageSpeed,
+                      calories: data.calories,
+                      ratings: $scope.rating,
+                      route: $scope.paths.p1.latlngs,
+                      generalComments: $scope.comments,
+                      isShared: $scope.input.isShared
+              }
+              }).then(function successCallback(response) {
+                  dataShare.clearData();
+                  $state.go('tabsController.cycle');
+              }, function errorCallback(response) {
+                  alert("Error Saving to database");
+                  alert(JSON.stringify(response, null, 4));
+              });
+          }
     };
 
 })
