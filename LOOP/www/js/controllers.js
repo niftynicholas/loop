@@ -798,10 +798,10 @@ angular.module('app.controllers', [])
                       duration: data.duration,
                       averageSpeed: data.averageSpeed,
                       calories: data.calories,
-                      ratings: $scope.rating,
+                      ratings: $scope.rating || 2,
                       route: $scope.paths.p1.latlngs,
                       generalComments: $scope.comments,
-                      isShared: $scope.input.isShared
+                      isShared: $scope.input.isShared || false
               }
               }).then(function successCallback(response) {
                   dataShare.clearData();
