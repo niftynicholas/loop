@@ -1,4 +1,4 @@
-<ion-view title="North Eastern Riverine Loop" hide-back-button="true">
+<ion-view hide-back-button="true">
     <ion-nav-bar class="bar-balanced">
         <ion-nav-buttons side="left">
             <a class="button back-button buttons button-clear header-item" ng-click="goBack()">
@@ -6,23 +6,24 @@
             </a>
         </ion-nav-buttons>
     </ion-nav-bar>
+        <ion-nav-title>{{routeName}}</ion-nav-title>
     <ion-content>
         <div data-tap-disabled="true" style="height:30vh;">
             <leaflet id="viewRoute" lf-center="center" tiles="tiles" defaults="defaults" height="100%" width="100%"></leaflet>
         </div>
         <div class="list">
             <div class="item item-divider">
-                Rate This Activity (Average Rating: {{}})
+                Rate This Activity (Average Rating: 4.67)
             </div>
             <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
             <div class="item item-divider">
                 Summary
             </div>
             <a class="item item-icon-left" href="#">
-                <i class="icon ion-clock"></i>Estimated Duration: {{estimateDuration}}
+                <i class="icon ion-clock"></i>Estimated Duration: 0:53:31
             </a>
             <a class="item item-icon-left" href="#">
-                <i class="icon ion-ios-location"></i> Distance: {{distance}}
+                <i class="icon ion-ios-location"></i> Distance: 5.28 km
             </a>
             <div class="item item-divider">
                 Comments
@@ -35,28 +36,25 @@
 
                 <a class="item item-avatar" href="#" ng-repeat="c in OtherUserComments">
                     <img src="img/placeholder-man-grid-240x268.png">
-                    <h2>{{c.user}}</h2>
+                    <h2><b>{{c.user}}</b></h2>
                     <p>{{c.comment}}</p>
                 </a>
                 <a class="item item-avatar" href="#" ng-repeat="c in comments">
                     <img src="img/placeholder-man-grid-240x268.png">
-                    <h2>Me</h2>
+                    <h2><b>{{username}}<b></h2>
                     <p>{{c.comment}}</p>
                 </a>
-
-
-
-                <div class="item item-input-inset">
-                    <label class="item-input-wrapper">
-                        <input type="text" placeholder="Write something..." ng-model="input.comment">
-                    </label>
-                    <button class="button button-small button-positive" ng-click="postComment()">
-                        Post
-                    </button>
-                </div>
-
+                <form>
+                    <div class="item item-input-inset">
+                        <label class="item-input-wrapper">
+                            <input type="text" placeholder="Write something..." ng-model="input.comment">
+                        </label>
+                        <button class="button button-small button-positive" type="submit" ng-click="postComment()">
+                            Post
+                        </button>
+                    </div>
+                </form>
             </div>
-
         </div>
         <!--<button class="button button-block icon-left ion-bookmark button-positive">Bookmark</button>
         <button class="button button-block icon-left ion-android-bicycle button-balanced" ui-sref="tabsController.cycle">Cycle</button>-->

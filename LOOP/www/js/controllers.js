@@ -110,7 +110,7 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('homeCtrl', function($scope) {
+.controller('homeCtrl', function($scope, routeName, $state) {
     $scope.options = {
         loop: true,
         effect: 'slide',
@@ -131,6 +131,28 @@ angular.module('app.controllers', [])
         $scope.activeIndex = data.activeIndex;
         $scope.previousIndex = data.previousIndex;
     });
+
+    // Hardcoded to Populate Route Name at the Top START
+    $scope.viewRoute1 = function() {
+        $scope.routeName = document.getElementById("routeName1").textContent;
+        routeName.sendData($scope.routeName);
+        console.log($scope.routeName);
+        $state.go("viewRoute");
+    }
+
+    $scope.viewRoute2 = function() {
+        $scope.routeName = document.getElementById("routeName2").textContent;
+        routeName.sendData($scope.routeName);
+        console.log($scope.routeName);
+        $state.go("viewRoute");
+    }
+
+    $scope.viewRoute3 = function() {
+        $scope.routeName = document.getElementById("routeName3").textContent;
+        routeName.sendData($scope.routeName);
+        console.log($scope.routeName);
+        $state.go("viewRoute");
+    }
 })
 
 .controller('pcnCtrl', function($scope, leafletData) {
@@ -190,7 +212,15 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory) {
+.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, routeName) {
+    $scope.routeName = '';
+    var routeName = routeName.getData();
+    console.log(routeName);
+    $scope.routeName = routeName;
+
+
+
+    $scope.username = localStorage.getItem("username");
     angular.extend($scope, {
         center: {
             lat: 1.3521,
@@ -209,26 +239,25 @@ angular.module('app.controllers', [])
         }
 
     });
-    $scope.input={comment:""};
-    $scope.OtherUserComments = [
-      {
-          user:"Venkman",
-          comment:"Well Lited at night."
-      },
-      {
-          user:"Melanie",
-          comment:"I love the people here!"
-      }
-    ];
+    $scope.input = {
+        comment: ""
+    };
+    $scope.OtherUserComments = [{
+        user: "Venkman",
+        comment: "Well Lited at night."
+    }, {
+        user: "Melanie",
+        comment: "I love the people here!"
+    }];
     $scope.comments = [];
-    $scope.postComment = function(){
-      if ($scope.input.comment.length > 0) {
-        $scope.comments.push({
-          dateTimeStamp:new Date().getTime(),
-          comment: $scope.input.comment
-        });
-        $scope.input.comment = "";
-      }
+    $scope.postComment = function() {
+        if ($scope.input.comment.length > 0) {
+            $scope.comments.push({
+                dateTimeStamp: new Date().getTime(),
+                comment: $scope.input.comment
+            });
+            $scope.input.comment = "";
+        }
     };
     /**
      * Rating Stars
@@ -251,7 +280,7 @@ angular.module('app.controllers', [])
     };
 
     $scope.goBack = function() {
-      $ionicHistory.goBack();
+        $ionicHistory.goBack();
     };
 })
 
@@ -480,7 +509,7 @@ angular.module('app.controllers', [])
         }
     });
 
-    leafletData.getMap("inprogress").then(function (map) {
+    leafletData.getMap("inprogress").then(function(map) {
         if (map.hasLayer(sharedRoute.data)) {
             map.removeLayer(sharedRoute.data);
         }
@@ -677,6 +706,7 @@ angular.module('app.controllers', [])
 })
 
 .controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http, sharedRoute) {
+    $scope.username = localStorage.getItem("username");
     $scope.input = {
         isShared: false,
         comment: ""
@@ -780,53 +810,55 @@ angular.module('app.controllers', [])
         //console.log('Selected rating is : ', rating);
         $scope.rating = rating;
     };
-    $scope.input = {comment:""};
-        $scope.OtherUserComments = [];
-        $scope.comments = [];
-        $scope.postComment = function() {
-          if ($scope.input.comment.length > 0) {
-            $scope.comments.push({
-              dateTimeStamp:new Date().getTime(),
-              comment: $scope.input.comment
-            });
-            $scope.input.comment = "";
-          }
+    $scope.input = {
+        comment: ""
+    };
+    $scope.OtherUserComments = [];
+    $scope.comments = [];
+    $scope.postComment = function() {
+            if ($scope.input.comment.length > 0) {
+                $scope.comments.push({
+                    dateTimeStamp: new Date().getTime(),
+                    comment: $scope.input.comment
+                });
+                $scope.input.comment = "";
+            }
         }
         /**
          * Save Button
          */
-        $scope.save = function() {
-            var route = $scope.paths.p1.latlngs;
-            var data = dataShare.getData();
-            if (route.length === 0) {
-              alert("No GPS Data was received");
-            } else {
-              $http({
-                  url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  },
-                  data: {
-                      uid: localStorage.getItem("uid"),
-                      startDateTimeStamp : new Date().getTime(),//Need the datetimestamp from the start of clicking the start activity
-                      distance: data.distance,
-                      duration: data.duration,
-                      averageSpeed: data.averageSpeed,
-                      calories: data.calories,
-                      ratings: $scope.rating || 2,
-                      route: $scope.paths.p1.latlngs,
-                      generalComments: $scope.comments,
-                      isShared: $scope.input.isShared || false
-              }
-              }).then(function successCallback(response) {
-                  dataShare.clearData();
-                  $state.go('tabsController.cycle');
-              }, function errorCallback(response) {
-                  alert("Error Saving to database");
-                  alert(JSON.stringify(response, null, 4));
-              });
-          }
+    $scope.save = function() {
+        var route = $scope.paths.p1.latlngs;
+        var data = dataShare.getData();
+        if (route.length === 0) {
+            alert("No GPS Data was received");
+        } else {
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    uid: localStorage.getItem("uid"),
+                    startDateTimeStamp: new Date().getTime(), //Need the datetimestamp from the start of clicking the start activity
+                    distance: data.distance,
+                    duration: data.duration,
+                    averageSpeed: data.averageSpeed,
+                    calories: data.calories,
+                    ratings: $scope.rating || 2,
+                    route: $scope.paths.p1.latlngs,
+                    generalComments: $scope.comments,
+                    isShared: $scope.input.isShared || false
+                }
+            }).then(function successCallback(response) {
+                dataShare.clearData();
+                $state.go('tabsController.cycle');
+            }, function errorCallback(response) {
+                alert("Error Saving to database");
+                alert(JSON.stringify(response, null, 4));
+            });
+        }
     };
 
 })
@@ -1118,14 +1150,17 @@ angular.module('app.controllers', [])
         });
     };
 
-    $scope.buttons = [
-  {icon: '', text: 'Shortest'},
-  {icon: '', text: 'Safest'}
-];
-$scope.activeButton = 0;
-$scope.setActiveButton = function(index) {
-  $scope.activeButton = index;
-};
+    $scope.buttons = [{
+        icon: '',
+        text: 'Shortest'
+    }, {
+        icon: '',
+        text: 'Safest'
+    }];
+    $scope.activeButton = 0;
+    $scope.setActiveButton = function(index) {
+        $scope.activeButton = index;
+    };
 })
 
 .controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window) {
@@ -1412,14 +1447,14 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
         map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
             animate: false,
             reset: true,
-            padding: [25,25],
+            padding: [25, 25],
             maxZoom: 16
         });
     } else {
         map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
             animate: false,
             reset: true,
-            padding: [25,25],
+            padding: [25, 25],
             maxZoom: 16
         });
     }

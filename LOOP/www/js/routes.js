@@ -40,6 +40,7 @@ angular.module('app.routes', [])
     })
 
     .state('tabsController.home', {
+        cache: false,
         url: '/home',
         views: {
             'tab1': {
@@ -101,6 +102,7 @@ angular.module('app.routes', [])
     })
 
     .state('viewRoute', {
+        cache: false,
         url: '/viewRoute',
         templateUrl: 'templates/viewRoute.html',
         controller: 'viewRouteCtrl'

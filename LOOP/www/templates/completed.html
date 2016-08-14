@@ -54,23 +54,23 @@
             <!-- If there are comments -->
             <a class="item item-avatar" href="#" ng-repeat="c in OtherUserComments">
                 <img src="img/placeholder-man-grid-240x268.png">
-                <h2>{{c.user}}</h2>
+                <h2><b>{{c.user}}</b></h2>
                 <p>{{c.comment}}</p>
             </a>
             <a class="item item-avatar" href="#" ng-repeat="c in comments">
                 <img src="img/placeholder-man-grid-240x268.png">
-                <h2>Me</h2>
+                <h2><b>{{username}}</b></h2>
                 <p>{{c.comment}}</p>
             </a>
             <form>
-              <div class="item item-input-inset">
-                  <label class="item-input-wrapper">
-                      <input type="text" placeholder="Write something..." ng-model="input.comment">
-                  </label>
-                  <button class="button button-small button-positive" type="submit" ng-click="postComment()">
-                      Post
-                  </button>
-              </div>
+                <div class="item item-input-inset">
+                    <label class="item-input-wrapper">
+                        <input type="text" placeholder="Write something..." ng-model="input.comment">
+                    </label>
+                    <button class="button button-small button-positive" type="submit" ng-click="postComment()">
+                        Post
+                    </button>
+                </div>
             </form>
         </div>
     </ion-content>
