@@ -22,6 +22,7 @@ angular.module('app.routes', [])
     })
 
     .state('verify', {
+        cache: false,
         url: '/verify',
         templateUrl: 'templates/verify.html',
         controller: 'verifyCtrl'

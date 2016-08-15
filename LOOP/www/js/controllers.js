@@ -767,7 +767,7 @@ angular.module('app.controllers', [])
 
     $scope.paths.p1.latlngs = data.path;
 
-    leafletData.getMap("completed").then(function (map) {
+    leafletData.getMap("completed").then(function(map) {
         map.invalidateSize();
         map.fitBounds($scope.paths.p1.latlngs);
     });
@@ -1198,7 +1198,17 @@ angular.module('app.controllers', [])
     }
 })
 
-.controller('verifyCtrl', function($scope, $state, $http) {
+.controller('verifyCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading) {
+    $scope.show = function() {
+        $ionicLoading.show({
+            template: '<p>Verifying...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        });
+    };
+
+    $scope.hide = function() {
+        $ionicLoading.hide();
+    };
+
     $scope.init = function() {
         $scope.passcode = "";
     };
@@ -1222,6 +1232,7 @@ angular.module('app.controllers', [])
     };
 
     $scope.verify = function() {
+        $scope.show();
         $http({
             url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/verify",
             method: 'POST',
@@ -1232,9 +1243,35 @@ angular.module('app.controllers', [])
                 verificationCode: $scope.passcode
             }
         }).then(function successCallback(response) {
-            $state.go('login');
+            $scope.hide();
+            $scope.success();
         }, function errorCallback(response) {
-            alert("Invalid Verification Code Entered");
+            $scope.hide();
+            $scope.fail();
+        });
+    };
+
+    // Verification Success
+    $scope.success = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Verification Success',
+            template: 'You have successfully verified your account. You may proceed to login.'
+        });
+
+        alertPopup.then(function(res) {
+            $state.go("login");
+        });
+    };
+
+    // Verification Failure
+    $scope.fail = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Verification Failed',
+            template: 'You have entered an invalid verification code. Please check your email and try again.'
+        });
+
+        alertPopup.then(function(res) {
+            console.log('Thank you for not eating my delicious ice cream cone');
         });
     };
 })
