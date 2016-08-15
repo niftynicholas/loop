@@ -330,7 +330,9 @@ angular.module('app.controllers', [])
         //     //subdomains: ['a', 'b', 'c'],
         //     //buffer: 8
         // }).addTo(map);
-
+        setInterval(function() {
+            map.invalidateSize();
+        }, 5000); //every 5s
         map.locate({
             watch: true,
             enableHighAccuracy: false
@@ -348,7 +350,6 @@ angular.module('app.controllers', [])
             $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
             $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
             $scope.timestamp = e.timestamp;
-            map.invalidateSize();
         });
         map.on('locationerror', function(e) {
             console.log('Location access denied.');
@@ -766,7 +767,8 @@ angular.module('app.controllers', [])
 
     $scope.paths.p1.latlngs = data.path;
 
-    leafletData.getMap("completed").then(function(map) {
+    leafletData.getMap("completed").then(function (map) {
+        map.invalidateSize();
         map.fitBounds($scope.paths.p1.latlngs);
     });
 
