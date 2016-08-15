@@ -779,7 +779,7 @@ angular.module('app.controllers', [])
     $scope.discard = function() {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Discard Activity',
-            template: 'Are you sure you want to eat discard this activity?'
+            template: 'Are you sure you want to discard this activity?'
         });
 
         confirmPopup.then(function(res) {
