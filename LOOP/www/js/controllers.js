@@ -284,7 +284,7 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('cycleCtrl', function($scope, $state, leafletData, dataShare, $ionicHistory) {
+.controller('cycleCtrl', function($scope, $state, leafletData, dataShare, $ionicHistory, $timeout) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
     $scope.timestamp = 0;
@@ -332,7 +332,7 @@ angular.module('app.controllers', [])
         // }).addTo(map);
         setInterval(function() {
             map.invalidateSize();
-        }, 5000); //every 5s
+        }, 3000); //every 3s
         map.locate({
             watch: true,
             enableHighAccuracy: false
