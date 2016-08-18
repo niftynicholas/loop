@@ -836,7 +836,7 @@ angular.module('app.controllers', [])
             alert("No GPS Data was received");
         } else {
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
+                url: "http://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -876,7 +876,7 @@ angular.module('app.controllers', [])
 .controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare, sharedRoute) {
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
-    
+
     /**
      * Ajax call to get token from OneMap
      */
@@ -999,7 +999,7 @@ angular.module('app.controllers', [])
      * Calculate Route based on Start & End Points
      */
     $scope.planRoute = function() {
-        
+
         var startInput = document.getElementById("startPoint");
         var endInput = document.getElementById("endPoint");
         var startLatLng = startInput.getAttribute("data-latlng");
@@ -1245,7 +1245,7 @@ angular.module('app.controllers', [])
     $scope.verify = function() {
         $scope.show();
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/verify",
+            url: "http://sgcycling-sgloop.rhcloud.com/api/users/accounts/verify",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1293,7 +1293,7 @@ angular.module('app.controllers', [])
     // No way to verify resetting of password
     $scope.sendResetEmail = function() {
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/sendResetPasswordEmail",
+            url: "http://sgcycling-sgloop.rhcloud.com/api/users/accounts/sendResetPasswordEmail",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1326,7 +1326,7 @@ angular.module('app.controllers', [])
             }).then(function successCallback(response) {
                     if ($scope.input.newPassword.length >= 8) {
                         $http({
-                            url: "http://sgcycling-sgloop.rhcloud.com/api/users/accounts/updatePassword",
+                            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updatePassword",
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -1426,7 +1426,7 @@ angular.module('app.controllers', [])
         localStorage.setItem("weight", $scope.input.weight);
         //console.log(localStorage.getItem("height"));
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
+            url: "http://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
