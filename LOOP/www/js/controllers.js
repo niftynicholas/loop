@@ -876,7 +876,7 @@ angular.module('app.controllers', [])
 .controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare, sharedRoute) {
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
-
+    
     /**
      * Ajax call to get token from OneMap
      */
@@ -896,6 +896,20 @@ angular.module('app.controllers', [])
     if (typeof(token) == "undefined") {
         token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi';
     }
+
+    $('#startPoint').focus(function () {
+        if (dataShare.data != false && typeof (dataShare.getData().currentLocation.lat) != "undefined") {
+            $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
+        }
+    });
+
+    $('#startPoint').focusout(function () {
+        $('#startResult').empty();
+    });
+
+    $('#endPoint').focusout(function () {
+        $('#endResult').empty();
+    });
 
     /**
      * Populate Search Results for Start Point
@@ -985,10 +999,7 @@ angular.module('app.controllers', [])
      * Calculate Route based on Start & End Points
      */
     $scope.planRoute = function() {
-        if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
-            $scope.currentLocation = [dataShare.getData().currentLocation.lat, dataShare.getData().currentLocation.lng];
-            dataShare.clearData();
-        }
+        
         var startInput = document.getElementById("startPoint");
         var endInput = document.getElementById("endPoint");
         var startLatLng = startInput.getAttribute("data-latlng");
