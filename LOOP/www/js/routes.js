@@ -72,12 +72,6 @@ angular.module('app.routes', [])
         }
     })
 
-    .state('freeRoute', {
-        url: '/freeRoute',
-        templateUrl: 'templates/freeRoute.html',
-        controller: 'freeRouteCtrl'
-    })
-
     .state('inprogress', {
         cache: false,
         url: '/inprogress',
@@ -107,18 +101,6 @@ angular.module('app.routes', [])
         url: '/viewRoute',
         templateUrl: 'templates/viewRoute.html',
         controller: 'viewRouteCtrl'
-    })
-
-    .state('selectRoute', {
-        url: '/selectRoute',
-        templateUrl: 'templates/selectRoute.html',
-        controller: 'selectRouteCtrl'
-    })
-
-    .state('findRoute', {
-        url: '/findRoute',
-        templateUrl: 'templates/findRoute.html',
-        controller: 'findRouteCtrl'
     })
 
     .state('planRoute', {
