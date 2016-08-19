@@ -27,7 +27,7 @@ angular.module('app.controllers', [])
                 }
             }).then(function successCallback(response) {
                     localStorage.setItem("login_state", "true");
-                    localStorage.setItem("uid", response.data.uid);
+                    localStorage.setItem("token", response.data.token);
                     localStorage.setItem("dateOfBirth", response.data.dateOfBirth);
                     localStorage.setItem("email", response.data.email);
                     localStorage.setItem("height", response.data.height);
@@ -836,13 +836,13 @@ angular.module('app.controllers', [])
             alert("No GPS Data was received");
         } else {
             $http({
-                url: "http://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
+                url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 data: {
-                    uid: localStorage.getItem("uid"),
+                    token: localStorage.getItem("token"),
                     startDateTimeStamp: new Date().getTime(), //Need the datetimestamp from the start of clicking the start activity
                     distance: data.distance,
                     duration: data.duration,
@@ -1245,7 +1245,7 @@ angular.module('app.controllers', [])
     $scope.verify = function() {
         $scope.show();
         $http({
-            url: "http://sgcycling-sgloop.rhcloud.com/api/users/accounts/verify",
+            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/verify",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1293,7 +1293,7 @@ angular.module('app.controllers', [])
     // No way to verify resetting of password
     $scope.sendResetEmail = function() {
         $http({
-            url: "http://sgcycling-sgloop.rhcloud.com/api/users/accounts/sendResetPasswordEmail",
+            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/sendResetPasswordEmail",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1332,7 +1332,7 @@ angular.module('app.controllers', [])
                                 'Content-Type': 'application/json'
                             },
                             data: {
-                                uid: localStorage.getItem("uid"),
+                                token: localStorage.getItem("token"),
                                 password: $scope.input.newPassword
                             }
                         }).then(function successCallback(response) {
@@ -1426,13 +1426,13 @@ angular.module('app.controllers', [])
         localStorage.setItem("weight", $scope.input.weight);
         //console.log(localStorage.getItem("height"));
         $http({
-            url: "http://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
+            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             data: {
-                uid: localStorage.getItem("uid"),
+                token: localStorage.getItem("token"),
                 name: $scope.input.name,
                 gender: $scope.input.gender.name,
                 dateOfBirth: new Date($scope.input.dateOfBirth).getTime(),
