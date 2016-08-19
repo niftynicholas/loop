@@ -212,13 +212,11 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, routeName) {
+.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, routeName, $http) {
     $scope.routeName = '';
     var routeName = routeName.getData();
     console.log(routeName);
     $scope.routeName = routeName;
-
-
 
     $scope.username = localStorage.getItem("username");
     angular.extend($scope, {
@@ -237,8 +235,24 @@ angular.module('app.controllers', [])
             scrollWheelZoom: true,
             zoomControl: true
         }
-
     });
+
+    // Get the countries geojson data from a JSON
+    $http.get("https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/route?route=Southern%20Ridges%20Loop").success(function(data, status) {
+        angular.extend($scope, {
+            geojson: {
+                data: data.data,
+                style: {
+                    weight: 8,
+                    opacity: 1,
+                    color: '#10735F',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                }
+            }
+        });
+    });
+
     $scope.input = {
         comment: ""
     };
@@ -259,6 +273,7 @@ angular.module('app.controllers', [])
             $scope.input.comment = "";
         }
     };
+
     /**
      * Rating Stars
      */
@@ -897,17 +912,17 @@ angular.module('app.controllers', [])
         token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi';
     }
 
-    $('#startPoint').focus(function () {
-        if (dataShare.data != false && typeof (dataShare.getData().currentLocation.lat) != "undefined") {
+    $('#startPoint').focus(function() {
+        if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
             $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
         }
     });
 
-    $('#startPoint').focusout(function () {
+    $('#startPoint').focusout(function() {
         $('#startResult').empty();
     });
 
-    $('#endPoint').focusout(function () {
+    $('#endPoint').focusout(function() {
         $('#endResult').empty();
     });
 
