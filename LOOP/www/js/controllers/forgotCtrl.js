@@ -6,7 +6,7 @@ angular.module('app.main.controllers')
     // No way to verify resetting of password
     $scope.sendResetEmail = function() {
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/sendResetPasswordEmail",
+            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/sendResetPasswordEmail",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -17,7 +17,7 @@ angular.module('app.main.controllers')
         if (form.$valid) {
             $scope.show();
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/signup",
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/signup",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

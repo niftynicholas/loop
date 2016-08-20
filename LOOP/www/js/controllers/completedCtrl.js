@@ -130,7 +130,7 @@ angular.module('app.main.controllers')
             alert("No GPS Data was received");
         } else {
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/upload",
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/upload",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

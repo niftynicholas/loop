@@ -36,7 +36,7 @@ angular.module('app.main.controllers')
     $scope.verify = function() {
         $scope.show();
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/verify",
+            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/verify",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -28,7 +28,7 @@ angular.module('app.main.controllers')
         localStorage.setItem("weight", $scope.input.weight);
         //console.log(localStorage.getItem("height"));
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updateAccountDetails",
+            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/updateAccountDetails",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

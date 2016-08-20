@@ -26,7 +26,7 @@ angular.module('app.main.controllers')
     });
 
     // Get the countries geojson data from a JSON
-    $http.get("https://sgcycling-sgloop.rhcloud.com/api/users/freeCycle/route?route=Southern%20Ridges%20Loop").success(function(data, status) {
+    $http.get("https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/route?route=Southern%20Ridges%20Loop").success(function(data, status) {
         angular.extend($scope, {
             geojson: {
                 data: data.data,

@@ -5,7 +5,7 @@ angular.module('app.main.controllers')
     $scope.changePW = function(form) {
         if (form.$valid) {
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/login",
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/login",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -17,7 +17,7 @@ angular.module('app.main.controllers')
             }).then(function successCallback(response) {
                     if ($scope.input.newPassword.length >= 8) {
                         $http({
-                            url: "https://sgcycling-sgloop.rhcloud.com/api/users/accounts/updatePassword",
+                            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/updatePassword",
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
