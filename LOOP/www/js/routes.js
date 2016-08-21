@@ -134,5 +134,13 @@ angular.module('app.routes', [])
         controller: 'editProfileCtrl'
     })
 
+    .state('uploadPhoto', {
+        cache: false,
+        url: '/uploadPhoto',
+        templateUrl: 'templates/uploadPhoto.html',
+        controller: 'uploadPhotoCtrl'
+    })
+
+
     $urlRouterProvider.otherwise('/login')
 });
