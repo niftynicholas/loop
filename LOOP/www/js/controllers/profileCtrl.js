@@ -100,4 +100,10 @@ angular.module('app.main.controllers')
             console.log(err);
         });
     }
+
+    $scope.urlForImage = function(imageName) {
+        var name = imageName.substr(imageName.lastIndexOf('/') + 1);
+        var trueOrigin = cordova.file.dataDirectory + name;
+        return trueOrigin;
+    }
 })
