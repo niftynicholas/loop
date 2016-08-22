@@ -4,13 +4,13 @@
         <button class="button" ui-sref="editProfile">EDIT</button>
     </ion-nav-buttons>
     <ion-content padding="true" class="has-header">
-        <ion-list id="profile-list8" class=" ">
-            <ion-item class="item-thumbnail-left  " id="profile-list-item9">
-                 <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" height="200px" ng-click="addImage()"/>
-                <img ng-if="!(images.length !== 0)" src="img/placeholder-man-grid-240x268.png" ng-click="addImage()">
-                <h2><b>{{name}}<b></h2>
-                <h3><i class="icon ion-arrow-up-a"></i> Height: {{height}} cm</h3>
-                <h3><i class="icon ion-speedometer"></i> Weight: {{weight}} kg</h3>
+        <ion-list>
+            <ion-item style="text-align:center;">                
+                <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" height="200px"  ng-click="show()"/>
+                <img ng-if="!(images.length !== 0)" src="img/placeholder-man-grid-240x268.png" height="200px" ng-click="show()">
+                <h1><b>{{name}}<b></h1>
+                <h2><i class="icon ion-arrow-up-a"></i> Height: {{height}} cm</h2>
+                <h2><i class="icon ion-speedometer"></i> Weight: {{weight}} kg</h2>
             </ion-item>
         </ion-list>
         <div class="item item-body " id="profile-list-item-container2">

@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova'])
+angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova'])
     .filter('digits', function() {
         return function(input) {
             if (input < 10) input = '0' + input;
@@ -96,6 +96,23 @@ angular.module('app', ['ionic', 'app.main.controllers', 'app.routes', 'app.direc
 
                 permissions.requestPermission(
                     permissions.ACCESS_FINE_LOCATION,
+                    function(status) {
+                        if (!status.hasPermission) errorCallback();
+                    },
+                    errorCallback);
+            }
+        }
+
+        permissions.hasPermission(permissions.CAMERA, checkPermissionCallback, null);
+
+        function checkPermissionCallback(status) {
+            if (!status.hasPermission) {
+                var errorCallback = function() {
+                    console.warn('Location permission is not turned on');
+                }
+
+                permissions.requestPermission(
+                    permissions.CAMERA,
                     function(status) {
                         if (!status.hasPermission) errorCallback();
                     },
