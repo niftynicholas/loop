@@ -1,6 +1,28 @@
 angular.module('app.main.controllers')
 
-.controller('homeCtrl', function($scope, routeName, $state) {
+.controller('homeCtrl', function($scope, routeName, $state, $http) {
+    $scope.routes = {}
+
+    $http({
+        url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getNParkRoutes",
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            token: localStorage.getItem("token")
+        }
+    }).then(function successCallback(response) {
+            console.log(JSON.stringify(response));
+            $scope.routes = response.data.data;
+        },
+        function errorCallback(response) {
+            console.log(JSON.stringify(response));
+            $scope.hide();
+            $scope.showAlert();
+        })
+
+
     $scope.options = {
         loop: true,
         effect: 'slide',
