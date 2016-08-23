@@ -1,9 +1,10 @@
 angular.module('app.main.controllers')
 
-.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, routeName, $http) {
+.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, routeName, $http, $state, dataShare) {
     $scope.routeName = '';
     $scope.distance = '';
     $scope.duration = '';
+    var coordinates = [];
 
     angular.extend($scope, {
         center: {
@@ -42,30 +43,43 @@ angular.module('app.main.controllers')
             $scope.routeName = response.data.name;
             $scope.distance = response.data.distance;
             $scope.duration = response.data.duration;
+            coordinates = JSON.parse(response.data.route).coordinates;
             angular.extend($scope, {
                 geojson: {
                     data: JSON.parse(response.data.route),
                     style: {
                         weight: 8,
                         opacity: 1,
-                        color: '#062D26'
+                        color: '#022F40'
                     }
                 }
             });
 
-            // leafletData.getMap("viewRoute").then(function(map) {
-            //     console.log(JSON.parse(response.data.route).coordinates);
-            //     map.fitBounds(
-            //         JSON.parse(response.data.route).coordinates
-            //     );
-            //     map.invalidateSize();
-            // })
+            var temp = [];
+            for (var i=0;i < coordinates.length;i++) {
+                var temp2 = [];
+                temp2.push(coordinates[i][1]);
+                temp2.push(coordinates[i][0]);
+                temp.push(temp2);
+            }
+
+            coordinates = temp;
+
+            leafletData.getMap("viewRoute").then(function(map) {
+                map.fitBounds(
+                    coordinates, {
+                        animate: true,
+                        reset: true,
+                        padding: [25, 25],
+                        maxZoom: 16
+                    }
+                );
+                map.invalidateSize();
+            })
         },
         function errorCallback(response) {
             console.log(JSON.stringify(response));
         })
-
-
 
     $scope.username = localStorage.getItem("username");
 
@@ -109,6 +123,12 @@ angular.module('app.main.controllers')
         console.log('Selected rating is : ', rating);
         $scope.rating = rating;
     };
+
+
+    $scope.cycle = function() {
+        dataShare.sendData(coordinates);
+        $state.go("cycle");
+    }
 
     $scope.goBack = function() {
         $ionicHistory.goBack();
