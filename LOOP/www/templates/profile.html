@@ -5,9 +5,9 @@
     </ion-nav-buttons>
     <ion-content padding="true" class="has-header">
         <ion-list>
-            <ion-item style="text-align:center;">                
-                <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" height="200px"  ng-click="show()"/>
-                <img ng-if="!(images.length !== 0)" src="img/placeholder-man-grid-240x268.png" height="200px" ng-click="show()">
+            <ion-item style="text-align:center;">
+                <img style="border-radius: 100%;" ng-repeat="image in images" ng-src="{{urlForImage(image)}}" width="200px" height="200px"  ng-click="show()"/>
+                <img style="border-radius: 100%;" ng-if="!(images.length !== 0)" src="img/placeholder-man-grid-240x268.png" width="200px" height="200px" ng-click="show()">
                 <h1><b>{{name}}<b></h1>
                 <h2><i class="icon ion-arrow-up-a"></i> Height: {{height}} cm</h2>
                 <h2><i class="icon ion-speedometer"></i> Weight: {{weight}} kg</h2>

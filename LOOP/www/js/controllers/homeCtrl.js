@@ -18,8 +18,6 @@ angular.module('app.main.controllers')
         },
         function errorCallback(response) {
             console.log(JSON.stringify(response));
-            $scope.hide();
-            $scope.showAlert();
         })
 
 
@@ -44,25 +42,31 @@ angular.module('app.main.controllers')
         $scope.previousIndex = data.previousIndex;
     });
 
+    $scope.viewRoute = function(cid) {
+        routeName.sendData(cid);
+        console.log(cid);
+        $state.go("viewRoute");
+    }
+
     // Hardcoded to Populate Route Name at the Top START
-    $scope.viewRoute1 = function() {
-        $scope.routeName = document.getElementById("routeName1").textContent;
-        routeName.sendData($scope.routeName);
-        console.log($scope.routeName);
-        $state.go("viewRoute");
-    }
-
-    $scope.viewRoute2 = function() {
-        $scope.routeName = document.getElementById("routeName2").textContent;
-        routeName.sendData($scope.routeName);
-        console.log($scope.routeName);
-        $state.go("viewRoute");
-    }
-
-    $scope.viewRoute3 = function() {
-        $scope.routeName = document.getElementById("routeName3").textContent;
-        routeName.sendData($scope.routeName);
-        console.log($scope.routeName);
-        $state.go("viewRoute");
-    }
+    // $scope.viewRoute1 = function() {
+    //     $scope.routeName = document.getElementById("routeName1").textContent;
+    //     routeName.sendData($scope.routeName);
+    //     console.log($scope.routeName);
+    //     $state.go("viewRoute");
+    // }
+    //
+    // $scope.viewRoute2 = function() {
+    //     $scope.routeName = document.getElementById("routeName2").textContent;
+    //     routeName.sendData($scope.routeName);
+    //     console.log($scope.routeName);
+    //     $state.go("viewRoute");
+    // }
+    //
+    // $scope.viewRoute3 = function() {
+    //     $scope.routeName = document.getElementById("routeName3").textContent;
+    //     routeName.sendData($scope.routeName);
+    //     console.log($scope.routeName);
+    //     $state.go("viewRoute");
+    // }
 })

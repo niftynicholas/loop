@@ -2,11 +2,9 @@ angular.module('app.main.controllers')
 
 .controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, routeName, $http) {
     $scope.routeName = '';
-    var routeName = routeName.getData();
-    console.log(routeName);
-    $scope.routeName = routeName;
+    $scope.distance = '';
+    $scope.duration = '';
 
-    $scope.username = localStorage.getItem("username");
     angular.extend($scope, {
         center: {
             lat: 1.3521,
@@ -25,21 +23,51 @@ angular.module('app.main.controllers')
         }
     });
 
-    // Get the countries geojson data from a JSON
-    $http.get("https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/route?route=Southern%20Ridges%20Loop").success(function(data, status) {
-        angular.extend($scope, {
-            geojson: {
-                data: data.data,
-                style: {
-                    weight: 8,
-                    opacity: 1,
-                    color: '#10735F',
-                    dashArray: '3',
-                    fillOpacity: 0.7
+    $http({
+        url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getRoute",
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            cid: routeName.getData(),
+            token: localStorage.getItem("token")
+        }
+
+    }).then(function successCallback(response) {
+            console.log(response);
+            console.log(response.data);
+            console.log(JSON.parse(response.data.route));
+            console.log(JSON.parse(response.data.route).coordinates);
+            $scope.routeName = response.data.name;
+            $scope.distance = response.data.distance;
+            $scope.duration = response.data.duration;
+            angular.extend($scope, {
+                geojson: {
+                    data: JSON.parse(response.data.route),
+                    style: {
+                        weight: 8,
+                        opacity: 1,
+                        color: '#062D26'
+                    }
                 }
-            }
-        });
-    });
+            });
+
+            // leafletData.getMap("viewRoute").then(function(map) {
+            //     console.log(JSON.parse(response.data.route).coordinates);
+            //     map.fitBounds(
+            //         JSON.parse(response.data.route).coordinates
+            //     );
+            //     map.invalidateSize();
+            // })
+        },
+        function errorCallback(response) {
+            console.log(JSON.stringify(response));
+        })
+
+
+
+    $scope.username = localStorage.getItem("username");
 
     $scope.input = {
         comment: ""
