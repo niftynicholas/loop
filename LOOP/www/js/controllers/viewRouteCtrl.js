@@ -1,6 +1,7 @@
 angular.module('app.main.controllers')
 
 .controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, routeName, $http, $state, dataShare) {
+    $scope.username = localStorage.getItem("username");
     $scope.routeName = '';
     $scope.distance = '';
     $scope.duration = '';
@@ -43,6 +44,7 @@ angular.module('app.main.controllers')
             $scope.routeName = response.data.name;
             $scope.distance = response.data.distance;
             $scope.duration = response.data.duration;
+            $scope.comments = response.data.comments;
             coordinates = JSON.parse(response.data.route).coordinates;
             angular.extend($scope, {
                 geojson: {
@@ -86,21 +88,37 @@ angular.module('app.main.controllers')
     $scope.input = {
         comment: ""
     };
-    $scope.OtherUserComments = [{
-        user: "Venkman",
-        comment: "Well Lited at night."
-    }, {
-        user: "Melanie",
-        comment: "I love the people here!"
-    }];
     $scope.comments = [];
     $scope.postComment = function() {
         if ($scope.input.comment.length > 0) {
             $scope.comments.push({
                 dateTimeStamp: new Date().getTime(),
-                comment: $scope.input.comment
+                comment: $scope.input.comment,
+                username: $scope.username
             });
             $scope.input.comment = "";
+            console.log($scope.comments.length);
+            console.log($scope.comments[$scope.comments.length-1].dateTimeStamp);
+            console.log($scope.comments[$scope.comments.length-1].comment);
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/addComment",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    cid: routeName.getData(),
+                    token: localStorage.getItem("token"),
+                    comment: $scope.comments[$scope.comments.length-1]
+                }
+
+            }).then(function successCallback(response) {
+                    //
+                  console.log("success");
+              },
+              function errorCallback(response) {
+                  console.log("error with sending http request for posting comment to server");
+              });
         }
     };
 
