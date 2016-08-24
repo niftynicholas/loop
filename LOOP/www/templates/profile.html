@@ -6,9 +6,10 @@
     <ion-content padding="true" class="has-header">
         <ion-list>
             <ion-item style="text-align:center;">
-                <img style="border-radius: 100%;" ng-repeat="image in images" ng-src="{{urlForImage(image)}}" width="200px" height="200px" />
-                <img style="border-radius: 100%;" ng-if="!(images.length !== 0)" src="img/profile-placeholder.gif" width="200px" height="200px">
-                <br><a class="button button-clear button-positive" ng-click="show()">Change</a><br>
+                <div id="profilephoto" class="cropped-photo">
+                    <img style="border-radius: 100%;" src="img/profile-placeholder.gif" width="100px" height="100px">
+                </div>
+                <a class="button button-clear button-positive" ng-click="show()">Change</a><br>
                 <h2><b>{{name}}<b></h2>
                 <h2><i class="icon ion-arrow-up-a"></i> Height: {{height}} cm</h2>
                 <h2><i class="icon ion-speedometer"></i> Weight: {{weight}} kg</h2>

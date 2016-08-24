@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window, $cordovaCamera, $cordovaFile, $ionicActionSheet, $cordovaImagePicker, $ionicPlatform) {
+.controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window, $cordovaCamera, $cordovaFile, $ionicActionSheet, $cordovaImagePicker, $ionicPlatform, $ionicModal, $jrCrop) {
     //console.log("reading height and weight in the profile page");
     //console.log("height is now " + localStorage.getItem("height"));
     $scope.height = parseFloat(localStorage.getItem("height"));
@@ -69,6 +69,7 @@ angular.module('app.main.controllers')
             allowEdit: false,
             encodingType: Camera.EncodingType.JPEG,
             popoverOptions: CameraPopoverOptions,
+            correctOrientation: true
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
@@ -99,8 +100,10 @@ angular.module('app.main.controllers')
 
             function onCopySuccess(entry) {
                 $scope.$apply(function() {
-                    $scope.images = [];
-                    $scope.images.push(entry.nativeURL);
+                    // $scope.images = [];
+                    // $scope.images.push(entry.nativeURL);
+                    // $scope.crop($scope.images[0]);
+                    $scope.crop(entry.nativeURL);
                 });
             }
 
@@ -176,8 +179,7 @@ angular.module('app.main.controllers')
 
                     function onCopySuccess(entry) {
                         $scope.$apply(function() {
-                            $scope.images = [];
-                            $scope.images.push(entry.nativeURL);
+                            $scope.crop(entry.nativeURL);
                         });
                     }
 
@@ -202,6 +204,37 @@ angular.module('app.main.controllers')
         });
     });
 
+    // For cropping
+    $scope.crop = function(image) {
+        $jrCrop.crop({
+            url: image,
+            width: 200,
+            height: 200,
+            circle: true
+        }).then(function(canvas) {
+            dataUrl = canvas.toDataURL(),
+            profilePhoto = document.createElement('img');
+            profilePhoto.src = dataUrl;
+
+            // Style your image here
+            profilePhoto.style.width = '100px';
+            profilePhoto.style.height = '100px';
+            profilePhoto.style.borderRadius = '100%';
+
+            // After you are done styling it, append it to the BODY element
+            var element;
+            element = document.getElementById("profilephoto");
+            console.log(element);
+            if (element) {
+                element.innerHTML = "";
+            }
+            document.querySelector('.cropped-photo').appendChild(profilePhoto);
+        }, function() {
+            // User canceled or couldn't load image.
+        });
+    };
+
+    // For displaying the image
     $scope.urlForImage = function(imageName) {
         var name = imageName.substr(imageName.lastIndexOf('/') + 1);
         var trueOrigin = cordova.file.dataDirectory + name;
