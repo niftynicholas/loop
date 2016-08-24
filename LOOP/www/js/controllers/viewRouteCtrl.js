@@ -125,7 +125,6 @@ angular.module('app.main.controllers')
     };
 
     $scope.bookmark = function() {
-      console.log($scope.isbookmarked);
       if ($scope.isbookmarked === false) {
         $scope.isbookmarked = true;
         $http({
