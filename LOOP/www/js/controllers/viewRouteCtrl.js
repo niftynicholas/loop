@@ -46,6 +46,7 @@ angular.module('app.main.controllers')
             $scope.distance = response.data.distance;
             $scope.duration = response.data.duration;
             $scope.comments = response.data.comments;
+            $scope.isbookmarked = response.data.isbookmarked;
             coordinates = JSON.parse(response.data.route).coordinates;
             angular.extend($scope, {
                 geojson: {
@@ -124,22 +125,44 @@ angular.module('app.main.controllers')
     };
 
     $scope.bookmark = function() {
-      $http({
-          url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/bookmark",
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          data: {
-              token: localStorage.getItem("token"),
-              cid: routeCID
-          }
-      }).then(function successCallback(response) {
-              console.log(JSON.stringify(response));
-          },
-          function errorCallback(response) {
-              console.log("You have already bookmarked this route");
-          })
+      console.log($scope.isbookmarked);
+      if ($scope.isbookmarked === false) {
+        $scope.isbookmarked = true;
+        $http({
+            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/bookmark",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                token: localStorage.getItem("token"),
+                cid: routeCID
+            }
+        }).then(function successCallback(response) {
+                console.log(JSON.stringify(response));
+            },
+            function errorCallback(response) {
+                console.log(JSON.stringify(response));
+            })
+      } else {
+        $scope.isbookmarked = false;
+        $http({
+            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/removeBookmark",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                token: localStorage.getItem("token"),
+                cid: routeCID
+            }
+        }).then(function successCallback(response) {
+                console.log(JSON.stringify(response));
+            },
+            function errorCallback(response) {
+                console.log(JSON.stringify(response));
+            })
+      }
     }
 
     /**

@@ -53,8 +53,8 @@
         </div>
     </ion-content>
     <ion-footer-bar class="bar-light">
-        <button style="width:49%;" class="button icon-left ion-bookmark button-positive" ng-click="bookmark()">
-            Bookmark
+        <button style="width:49%;" ng-class="{'button icon-left ion-bookmark button-positive':isbookmarked===true,'button icon-left ion-bookmark button-stable':isbookmarked===false }" ng-click="bookmark()">
+            {{isbookmarked === true && "Bookmark" || "Unbookmark"}}
         </button>
         <button style="width:49%;" class="button icon-left ion-android-bicycle button-balanced">
             Cycle
