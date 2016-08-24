@@ -41,7 +41,7 @@ angular.module('app.main.controllers')
             }, {
                 text: 'Choose From Gallery'
             }],
-            titleText: 'Upload profile photo',
+            titleText: 'Upload Profile Photo',
             cancelText: 'Cancel',
             cancel: function() {
                 console.log("User tapped on cancel.")
@@ -58,13 +58,11 @@ angular.module('app.main.controllers')
         });
     };
 
-
     // This is to upload by taking photo
     // https://devdactic.com/how-to-capture-and-store-images-with-ionic/
     $scope.images = [];
 
     $scope.addImage = function() {
-        // 2
         var options = {
             destinationType: Camera.DestinationType.FILE_URI,
             sourceType: Camera.PictureSourceType.CAMERA, // Camera.PictureSourceType.PHOTOLIBRARY
@@ -73,10 +71,7 @@ angular.module('app.main.controllers')
             popoverOptions: CameraPopoverOptions,
         };
 
-        // 3
         $cordovaCamera.getPicture(options).then(function(imageData) {
-
-            // 4
             onImageSuccess(imageData);
 
             function onImageSuccess(fileURI) {
@@ -87,7 +82,6 @@ angular.module('app.main.controllers')
                 window.resolveLocalFileSystemURL(fileURI, copyFile, fail);
             }
 
-            // 5
             function copyFile(fileEntry) {
                 var name = fileEntry.fullPath.substr(fileEntry.fullPath.lastIndexOf('/') + 1);
                 var newName = makeid() + name;
@@ -103,9 +97,9 @@ angular.module('app.main.controllers')
                     fail);
             }
 
-            // 6
             function onCopySuccess(entry) {
                 $scope.$apply(function() {
+                    $scope.images = [];
                     $scope.images.push(entry.nativeURL);
                 });
             }
@@ -129,12 +123,6 @@ angular.module('app.main.controllers')
         });
     }
 
-    $scope.urlForImage = function(imageName) {
-        var name = imageName.substr(imageName.lastIndexOf('/') + 1);
-        var trueOrigin = cordova.file.dataDirectory + name;
-        return trueOrigin;
-    }
-
     // This is to upload from Gallery
     $scope.collection = {
         selectedImage: ''
@@ -142,31 +130,81 @@ angular.module('app.main.controllers')
 
     $ionicPlatform.ready(function() {
 
-        $scope.upload = function() {
-            // Image picker will load images according to these settings
-            var options = {
-                maximumImagesCount: 1, // Max number of selected images, I'm using only one for this example
-                width: 800,
-                height: 800,
-                quality: 80 // Higher is better
-            };
-
-            $cordovaImagePicker.getPictures(options).then(function(results) {
-                // Loop through acquired images
-                for (var i = 0; i < results.length; i++) {
-                    $scope.collection.selectedImage = results[i]; // We loading only one image so we can use it like this
-
-                    window.plugins.Base64.encodeFile($scope.collection.selectedImage, function(base64) { // Encode URI to Base64 needed for contacts plugin
-                        $scope.collection.selectedImage = base64;
-                        $scope.$apply(function() {
-                            $scope.images.push($scope.collection.selectedImage);
-                        });
-                    });
-                }
-            }, function(error) {
-                console.log('Error: ' + JSON.stringify(error)); // In case of error
-            });
+        $scope.collection = {
+            selectedImage: ''
         };
 
+        $ionicPlatform.ready(function() {
+            $scope.upload = function() {
+                // Image picker will load images according to these settings
+                var options = {
+                    maximumImagesCount: 1, // Max number of selected images, I'm using only one for this example
+                    width: 800,
+                    height: 800,
+                    quality: 80 // Higher is better
+                };
+
+                $cordovaImagePicker.getPictures(options).then(function(results) {
+                    for (var i = 0; i < results.length; i++) {
+                        var imageData = results[i];
+                    }
+
+                    onImageSuccess(imageData);
+
+                    function onImageSuccess(fileURI) {
+                        createFileEntry(fileURI);
+                    }
+
+                    function createFileEntry(fileURI) {
+                        window.resolveLocalFileSystemURL(fileURI, copyFile, fail);
+                    }
+
+                    function copyFile(fileEntry) {
+                        var name = fileEntry.fullPath.substr(fileEntry.fullPath.lastIndexOf('/') + 1);
+                        var newName = makeid() + name;
+
+                        window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(fileSystem2) {
+                                fileEntry.copyTo(
+                                    fileSystem2,
+                                    newName,
+                                    onCopySuccess,
+                                    fail
+                                );
+                            },
+                            fail);
+                    }
+
+                    function onCopySuccess(entry) {
+                        $scope.$apply(function() {
+                            $scope.images = [];
+                            $scope.images.push(entry.nativeURL);
+                        });
+                    }
+
+                    function fail(error) {
+                        console.log("fail: " + error.code);
+                    }
+
+                    function makeid() {
+                        var text = "";
+                        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+                        for (var i = 0; i < 5; i++) {
+                            text += possible.charAt(Math.floor(Math.random() * possible.length));
+                        }
+                        return text;
+                    }
+
+                }, function(err) {
+                    console.log(err);
+                });
+            };
+        });
     });
+
+    $scope.urlForImage = function(imageName) {
+        var name = imageName.substr(imageName.lastIndexOf('/') + 1);
+        var trueOrigin = cordova.file.dataDirectory + name;
+        return trueOrigin;
+    }
 })

@@ -48,24 +48,7 @@ angular.module('app.main.controllers')
         $state.go("viewRoute");
     }
 
-    $scope.bookmark = function(cid) {
-      $http({
-          url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/bookmark",
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          data: {
-              token: localStorage.getItem("token"),
-              cid:cid
-          }
-      }).then(function successCallback(response) {
-              console.log(JSON.stringify(response));
-          },
-          function errorCallback(response) {
-              console.log("You have already bookmarked this route");
-          })
-    }
+
 
     // Hardcoded to Populate Route Name at the Top START
     // $scope.viewRoute1 = function() {

@@ -6,6 +6,7 @@ angular.module('app.main.controllers')
     $scope.distance = '';
     $scope.duration = '';
     var coordinates = [];
+    var routeCID = routeName.getData();
 
     angular.extend($scope, {
         center: {
@@ -32,7 +33,7 @@ angular.module('app.main.controllers')
             'Content-Type': 'application/json'
         },
         data: {
-            cid: routeName.getData(),
+            cid: routeCID,
             token: localStorage.getItem("token")
         }
 
@@ -121,6 +122,25 @@ angular.module('app.main.controllers')
               });
         }
     };
+
+    $scope.bookmark = function() {
+      $http({
+          url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/bookmark",
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          data: {
+              token: localStorage.getItem("token"),
+              cid: routeCID
+          }
+      }).then(function successCallback(response) {
+              console.log(JSON.stringify(response));
+          },
+          function errorCallback(response) {
+              console.log("You have already bookmarked this route");
+          })
+    }
 
     /**
      * Rating Stars

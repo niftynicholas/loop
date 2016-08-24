@@ -68,10 +68,8 @@
         </div>-->
         <ion-list>
             <h4>Here are some routes recommended by National Parks Board:</h4><br>
-            <ion-item ng-repeat="route in routes">
-                {{route.name}}
-                <button id="home-button7" class=" button button-balanced button-block icon-right ion-bookmark " ng-click="bookmark(route.cid)">Bookmark</button>
-                <button id="home-button7" class=" button button-balanced button-block icon-right ion-bookmark " ng-click="viewRoute(route.cid)">Enter</button>
+            <ion-item ng-repeat="route in routes" ng-click="viewRoute(route.cid)">
+                {{route.name}}                
             </ion-item>
         </ion-list>
     </ion-content>
