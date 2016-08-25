@@ -67,9 +67,21 @@
 
         </div>-->
         <ion-list>
-            <h4>Here are some routes recommended by National Parks Board:</h4><br>
             <ion-item ng-repeat="route in routes" ng-click="viewRoute(route.cid)">
-                {{route.name}}  
+                <b>{{route.name}}</b></br>
+                </br>
+                <div data-tap-disabled="true" style="height:30vh;">
+                    <leaflet id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
+                </div>
+                <br>
+                <div class="row" style="padding: 0 !important;">
+                    <div class="col" style="padding: 0 !important;">
+                        <p><b>Distance:</b> {{route.distance}} km <b>Duration:</b> {{route.duration}} mins</p>
+                    </div>
+                    <div class="col" style="padding: 0 !important;">
+                        <p align="right">{{route.noOfComments}} <i class="icon ion-ios-chatbubble-outline"></i></p>
+                    </div>
+                </div>
             </ion-item>
         </ion-list>
     </ion-content>

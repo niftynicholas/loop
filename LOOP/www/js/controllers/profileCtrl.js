@@ -212,9 +212,12 @@ angular.module('app.main.controllers')
             height: 200,
             circle: true
         }).then(function(canvas) {
-            dataUrl = canvas.toDataURL(),
+            dataURL = canvas.toDataURL();
+            console.log(dataURL);
+            // Pass this dataURL to the server
+
             profilePhoto = document.createElement('img');
-            profilePhoto.src = dataUrl;
+            profilePhoto.src = dataURL;
 
             // Style your image here
             profilePhoto.style.width = '100px';
@@ -224,7 +227,6 @@ angular.module('app.main.controllers')
             // After you are done styling it, append it to the BODY element
             var element;
             element = document.getElementById("profilephoto");
-            console.log(element);
             if (element) {
                 element.innerHTML = "";
             }
