@@ -1,6 +1,9 @@
 <ion-view title="Park Connector Network" hide-back-button="true">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
+    <ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-android-locate" ng-click="locateMe()"></button>
+    </ion-nav-buttons>
     <ion-content data-tap-disabled="true" scroll="false">
-        <leaflet id="pcn" lf-center="center" defaults="defaults" tiles="tiles" height="100%" width="100%"></leaflet>
+        <leaflet id="pcn" lf-center="center" defaults="defaults" paths="paths" tiles="tiles" height="100%" width="100%"></leaflet>
     </ion-content>
 </ion-view>

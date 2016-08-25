@@ -102,9 +102,15 @@ angular.module('app.main.controllers')
             }
         },
         defaults: {
+            dragging: false,
+            touchZoom: false,
             scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            tap: false,
             zoomControl: false,
-            dragging: false
+            attributionControl: false,
+            keyboard: false
         }
     });
 
