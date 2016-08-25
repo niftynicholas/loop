@@ -41,7 +41,6 @@ angular.module('app.routes', [])
     })
 
     .state('tabsController.home', {
-        cache: false,
         url: '/home',
         views: {
             'tab1': {
