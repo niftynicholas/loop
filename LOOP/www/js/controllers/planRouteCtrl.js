@@ -1,12 +1,12 @@
 angular.module('app.main.controllers')
 
-.controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare, sharedRoute) {
+.controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare, sharedRoute, $cordovaGeolocation) {
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
 
     /**
-     * Ajax call to get token from OneMap
-     */
+    * Ajax call to get token from OneMap
+    */
     $.ajax({
         dataType: 'json',
         url: 'http://www.onemap.sg/API/services.svc/getToken',
@@ -25,9 +25,13 @@ angular.module('app.main.controllers')
     }
 
     $('#startPoint').focus(function() {
-        if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
-            $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
-        }
+        $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+            $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + "Current Location" + '</div>');
+        }, function(err) {
+            if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
+                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
+            }
+        });
     });
 
     $('#startPoint').focusout(function() {
@@ -39,11 +43,11 @@ angular.module('app.main.controllers')
     });
 
     /**
-     * Populate Search Results for Start Point
-     */
+    * Populate Search Results for Start Point
+    */
     $('#startPoint').keyup(function() {
         var input = $('#startPoint').val(),
-            type = 'WGS84';
+        type = 'WGS84';
         var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
         $.getJSON(requestURL, {
             'token': token,
@@ -81,11 +85,11 @@ angular.module('app.main.controllers')
     });
 
     /**
-     * Populate Search Results for End Point
-     */
+    * Populate Search Results for End Point
+    */
     $('#endPoint').keyup(function() {
         var input = $('#endPoint').val(),
-            type = 'WGS84';
+        type = 'WGS84';
         var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
         $.getJSON(requestURL, {
             'token': token,
@@ -123,8 +127,8 @@ angular.module('app.main.controllers')
     });
 
     /**
-     * Calculate Route based on Start & End Points
-     */
+    * Calculate Route based on Start & End Points
+    */
     $scope.planRoute = function() {
 
         var startInput = document.getElementById("startPoint");
@@ -351,21 +355,15 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
         map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
             animate: false,
             reset: true,
-            padding: [25, 25],
             maxZoom: 16
         });
     } else {
         map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
             animate: false,
             reset: true,
-            padding: [25, 25],
             maxZoom: 16
         });
     }
-    /*if ($scope.currentLocation == "undefined") {
-        map.setView(startLatLng, 11);
-    } else {
-        map.setView(startLatLng, 11);
-    }*/
+
 
 }

@@ -68,8 +68,8 @@ angular.module('app.main.controllers')
 
 
     /**
-     * Confirm Dialog
-     */
+    * Confirm Dialog
+    */
     $scope.discard = function() {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Discard Activity',
@@ -88,8 +88,8 @@ angular.module('app.main.controllers')
     };
 
     /**
-     * Rating Stars
-     */
+    * Rating Stars
+    */
     $scope.ratingsObject = {
         iconOn: 'ion-ios-star',
         iconOff: 'ion-ios-star-outline',
@@ -112,17 +112,17 @@ angular.module('app.main.controllers')
     $scope.OtherUserComments = [];
     $scope.comments = [];
     $scope.postComment = function() {
-            if ($scope.input.comment.length > 0) {
-                $scope.comments.push({
-                    dateTimeStamp: new Date().getTime(),
-                    comment: $scope.input.comment
-                });
-                $scope.input.comment = "";
-            }
+        if ($scope.input.comment.length > 0) {
+            $scope.comments.push({
+                dateTimeStamp: new Date().getTime(),
+                comment: $scope.input.comment
+            });
+            $scope.input.comment = "";
         }
-        /**
-         * Save Button
-         */
+    }
+    /**
+    * Save Button
+    */
     $scope.save = function() {
         var route = $scope.paths.p1.latlngs;
         var data = dataShare.getData();
@@ -137,9 +137,9 @@ angular.module('app.main.controllers')
                 },
                 data: {
                     token: localStorage.getItem("token"),
-                    startDateTimeStamp: new Date().getTime(), //Need the datetimestamp from the start of clicking the start activity
+                    startDateTimeStamp: new Date().getMilliseconds(), //Need the datetimestamp from the start of clicking the start activity
                     distance: data.distance,
-                    duration: data.duration,
+                    duration: data.durationInMillis,
                     averageSpeed: data.averageSpeed,
                     calories: data.calories,
                     ratings: $scope.rating || 2,

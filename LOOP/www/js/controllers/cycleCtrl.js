@@ -105,12 +105,6 @@ angular.module('app.main.controllers')
         dataShare.clearData();
         dataShare.sendData(data);
         $scope.firstLoad = true;
-        leafletData.getMap("inprogress").then(function(map) {
-            map.locate({
-                watch: true,
-                enableHighAccuracy: false
-            });
-        });
         $state.go("inprogress");
     }
 
