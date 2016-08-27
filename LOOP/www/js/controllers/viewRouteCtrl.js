@@ -99,9 +99,6 @@ angular.module('app.main.controllers')
                 username: $scope.username
             });
             $scope.input.comment = "";
-            console.log($scope.comments.length);
-            console.log($scope.comments[$scope.comments.length-1].dateTimeStamp);
-            console.log($scope.comments[$scope.comments.length-1].comment);
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/addComment",
                 method: 'POST',
@@ -115,7 +112,6 @@ angular.module('app.main.controllers')
                 }
 
             }).then(function successCallback(response) {
-                    //
                   console.log("success");
               },
               function errorCallback(response) {

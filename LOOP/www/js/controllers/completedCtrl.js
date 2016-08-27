@@ -109,7 +109,6 @@ angular.module('app.main.controllers')
     $scope.input = {
         comment: ""
     };
-    $scope.OtherUserComments = [];
     $scope.comments = [];
     $scope.postComment = function() {
         if ($scope.input.comment.length > 0) {
