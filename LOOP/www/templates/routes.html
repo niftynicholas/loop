@@ -48,34 +48,13 @@
             <ion-view>
                 <ion-content class="has-header has-tabs-top">
                     <ion-list>
-                        <ion-item ng-repeat="route in routes" ng-click="viewRoute(route.cid)">
-                            <b>{{route.name}}</b></br>
-                            </br>
-                            <div data-tap-disabled="true" style="height:30vh;">
+                        <ion-item class="item item-thumbnail-left" ng-repeat="route in routes" ng-click="viewRoute(route.cid)">
+                            <div data-tap-disabled="true" style="position: absolute; top: 10px; left: 10px; max-width: 80px; max-height: 80px; width: 100%; height: 100%;">
                                 <leaflet id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
                             </div>
-                            <br>
-                            <div class="row" >
-                                <div class="col-90" style="padding: 0 !important;">
-                                    <p><b>Distance:</b> {{route.distance}} km <b>Duration:</b> {{route.duration}} mins</p>
-                                </div>
-                                <div class="col-10" style="padding: 0 !important;">
-                                    <p style="width=20%;" align="right">{{route.numcomments}} <i class="icon ion-ios-chatbubble-outline"></i></p>
-                                </div>
-                            </div>
+                            <h2>{{route.name}}</h2>
+                            <p>Distance: {{route.distance}} km</br>Duration: {{route.duration}} mins</br>Comments: {{route.numcomments}}</p>
                         </ion-item>
-                        <!--<ion-item class="item-thumbnail-right  " id="routes-list-item5" ui-sref="viewRoute">
-                            <img src="img/sg.png">
-                            <h2>PCN 4</h2>
-                        </ion-item>
-                        <ion-item class="item-thumbnail-right  " id="routes-list-item6" ui-sref="viewRoute">
-                            <img src="img/sg.png">
-                            <h2>PCN 5</h2>
-                        </ion-item>
-                        <ion-item class="item-thumbnail-right" id="routes-list-item7" ui-sref="viewRoute">
-                            <img src="img/sg.png">
-                            <h2>PCN 6</h2>
-                        </ion-item>-->
                     </ion-list>
                 </ion-content>
             </ion-view>

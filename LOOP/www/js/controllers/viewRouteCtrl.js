@@ -5,6 +5,7 @@ angular.module('app.main.controllers')
     $scope.routeName = '';
     $scope.distance = '';
     $scope.duration = '';
+    $scope.ratings ='';
     var coordinates = [];
     var routeCID = routeName.getData();
 
@@ -47,6 +48,7 @@ angular.module('app.main.controllers')
             $scope.duration = response.data.duration;
             $scope.comments = response.data.comments;
             $scope.isbookmarked = response.data.isbookmarked;
+            $scope.ratings = parseFloat(response.data.ratings).toFixed(2);            
             coordinates = JSON.parse(response.data.route).coordinates;
             angular.extend($scope, {
                 geojson: {
