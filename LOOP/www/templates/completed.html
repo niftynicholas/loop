@@ -49,17 +49,12 @@
                 Comments
             </div>
             <!-- If there is no comment -->
-            <a class="item" href="#" ng-if="!(OtherUserComments.length !== 0 || comments.length !== 0)">There are no comments yet.</a>
+            <a class="item" href="#" ng-if="!(comments.length !== 0)">There are no comments yet.</a>
 
             <!-- If there are comments -->
-            <a class="item item-avatar" href="#" ng-repeat="c in OtherUserComments">
-                <img src="img/profile-placeholder.gif">
-                <h2><b>{{c.user}}</b></h2>
-                <p>{{c.comment}}</p>
-            </a>
             <a class="item item-avatar" href="#" ng-repeat="c in comments">
                 <img src="img/profile-placeholder.gif">
-                <h2><b>{{username}}</b></h2>
+                <h2><b>{{ "Me" || c.username}}</b></h2>
                 <p>{{c.comment}}</p>
             </a>
             <form>
