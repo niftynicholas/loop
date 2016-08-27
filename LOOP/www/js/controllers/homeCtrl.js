@@ -58,7 +58,7 @@ angular.module('app.main.controllers')
                             color: '#022F40'
                         }
 
-                        leafletData.getMap(routeCID).then(function(map) {
+                        leafletData.getMap((routeCID)).then(function(map) {
                             map.fitBounds(
                                 coordinates, {
                                     animate: true,
