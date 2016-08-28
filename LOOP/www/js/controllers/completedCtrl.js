@@ -144,6 +144,7 @@ angular.module('app.main.controllers')
                     ratings: $scope.rating || 2,
                     route: $scope.paths.p1.latlngs,
                     generalComments: $scope.comments,
+                    geotagComments: "Link to array of geotag here",
                     isShared: $scope.input.isShared || false
                 }
             }).then(function successCallback(response) {
