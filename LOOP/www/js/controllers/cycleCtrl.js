@@ -100,7 +100,8 @@ angular.module('app.main.controllers')
     $scope.startActivity = function() {
         var data = {
             currentLocation: $scope.currentLocation,
-            time: $scope.timestamp
+            time: $scope.timestamp,
+            startDateTimeStamp: new Date().getTime()
         };
         dataShare.clearData();
         dataShare.sendData(data);

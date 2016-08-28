@@ -15,6 +15,7 @@ angular.module('app.main.controllers')
     var latlngs = [];
     var polyline = null;
     var data;
+    var geotags = L.layerGroup();
 
     $scope.options = {
         loop: false,
@@ -178,6 +179,9 @@ angular.module('app.main.controllers')
     map.addControl(bearingControl = new L.Control.Bearing({closeOnZeroBearing: false}));
     map.compassBearing.enable();
 
+    //Adding the GeoTags Layer into Map
+    geotags.addTo(map);
+
     var currentLoc = L.circle([0, 0], 10, {
         fillColor: '#4183D7', //DarkSlateGray
         opacity: 80,
@@ -196,6 +200,8 @@ angular.module('app.main.controllers')
     $scope.$broadcast('timer-start');
     $scope.timerRunning = true;
 
+    $scope.startDateTimeStamp = dataShare.data.startDateTimeStamp;
+
     if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
         //Pass currentLocation from cycle.html
         var data = dataShare.getData();
@@ -209,10 +215,9 @@ angular.module('app.main.controllers')
             //alt: e.altitude,
             time: data.time
         });
-        dataShare.clearData();
-
     }
 
+    dataShare.clearData();
     //***************************** ON WATCH ****************************************
     var setWatch = true;
 
@@ -324,7 +329,8 @@ angular.module('app.main.controllers')
                     averageSpeed: $scope.averageSpeed,
                     calories: $scope.calories,
                     path: latlngs,
-                    durationInMillis: $scope.durationInMillis
+                    durationInMillis: $scope.durationInMillis,
+                    startDateTimeStamp: $scope.startDateTimeStamp
                 };
                 dataShare.sendData(data); //pass as JS object
                 $state.go('completed');
@@ -361,7 +367,9 @@ angular.module('app.main.controllers')
         });
 
         myPopup.then(function(res) {
-            console.log('Tapped!', res);
+            L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
+            console.log(geotags);
+            console.log('Succesfully added');
         });
     };
 

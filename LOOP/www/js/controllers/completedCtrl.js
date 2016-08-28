@@ -136,7 +136,7 @@ angular.module('app.main.controllers')
                 },
                 data: {
                     token: localStorage.getItem("token"),
-                    startDateTimeStamp: new Date().getMilliseconds(), //Need the datetimestamp from the start of clicking the start activity
+                    startDateTimeStamp: data.startDateTimeStamp, //Need the datetimestamp from the start of clicking the start activity
                     distance: data.distance,
                     duration: data.durationInMillis,
                     averageSpeed: data.averageSpeed,
