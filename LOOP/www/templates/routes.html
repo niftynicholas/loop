@@ -48,12 +48,14 @@
             <ion-view>
                 <ion-content class="has-header has-tabs-top">
                     <ion-list>
-                        <ion-item class="item item-thumbnail-left" ng-repeat="route in routes" ng-click="viewRoute(route.cid)">
+                        <ion-item ng-repeat="route in routes" ng-click="viewRoute(route.cid)">
+                            {{route.name}}
+                        <!-- <ion-item class="item item-thumbnail-left" ng-repeat="route in routes" ng-click="viewRoute(route.cid)">
                             <div data-tap-disabled="true" style="position: absolute; top: 10px; left: 10px; max-width: 80px; max-height: 80px; width: 100%; height: 100%;">
                                 <leaflet id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
                             </div>
                             <h2>{{route.name}}</h2>
-                            <p>Distance: {{route.distance}} km</br>Duration: {{route.duration}} mins</br>Comments: {{route.numcomments}}</p>
+                            <p>Distance: {{route.distance}} km</br>Duration: {{route.duration}} mins</br>Comments: {{route.numcomments}}</p> -->
                         </ion-item>
                     </ion-list>
                 </ion-content>
