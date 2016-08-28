@@ -16,6 +16,7 @@ angular.module('app.main.controllers')
     var polyline = null;
     var data;
     var geotags = L.layerGroup();
+    var geotagsInfo = [];
 
     $scope.options = {
         loop: false,
@@ -330,7 +331,8 @@ angular.module('app.main.controllers')
                     calories: $scope.calories,
                     path: latlngs,
                     durationInMillis: $scope.durationInMillis,
-                    startDateTimeStamp: $scope.startDateTimeStamp
+                    startDateTimeStamp: $scope.startDateTimeStamp,
+                    geotagsInfo: geotagsInfo
                 };
                 dataShare.sendData(data); //pass as JS object
                 $state.go('completed');
@@ -368,6 +370,13 @@ angular.module('app.main.controllers')
 
         myPopup.then(function(res) {
             L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
+            geotagsInfo.push(
+                {
+                    dateTimeStamp: new Date().getTime(),
+                    coordinates: $scope.currentLoc,
+                    comment: res
+                }
+            );
             console.log(geotags);
             console.log('Succesfully added');
         });
