@@ -29,6 +29,9 @@ angular.module('app.main.controllers')
     });
 
     $scope.onTabSelected = function() {
+        var routeCID = null;
+        var geom = null;
+        $scope.routes = {};
         $.ajax({
             dataType: 'json',
             url: 'https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getBookmarkedRoutes',
@@ -44,9 +47,9 @@ angular.module('app.main.controllers')
 
         for (var i = 0; i < $scope.routes.length; i++) {
             var route = $scope.routes[i];
-            var routeCID = route.cid;
+            routeCID = "" + route.cid;
 
-            var geom = JSON.parse(route.geom);
+            geom = JSON.parse(route.geom);
 
             var myStyle = {
                 weight: 8,
@@ -66,26 +69,11 @@ angular.module('app.main.controllers')
             }
 
             coordinates = temp;
+            getRouteMap(routeCID, geom, myStyle, coordinates, leafletData);
 
-            leafletData.getMap(routeCID).then(function(map) {
-                console.log(routeCID);
-                console.log(geom);
-
-                L.geoJson(geom, {
-                    style: myStyle
-                }).addTo(map);
-
-                map.fitBounds(
-                    coordinates, {
-                        animate: true,
-                        reset: true,
-                        padding: [25, 25],
-                        maxZoom: 16
-                    }
-                );
-                map.invalidateSize();
-            })
         }
+
+
     }
 
     $scope.viewRoute = function(cid) {
@@ -96,3 +84,24 @@ angular.module('app.main.controllers')
 
 
 })
+
+function getRouteMap (routeCID, geom, myStyle, coordinates, leafletData) {
+    leafletData.getMap(routeCID).then(function(map) {
+        console.log(routeCID);
+        console.log(geom);
+
+        L.geoJson(geom, {
+            style: myStyle
+        }).addTo(map);
+
+        map.fitBounds(
+            coordinates, {
+                animate: true,
+                reset: true,
+                padding: [25, 25],
+                maxZoom: 16
+            }
+        );
+        map.invalidateSize();
+    });
+}
