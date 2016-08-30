@@ -9,6 +9,7 @@ angular.module('app.main.controllers')
     var bicycle_rental;
     var bicycle_parking;
     var drinking_water;
+    var geotaggedComments;
 
     $.ajax({
         dataType: 'json',
@@ -19,7 +20,7 @@ angular.module('app.main.controllers')
             token: localStorage.getItem("token")
         },
         success: function(response) {
-            console.log(response);
+            geotaggedComments = response.geotaggedComments;
             shelters = response.shelter;
             toilets = response.toilets;
             bicycle_rental = response.bicycleRental;
@@ -63,6 +64,17 @@ angular.module('app.main.controllers')
                     icon: {
                         icon: 'male',
                         markerColor: 'black',
+                        prefix: 'fa'
+                    }
+                },
+                comments: {
+                    name: 'Geotagged Comments',
+                    type: 'geoJSONAwesomeMarker',
+                    data: geotaggedComments,
+                    visibile: false,
+                    icon: {
+                        icon: 'male',
+                        markerColor: 'red',
                         prefix: 'fa'
                     }
                 },
