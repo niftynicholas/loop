@@ -1,7 +1,9 @@
 angular.module('app.main.controllers')
 
 .controller('routesBookmarksCtrl', function($scope, routeName, $state, $http, leafletData) {
-    $scope.routes = {}
+    $scope.routes;
+    var routeCID;
+    var geom;
 
     angular.extend($scope, {
         center: {
@@ -28,9 +30,6 @@ angular.module('app.main.controllers')
         }
     });
 
-    var routeCID = null;
-    var geom = null;
-    $scope.routes = {};
     $.ajax({
         dataType: 'json',
         url: 'https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getBookmarkedRoutes',
@@ -41,35 +40,37 @@ angular.module('app.main.controllers')
         },
         success: function(response) {
             $scope.routes = response.data;
+            console.log("Received " + $scope.routes.length + " routes...");
+
+            for (var i = 0; i < $scope.routes.length; i++) {
+                var route = $scope.routes[i];
+                routeCID = "" + route.cid;
+                geom = JSON.parse(route.geom);
+                console.log("TOP");
+                console.log(geom);
+                console.log("Preparing drawing properties for Route CID " + route.cid + "...");
+
+                var myStyle = {
+                    weight: 8,
+                    opacity: 1,
+                    color: '#022F40'
+                };
+
+                var coordinates = geom.coordinates;
+                var temp = [];
+
+                for (var j = 0; j < coordinates.length; j++) {
+                    var temp2 = [];
+                    temp2.push(coordinates[j][1]);
+                    temp2.push(coordinates[j][0]);
+                    temp.push(temp2);
+                }
+
+                coordinates = temp;
+                getRouteMap(routeCID, geom, myStyle, coordinates, leafletData);
+            }
         }
     });
-
-    for (var i = 0; i < $scope.routes.length; i++) {
-        var route = $scope.routes[i];
-        routeCID = "" + route.cid;
-
-        geom = JSON.parse(route.geom);
-
-        var myStyle = {
-            weight: 8,
-            opacity: 1,
-            color: '#022F40'
-        };
-
-        var coordinates = geom.coordinates;
-
-        var temp = [];
-
-        for (var j = 0; j < coordinates.length; j++) {
-            var temp2 = [];
-            temp2.push(coordinates[j][1]);
-            temp2.push(coordinates[j][0]);
-            temp.push(temp2);
-        }
-
-        coordinates = temp;
-        getRouteMap(routeCID, geom, myStyle, coordinates, leafletData);
-    }
 
     $scope.viewRoute = function(cid) {
         routeName.sendData(cid);
@@ -79,6 +80,9 @@ angular.module('app.main.controllers')
 
 function getRouteMap(routeCID, geom, myStyle, coordinates, leafletData) {
     leafletData.getMap(routeCID).then(function(map) {
+        console.log("BOTTOM");
+        console.log(geom);
+        console.log("Drawing on Leaflet ID " + routeCID + "...");
         L.geoJson(geom, {
             style: myStyle
         }).addTo(map);
@@ -86,9 +90,7 @@ function getRouteMap(routeCID, geom, myStyle, coordinates, leafletData) {
         map.fitBounds(
             coordinates, {
                 animate: true,
-                reset: true,
-                padding: [25, 25],
-                maxZoom: 16
+                padding: [5, 5]
             }
         );
         map.invalidateSize();
