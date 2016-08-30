@@ -26,6 +26,7 @@ angular.module('app.main.controllers')
             bicycle_rental = response.bicycleRental;
             bicycle_parking = response.bicycleParking;
             drinking_water = response.drinkingWater;
+            console.log(geotaggedComments);
         }
     });
 
@@ -60,21 +61,10 @@ angular.module('app.main.controllers')
                     name: 'Toilets',
                     type: 'geoJSONAwesomeMarker',
                     data: toilets,
-                    visibile: false,
+                    visible: false,
                     icon: {
                         icon: 'male',
                         markerColor: 'black',
-                        prefix: 'fa'
-                    }
-                },
-                comments: {
-                    name: 'Geotagged Comments',
-                    type: 'geoJSONAwesomeMarker',
-                    data: geotaggedComments,
-                    visibile: false,
-                    icon: {
-                        icon: 'male',
-                        markerColor: 'red',
                         prefix: 'fa'
                     }
                 },
@@ -82,7 +72,7 @@ angular.module('app.main.controllers')
                     name: 'Shelters',
                     type: 'geoJSONAwesomeMarker',
                     data: shelters,
-                    visibile: false,
+                    visible: false,
                     icon: {
                         icon: 'umbrella',
                         markerColor: 'orange',
@@ -93,7 +83,7 @@ angular.module('app.main.controllers')
                     name: 'Drinking Water Points',
                     type: 'geoJSONAwesomeMarker',
                     data: drinking_water,
-                    visibile: false,
+                    visible: false,
                     icon: {
                         icon: 'tint',
                         markerColor: 'blue',
@@ -104,7 +94,7 @@ angular.module('app.main.controllers')
                     name: 'Bicycle Parking Lots',
                     type: 'geoJSONAwesomeMarker',
                     data: bicycle_parking,
-                    visibile: false,
+                    visible: false,
                     icon: {
                         icon: 'bicycle',
                         markerColor: 'gray',
@@ -115,7 +105,7 @@ angular.module('app.main.controllers')
                     name: 'Bicycle Rentals',
                     type: 'geoJSONAwesomeMarker',
                     data: bicycle_rental,
-                    visibile: false,
+                    visible: false,
                     icon: {
                         icon: 'key',
                         markerColor: 'green',
@@ -127,6 +117,39 @@ angular.module('app.main.controllers')
     });
 
     leafletData.getMap("pcn").then(function(map) {
+
+        function onEachFeature(feature, layer) {
+            if (feature.properties && feature.properties.comment) {
+                layer.bindPopup(feature.properties.comment);
+            }
+        }
+        var geoJsonLayer = L.geoJson(geotaggedComments, {
+            onEachFeature: onEachFeature
+        });
+
+        var geotaggedCommentsButton = L.easyButton({
+            id: 'animated-marker-toggle',
+            type: 'replace',
+            states: [{
+                stateName: 'add-geotagged-comments',
+                icon: 'fa-map-marker',
+                title: 'Add Geotagged Comments',
+                onClick: function(control) {
+                    map.addLayer(geoJsonLayer);
+                    control.state('remove-geotagged-comments');
+                }
+            }, {
+                stateName: 'remove-geotagged-comments',
+                title: 'Remove Geotagged Comments',
+                icon: 'fa-undo',
+                onClick: function(control) {
+                    map.removeLayer(geoJsonLayer);
+                    control.state('add-geotagged-comments');
+                }
+            }]
+        });
+        geotaggedCommentsButton.addTo(map);
+
         setInterval(function() {
             map.invalidateSize();
         }, 3000); //every 3s

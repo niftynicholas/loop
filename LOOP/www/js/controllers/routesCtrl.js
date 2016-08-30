@@ -42,6 +42,7 @@ angular.module('app.main.controllers')
             },
             success: function(response) {
                 $scope.routes = response.data;
+                console.log(response.data);
             }
         });
 
