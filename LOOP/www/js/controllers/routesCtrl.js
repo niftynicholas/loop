@@ -29,6 +29,14 @@ angular.module('app.main.controllers')
     });
 
     $scope.onTabSelected = function() {
+        $scope.updateBookmarks();
+    }
+
+    $scope.onTabDeselected = function() {
+        $scope.updateBookmarks();
+    }
+
+    $scope.updateBookmarks = function() {
         var routeCID = null;
         var geom = null;
         $scope.routes = {};
@@ -42,7 +50,6 @@ angular.module('app.main.controllers')
             },
             success: function(response) {
                 $scope.routes = response.data;
-                console.log(response.data);
             }
         });
 
@@ -71,22 +78,16 @@ angular.module('app.main.controllers')
 
             coordinates = temp;
             getRouteMap(routeCID, geom, myStyle, coordinates, leafletData);
-
         }
-
-
     }
 
     $scope.viewRoute = function(cid) {
         routeName.sendData(cid);
         $state.go("viewRoute");
     }
-
-
-
 })
 
-function getRouteMap (routeCID, geom, myStyle, coordinates, leafletData) {
+function getRouteMap(routeCID, geom, myStyle, coordinates, leafletData) {
     leafletData.getMap(routeCID).then(function(map) {
         console.log(routeCID);
         console.log(geom);

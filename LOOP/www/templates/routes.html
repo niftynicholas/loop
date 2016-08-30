@@ -44,7 +44,7 @@
             </ion-view>
         </ion-tab>
 
-        <ion-tab title="Bookmarks" on-select="onTabSelected()">
+        <ion-tab title="Bookmarks" on-deselect="main.onTabDeselected()" on-select="onTabSelected()">
             <ion-view>
                 <ion-content class="has-header has-tabs-top">
                     <ion-list>
