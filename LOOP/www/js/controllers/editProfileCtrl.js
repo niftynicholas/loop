@@ -18,15 +18,13 @@ angular.module('app.main.controllers')
     $scope.input.name = localStorage.getItem("name");
     $scope.input.height = parseFloat(localStorage.getItem("height"));
     $scope.input.weight = parseFloat(localStorage.getItem("weight"));
-    //tabsController.profile
+
     $scope.save = function() {
-        //console.log("saving to the localStoage height " + $scope.input.height);
         localStorage.setItem("name", $scope.input.name);
         localStorage.setItem("gender", $scope.input.gender.name);
         localStorage.setItem("dateOfBirth", new Date($scope.input.dateOfBirth).getTime());
         localStorage.setItem("height", $scope.input.height);
         localStorage.setItem("weight", $scope.input.weight);
-        //console.log(localStorage.getItem("height"));
         $http({
             url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/updateAccountDetails",
             method: 'POST',

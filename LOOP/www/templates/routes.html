@@ -1,65 +1,15 @@
 <ion-view title="Routes" hide-back-button="true">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
-    <ion-tabs class="tabs-striped tabs-top">
+    <ion-tabs class="tabs-striped tabs-top tabs-background-light">
+        <ion-tab title="My Routes" ui-sref="tabsController.routes.myRoutes">
 
-        <ion-tab title="Popular">
-            <ion-view>
-                <ion-content class="has-header has-tabs-top">
-                    <ion-list>
-                        <ion-item class="item-thumbnail-right  " id="routes-list-item5" ui-sref="viewRoute">
-                            <img src="img/ecl.png">
-                            <h2>Eastern Coastal Loop</h2>
-                        </ion-item>
-                        <ion-item class="item-thumbnail-right  " id="routes-list-item6" ui-sref="viewRoute">
-                            <img src="img/cul.png">
-                            <h2>Central Urban Loop</h2>
-                        </ion-item>
-                        <ion-item class="item-thumbnail-right" id="routes-list-item7" ui-sref="viewRoute">
-                            <img src="img/nerl.png">
-                            <h2>North Eastern Riverine Loop</h2>
-                        </ion-item>
-                    </ion-list>
-                </ion-content>
-            </ion-view>
         </ion-tab>
+        <ion-tab title="Nearby" ui-sref="tabsController.routes.nearby">
 
-        <ion-tab title="My Routes">
-            <ion-view>
-                <ion-content class="has-header has-tabs-top">
-                    <ion-list>
-                        <ion-item class="item-thumbnail-right  " id="routes-list-item5" ui-sref="viewRoute">
-                            <img src="img/sg.png">
-                            <h2>PCN 1</h2>
-                        </ion-item>
-                        <ion-item class="item-thumbnail-right  " id="routes-list-item6" ui-sref="viewRoute">
-                            <img src="img/sg.png">
-                            <h2>PCN 2</h2>
-                        </ion-item>
-                        <ion-item class="item-thumbnail-right" id="routes-list-item7" ui-sref="viewRoute">
-                            <img src="img/sg.png">
-                            <h2>PCN 3</h2>
-                        </ion-item>
-                    </ion-list>
-                </ion-content>
-            </ion-view>
         </ion-tab>
+        <ion-tab title="Bookmarks" ui-sref="tabsController.routes.bookmarks">
 
-        <ion-tab title="Bookmarks" on-deselect="main.onTabDeselected()" on-select="onTabSelected()">
-            <ion-view>
-                <ion-content class="has-header has-tabs-top">
-                    <ion-list>
-                        <!-- <ion-item ng-repeat="route in routes" ng-click="viewRoute(route.cid)">
-                            {{route.name}} -->
-                        <ion-item class="item item-thumbnail-left" ng-repeat="route in routes" ng-click="viewRoute(route.cid)">
-                            <div data-tap-disabled="true" style="position: absolute; top: 10px; left: 10px; max-width: 80px; max-height: 80px; width: 100%; height: 100%;">
-                                <leaflet id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
-                            </div>
-                            <h2>{{route.name}}</h2>
-                            <p>Distance: {{route.distance}} km</br>Duration: {{route.duration}} mins</br>Comments: {{route.numcomments}}</p>
-                        </ion-item>
-                    </ion-list>
-                </ion-content>
-            </ion-view>
         </ion-tab>
     </ion-tabs>
+  <ui-view name="routes-tab"></ui-view>
 </ion-view>

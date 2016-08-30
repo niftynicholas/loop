@@ -86,11 +86,41 @@ angular.module('app.routes', [])
 
     .state('tabsController.routes', {
         cache: false,
-        url: '/routes',
+        url: '/routes',        
         views: {
             'tab2': {
                 templateUrl: 'templates/routes.html',
-                controller: 'routesCtrl'
+            }
+        }
+    })
+
+    .state('tabsController.routes.myRoutes', {
+        url: "/routesMyRoutes",
+        views: {
+            'routes-tab': {
+                templateUrl: "templates/routesMyRoutes.html",
+                controller: 'routesMyRoutesCtrl'
+            }
+        }
+    })
+
+    .state('tabsController.routes.nearby', {
+        url: "/routesNearby",
+        views: {
+            'routes-tab': {
+                templateUrl: "templates/routesNearby.html",
+                controller: 'routesNearbyCtrl'
+            }
+        }
+    })
+
+    .state('tabsController.routes.bookmarks', {
+        cache: false,
+        url: "/routesBookmarks",
+        views: {
+            'routes-tab': {
+                templateUrl: "templates/routesBookmarks.html",
+                controller: 'routesBookmarksCtrl'
             }
         }
     })

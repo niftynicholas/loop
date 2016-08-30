@@ -27,11 +27,9 @@ angular.module('app.main.controllers')
                                 password: $scope.input.newPassword
                             }
                         }).then(function successCallback(response) {
-                                console.log(response);
                                 $scope.showAlertPWSuccess();
                             },
                             function errorCallback(response) {
-                                console.log("Error in updating password.");
                             });
                     } else {
                         $scope.showAlertPWShort();

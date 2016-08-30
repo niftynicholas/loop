@@ -78,11 +78,9 @@ angular.module('app.main.controllers')
 
         confirmPopup.then(function(res) {
             if (res) {
-                console.log('You are sure');
                 dataShare.clearData();
                 $state.go('tabsController.cycle');
             } else {
-                console.log('You are not sure');
             }
         });
     };
@@ -103,7 +101,6 @@ angular.module('app.main.controllers')
     };
 
     $scope.ratingsCallback = function(rating) {
-        //console.log('Selected rating is : ', rating);
         $scope.rating = rating;
     };
     $scope.input = {

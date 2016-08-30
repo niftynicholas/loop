@@ -26,7 +26,6 @@ angular.module('app.main.controllers')
             bicycle_rental = response.bicycleRental;
             bicycle_parking = response.bicycleParking;
             drinking_water = response.drinkingWater;
-            console.log(geotaggedComments);
         }
     });
 

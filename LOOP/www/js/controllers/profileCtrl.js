@@ -1,8 +1,6 @@
 angular.module('app.main.controllers')
 
 .controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window, $cordovaCamera, $cordovaFile, $ionicActionSheet, $cordovaImagePicker, $ionicPlatform, $ionicModal, $jrCrop) {
-    //console.log("reading height and weight in the profile page");
-    //console.log("height is now " + localStorage.getItem("height"));
     $scope.height = parseFloat(localStorage.getItem("height"));
     if (isNaN($scope.height)) {
         $scope.height = 0;
@@ -44,10 +42,8 @@ angular.module('app.main.controllers')
             titleText: 'Upload Profile Photo',
             cancelText: 'Cancel',
             cancel: function() {
-                console.log("User tapped on cancel.")
             },
             buttonClicked: function(index) {
-                console.log(index);
                 if (index == 0) {
                     $scope.addImage();
                 } else if (index == 1) {
@@ -213,8 +209,7 @@ angular.module('app.main.controllers')
             circle: true
         }).then(function(canvas) {
             dataURL = canvas.toDataURL();
-            console.log(dataURL);
-            // Pass this dataURL to the server
+            // FOR WEEKIANL: Pass this dataURL to the server
 
             profilePhoto = document.createElement('img');
             profilePhoto.src = dataURL;

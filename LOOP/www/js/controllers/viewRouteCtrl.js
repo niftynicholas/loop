@@ -39,16 +39,12 @@ angular.module('app.main.controllers')
         }
 
     }).then(function successCallback(response) {
-            console.log(response);
-            console.log(response.data);
-            console.log(JSON.parse(response.data.route));
-            console.log(JSON.parse(response.data.route).coordinates);
             $scope.routeName = response.data.name;
             $scope.distance = response.data.distance;
             $scope.duration = response.data.duration;
             $scope.comments = response.data.comments;
             $scope.isbookmarked = response.data.isbookmarked;
-            $scope.ratings = parseFloat(response.data.ratings).toFixed(2);            
+            $scope.ratings = parseFloat(response.data.ratings).toFixed(2);
             coordinates = JSON.parse(response.data.route).coordinates;
             angular.extend($scope, {
                 geojson: {
@@ -84,7 +80,6 @@ angular.module('app.main.controllers')
             })
         },
         function errorCallback(response) {
-            console.log(JSON.stringify(response));
         })
 
     $scope.username = localStorage.getItem("username");
@@ -101,9 +96,6 @@ angular.module('app.main.controllers')
                 username: $scope.username
             });
             $scope.input.comment = "";
-            console.log($scope.comments.length);
-            console.log($scope.comments[$scope.comments.length-1].dateTimeStamp);
-            console.log($scope.comments[$scope.comments.length-1].comment);
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/addComment",
                 method: 'POST',
@@ -117,7 +109,6 @@ angular.module('app.main.controllers')
                 }
 
             }).then(function successCallback(response) {
-                    //
                   console.log("success");
               },
               function errorCallback(response) {
@@ -140,10 +131,8 @@ angular.module('app.main.controllers')
                 cid: routeCID
             }
         }).then(function successCallback(response) {
-                console.log(JSON.stringify(response));
             },
             function errorCallback(response) {
-                console.log(JSON.stringify(response));
             })
       } else {
         $scope.isbookmarked = false;
@@ -158,10 +147,8 @@ angular.module('app.main.controllers')
                 cid: routeCID
             }
         }).then(function successCallback(response) {
-                console.log(JSON.stringify(response));
             },
             function errorCallback(response) {
-                console.log(JSON.stringify(response));
             })
       }
     }
@@ -182,7 +169,6 @@ angular.module('app.main.controllers')
     };
 
     $scope.ratingsCallback = function(rating) {
-        console.log('Selected rating is : ', rating);
         $scope.rating = rating;
     };
 

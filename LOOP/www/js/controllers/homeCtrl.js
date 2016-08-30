@@ -51,7 +51,6 @@ angular.module('app.main.controllers')
                         coordinates = temp;
 
                         var geojson = JSON.parse(json.route);
-                        console.log(geojson);
                         var myStyle = {
                             weight: 8,
                             opacity: 1,
@@ -76,16 +75,13 @@ angular.module('app.main.controllers')
                     }
                 });
             }
-            console.log($scope.routes);
         },
         function errorCallback(response) {
-            console.log(JSON.stringify(response));
         })
 
 
     $scope.viewRoute = function(cid) {
         routeName.sendData(cid);
-        console.log(cid);
         $state.go("viewRoute");
     }
 
