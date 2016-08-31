@@ -8,7 +8,13 @@ angular.module('app.routes', [])
     // Each state's controller can be found in controllers.js
     $stateProvider
 
-        .state('login', {
+        .state('landing', {
+        cache: false,
+        url: '/landing',
+        templateUrl: 'templates/landing.html',
+    })
+
+    .state('login', {
         cache: false,
         url: '/login',
         templateUrl: 'templates/login.html',
@@ -86,7 +92,7 @@ angular.module('app.routes', [])
 
     .state('tabsController.routes', {
         cache: false,
-        url: '/routes',        
+        url: '/routes',
         views: {
             'tab2': {
                 templateUrl: 'templates/routes.html',
@@ -163,5 +169,5 @@ angular.module('app.routes', [])
         controller: 'editProfileCtrl'
     })
 
-    $urlRouterProvider.otherwise('/login')
+    $urlRouterProvider.otherwise('/landing')
 });

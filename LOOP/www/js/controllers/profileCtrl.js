@@ -26,7 +26,7 @@ angular.module('app.main.controllers')
                 disableBack: true,
                 historyRoot: true
             });
-            $state.go('login');
+            $state.go('landing');
         }, 30);
     }
 
