@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window, $cordovaCamera, $cordovaFile, $ionicActionSheet, $cordovaImagePicker, $ionicPlatform, $ionicModal, $jrCrop) {
+.controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window, $cordovaCamera, $cordovaFile, $ionicActionSheet, $cordovaImagePicker, $ionicPlatform, $ionicModal, $jrCrop, $http) {
     $scope.height = parseFloat(localStorage.getItem("height"));
     if (isNaN($scope.height)) {
         $scope.height = 0;
@@ -208,24 +208,7 @@ angular.module('app.main.controllers')
             height: 200,
             circle: true
         }).then(function(canvas) {
-            dataURL = canvas.toDataURL();
-            alert(dataURL);
-            $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/uploadProfilePicture",
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: {
-                    image:dataURL
-                }
-            }).then(function successCallback(response) {
-                alert("success");
-                alert(JSON.stringify(response));
-            }, function errorCallback(response) {
-                alert("Error uploading profile picture");
-                alert(JSON.stringify(response));
-            });
+            dataURL = canvas.toDataURL("image/jpeg", 0.1);
             // FOR WEEKIANL: Pass this dataURL to the server
 
             profilePhoto = document.createElement('img');
@@ -243,6 +226,21 @@ angular.module('app.main.controllers')
                 element.innerHTML = "";
             }
             document.querySelector('.cropped-photo').appendChild(profilePhoto);
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/uploadProfilePicture",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    image:dataURL,
+                    token:localStorage.getItem("token")
+                }
+            }).then(function successCallback(response) {
+              console.log("success");
+            }, function errorCallback(response) {
+              console.log("failure");
+            });
         }, function() {
             // User canceled or couldn't load image.
         });
