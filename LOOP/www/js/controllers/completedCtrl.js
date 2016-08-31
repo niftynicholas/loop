@@ -33,7 +33,7 @@ angular.module('app.main.controllers')
     });
 
     leafletData.getMap("cycle").then(function(map) {
-        if(sharedRoute.hasPlanned){
+        if (sharedRoute.hasPlanned) {
             map.removeLayer(sharedRoute.markerLayer);
             map.removeLayer(sharedRoute.routeLayer);
         }
@@ -73,8 +73,8 @@ angular.module('app.main.controllers')
 
 
     /**
-    * Confirm Dialog
-    */
+     * Confirm Dialog
+     */
     $scope.discard = function() {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Discard Activity',
@@ -85,20 +85,19 @@ angular.module('app.main.controllers')
             if (res) {
                 dataShare.clearData();
                 $state.go('tabsController.cycle');
-            } else {
-            }
+            } else {}
         });
     };
 
     /**
-    * Rating Stars
-    */
+     * Rating Stars
+     */
     $scope.ratingsObject = {
         iconOn: 'ion-ios-star',
         iconOff: 'ion-ios-star-outline',
         iconOnColor: 'rgb(255,186,73)',
         iconOffColor: 'rgb(255,186,73)',
-        rating: 2,
+        rating: 3,
         minRating: 1,
         callback: function(rating) {
             $scope.ratingsCallback(rating);
@@ -106,6 +105,13 @@ angular.module('app.main.controllers')
     };
 
     $scope.ratingsCallback = function(rating) {
+        window.plugins.toast.showWithOptions({
+                message: "Rating Received",
+                duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+                position: "bottom",
+                addPixelsY: -40 // added a negative value to move it up a bit (default 0)
+            }
+        );
         $scope.rating = rating;
     };
     $scope.input = {
@@ -113,17 +119,17 @@ angular.module('app.main.controllers')
     };
     $scope.comments = [];
     $scope.postComment = function() {
-        if ($scope.input.comment.length > 0) {
-            $scope.comments.push({
-                dateTimeStamp: new Date().getTime(),
-                comment: $scope.input.comment
-            });
-            $scope.input.comment = "";
+            if ($scope.input.comment.length > 0) {
+                $scope.comments.push({
+                    dateTimeStamp: new Date().getTime(),
+                    comment: $scope.input.comment
+                });
+                $scope.input.comment = "";
+            }
         }
-    }
-    /**
-    * Save Button
-    */
+        /**
+         * Save Button
+         */
     $scope.save = function() {
         var route = $scope.paths.p1.latlngs;
         var data = dataShare.getData();

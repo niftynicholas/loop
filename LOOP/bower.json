@@ -5,7 +5,7 @@
     "ionic": "driftyco/ionic-bower#1.2.4"
   },
   "dependencies": {
-    "ionic-ratings": "^0.2.0",
+    "ionic-ratings": "^0.3.0",
     "ionic-datepicker": "^1.2.0",
     "jr-crop": "^1.1.2"
   }

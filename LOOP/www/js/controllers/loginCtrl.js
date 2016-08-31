@@ -3,7 +3,7 @@ angular.module('app.main.controllers')
 .controller('loginCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup) {
     $scope.show = function() {
         $ionicLoading.show({
-            template: '<p>Loading...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+            template: '<p>Logging In...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
         });
     };
 

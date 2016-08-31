@@ -1,7 +1,19 @@
 angular.module('app.main.controllers')
 
-.controller('homeCtrl', function($scope, routeName, $state, $http, leafletData) {
+.controller('homeCtrl', function($scope, $ionicLoading, routeName, $state, $http, leafletData) {
+    $scope.show = function() {
+        $ionicLoading.show({
+            template: '<p>Loading Popular Routes...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        });
+    };
+
+    $scope.hide = function() {
+        $ionicLoading.hide();
+    };
+
     $scope.routes = {}
+
+    $scope.show();
 
     // Get routeName and routeCID
     $http({
@@ -75,10 +87,11 @@ angular.module('app.main.controllers')
                     }
                 });
             }
+            $scope.hide();
         },
         function errorCallback(response) {
+            $scope.hide();
         })
-
 
     $scope.viewRoute = function(cid) {
         routeName.sendData(cid);

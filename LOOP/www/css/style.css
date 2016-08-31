@@ -107,55 +107,61 @@
 .state-add-markers.add-markers-active{
   transform: scaleY(1); }*/
 
-  .login-container {
-  	display: -webkit-flex;
-  	-webkit-flex-direction: column;
-  	height: 100%;
-  	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cee9fc), color-stop(100%,#E3F1FC));
-  	background: -webkit-linear-gradient(top, #cee9fc 0%,#E3F1FC 100%);
+.login-container {
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    height: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #cee9fc), color-stop(100%, #E3F1FC));
+    background: -webkit-linear-gradient(top, #cee9fc 0%, #E3F1FC 100%);
     /*background: url('../img/bicycles.jpg') repeat;
     background-size: auto 100%;*/
-  }
-
-  .login-container > .button-row img {
-  	max-width: 80%;
-  }
-
-  .login-container > .header {
-  	-webkit-flex: 4;
-  	padding-top: 20px;
-  }
-
-  .logo {
-  	max-height: 80%;
-  	max-width: 80%;
-  	width: auto;
-  }
-
-  .welcome-view {
-  background-color: #00b6d6; }
-  .welcome-view .top-content {
-    height: 66%; }
-    .welcome-view .top-content .app-copy {
-      text-align: center;
-      padding-top: 13vh; }
-    .welcome-view .top-content .app-logo {
-      font-size: 60px;
-      font-family: sans-serif;
-      font-weight: 600;
-      color: #FFF;
-      letter-spacing: 8px;
-      text-transform: uppercase; }
-    .welcome-view .top-content .app-tagline {
-      font-size: 16px;
-      margin-top: 0px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.95); }
-  .welcome-view .bottom-content {
-    height: 34%; }
-    .welcome-view .bottom-content .google-sign-in {
-      border-radius: 4px;
-      font-weight: 500;
-      color: #FFF;
-      background-color: #dd4c39;
-      border-color: #dc4430; }
+}
+.login-container> .button-row img {
+    max-width: 80%;
+}
+.login-container> .header {
+    -webkit-flex: 4;
+    padding-top: 20px;
+}
+.logo {
+    max-height: 80%;
+    max-width: 80%;
+    width: auto;
+}
+.welcome-view {
+    background-color: #00b6d6;
+}
+.welcome-view .top-content {
+    height: 66%;
+}
+.welcome-view .top-content .app-copy {
+    text-align: center;
+    padding-top: 13vh;
+}
+.welcome-view .top-content .app-logo {
+    font-size: 60px;
+    font-family: sans-serif;
+    font-weight: 600;
+    color: #FFF;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+}
+.welcome-view .top-content .app-tagline {
+    font-size: 16px;
+    margin-top: 0px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.95);
+}
+.welcome-view .bottom-content {
+    height: 34%;
+}
+.welcome-view .bottom-content .google-sign-in {
+    border-radius: 4px;
+    font-weight: 500;
+    color: #FFF;
+    background-color: #dd4c39;
+    border-color: #dc4430;
+}
+.ionic_ratings .read_only {
+    pointer-events: none !important;
+}

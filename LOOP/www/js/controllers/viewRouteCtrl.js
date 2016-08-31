@@ -6,6 +6,8 @@ angular.module('app.main.controllers')
     $scope.distance = '';
     $scope.duration = '';
     $scope.ratings ='';
+    $scope.stars = 0;
+    $scope.readOnly = true;
     var coordinates = [];
     var routeCID = routeName.getData();
 
@@ -45,6 +47,13 @@ angular.module('app.main.controllers')
             $scope.comments = response.data.comments;
             $scope.isbookmarked = response.data.isbookmarked;
             $scope.ratings = parseFloat(response.data.ratings).toFixed(2);
+            console.log($scope.ratings);
+            if (isNaN($scope.ratings)) {
+                $scope.ratings = "0.00";
+            }
+                        console.log($scope.ratings);
+            $scope.stars = Math.round($scope.ratings);
+            console.log($scope.stars);
             coordinates = JSON.parse(response.data.route).coordinates;
             angular.extend($scope, {
                 geojson: {
@@ -161,8 +170,9 @@ angular.module('app.main.controllers')
         iconOff: 'ion-ios-star-outline',
         iconOnColor: 'rgb(255,186,73)',
         iconOffColor: 'rgb(255,186,73)',
-        rating: 2,
-        minRating: 1,
+        rating: $scope.stars,
+        minRating: 0,
+        readOnly: true,
         callback: function(rating) {
             $scope.ratingsCallback(rating);
         }

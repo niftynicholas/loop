@@ -1,3 +1,5 @@
+[![bitHound Score](https://www.bithound.io/github/rajeshwarpatlolla/ionic-ratings/badges/score.svg)](https://www.bithound.io/github/rajeshwarpatlolla/ionic-ratings)
+
 ##Introduction:
 
 This is an `ionic-ratings` bower component which can be used with any Ionic framework's application.
@@ -25,7 +27,9 @@ This will install the latest version released.
 
 ````html 
 <!-- path to ionic/angularjs js -->
-<script src="lib/ionic-ratings/dist/ionic-ratings.js"></script>
+<script src="lib/ionic-ratings/dist/ionic-ratings.min.js"></script>
+or
+<script src="lib/ionic-ratings/src/ionic-ratings.js"></script>
 ````
 
 ##### 3) In your application module inject the dependency `ionic-ratings`, in order to work with it.
@@ -42,20 +46,20 @@ angular.module('mainModuleName', ['ionic', 'ionic-ratings']){
 .controller('ControllerName', ['$scope', function($scope) {
    
       $scope.ratingsObject = {
-        iconOn : 'ion-ios-star',    //Optional
-        iconOff : 'ion-ios-star-outline',   //Optional
+        iconOn: 'ion-ios-star',    //Optional
+        iconOff: 'ion-ios-star-outline',   //Optional
         iconOnColor: 'rgb(200, 200, 100)',  //Optional
         iconOffColor:  'rgb(200, 100, 100)',    //Optional
         rating:  2, //Optional
         minRating:1,    //Optional
-        readOnly : true //Optional
-        callback: function(rating) {    //Mandatory
-          $scope.ratingsCallback(rating);
+        readOnly: true, //Optional
+        callback: function(rating, index) {    //Mandatory
+          $scope.ratingsCallback(rating, index);
         }
       };
   
-      $scope.ratingsCallback = function(rating) {
-        console.log('Selected rating is : ', rating);
+      $scope.ratingsCallback = function(rating, index) {
+        console.log('Selected rating is : ', rating, ' and the index is : ', index);
       };
 
 }])
@@ -71,9 +75,9 @@ c) **iconOnColor** (Optional) : You can give any color. The color format can be 
 
 d) **iconOffColor** (Optional) : You can give any color. The color format can be `red` or `#00FF00` or `rgb(200, 200, 100).` This color will be shown when the icon is inactive. The default value is `rgb(200, 100, 100)`.
 
-e) **rating** (Optional) : You can pass any values starting from 0. This is the initial/default rating. Default value is `1`.
+e) **rating** (Optional) : You can pass any values starting from 0. This is the initial/default rating. Default value is `0`.
 
-f) **minRating** (Optional) : You can pass any values starting from 0. This is the minimum value a user can select. Default value is `1`.
+f) **minRating** (Optional) : You can pass any values starting from 0. This is the minimum value a user can select. Default value is `0`.
 
 g) **readOnly** (Optional) : This takes two values. If you wish to make it read only, give `true` or else you can give `false`. Default value is `false`.
 If you wish to make it read only please add the below css class to your css file.
@@ -89,9 +93,19 @@ h) **callback** (Mandatory) : This will be called when the user selects a rating
 
 ##### 5) In your template you can use like below
 
+Without ng-repeat
+
 ````html
-<ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
+<ionic-ratings ratingsobj='ratingsObject' index='0'></ionic-ratings>
 ````
+
+Within ng-repeat
+
+````html
+<ionic-ratings ratingsobj='ratingsObject' index='$index'></ionic-ratings>
+````
+
+**index** : This is mandatory property which will help to get the index of the selected item, if this is used in side `ng-repeat`. This will be sent in the callback function. The value of the `index` is zero based similar to `$index`.
 
 ##CSS Classes:
 You can customize font, width and height of the icons using these classes.
@@ -123,6 +137,9 @@ The whole `ionic-ratings` component functionality has been implemented, and it c
 ### 2) v0.2.0
 Read only feature added.
 
+### 3) v0.3.0
+[New feature](https://github.com/rajeshwarpatlolla/ionic-ratings/issues/10)
+
 
 ##License:
 [MIT](https://github.com/rajeshwarpatlolla/ionic-ratings/blob/master/LICENSE.md "MIT")
@@ -137,3 +154,5 @@ twitter : https://twitter.com/rajeshwar_9032
 facebook : https://www.facebook.com/rajeshwarpatlolla
 
 paypal : rajeshwar.patlolla@gmail.com
+
+Comment  or rate it : http://market.ionic.io/plugins/ionicratings
