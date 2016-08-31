@@ -345,7 +345,6 @@ angular.module('app.main.controllers')
 
     $scope.geotag = function() {
         $scope.data = {};
-
         // An elaborate, custom popup
         var myPopup = $ionicPopup.show({
             template: '<input type="text" ng-model="data.geotag">',
@@ -358,27 +357,29 @@ angular.module('app.main.controllers')
                 text: '<b>Save</b>',
                 type: 'button-positive',
                 onTap: function(e) {
-                    if (!$scope.data.geotag) {
-                        //don't allow the user to close unless he enters wifi password
-
-                    } else {
-                        return $scope.data.geotag;
-                    }
+                    if($scope.data.geotag) return $scope.data.geotag;
+                    else $scope.data.geotag = "";
                 }
             }]
         });
 
         myPopup.then(function(res) {
-            L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
-            geotagsInfo.push(
-                {
-                    dateTimeStamp: new Date().getTime(),
-                    coordinates: $scope.currentLoc,
-                    comment: res
-                }
-            );
-            console.log(geotags);
-            console.log('Succesfully added');
+            if($scope.data.geotag == ""){
+                console.log("You have entered an empty comment");
+            }
+            else if(typeof res === "undefined"){
+                console.log("You have cancelled Geotag");
+            }else{
+                L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
+                geotagsInfo.push(
+                    {
+                        dateTimeStamp: new Date().getTime(),
+                        coordinates: $scope.currentLoc,
+                        comment: res
+                    }
+                );
+                console.log('Succesfully added');
+            }
         });
     };
 
