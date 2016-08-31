@@ -209,6 +209,23 @@ angular.module('app.main.controllers')
             circle: true
         }).then(function(canvas) {
             dataURL = canvas.toDataURL();
+            alert(dataURL);
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/uploadProfilePicture",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    image:dataURL
+                }
+            }).then(function successCallback(response) {
+                alert("success");
+                alert(JSON.stringify(response));
+            }, function errorCallback(response) {
+                alert("Error uploading profile picture");
+                alert(JSON.stringify(response));
+            });
             // FOR WEEKIANL: Pass this dataURL to the server
 
             profilePhoto = document.createElement('img');
