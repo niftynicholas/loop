@@ -145,10 +145,11 @@ angular.module('app.main.controllers')
                 startLatLng = startLatLng.split(",");
                 endLatLng = endLatLng.split(",");
 
-                if (map.hasLayer(sharedRoute.data)) {
-                    map.removeLayer(sharedRoute.data);
+
+                if(sharedRoute.hasPlanned){
+                    map.removeLayer(sharedRoute.markerLayer);
+                    map.removeLayer(sharedRoute.routeLayer);
                 }
-                sharedRoute.sendData(new L.FeatureGroup());
 
                 r360.config.serviceKey = '00AGI2VAF2HNS37EMMLV'; //My Key: 00AGI2VAF2HNS37EMMLV         Website Key: YWtKiQB7MiZETbCoVsG6
                 r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
@@ -165,14 +166,24 @@ angular.module('app.main.controllers')
 
                 var sourceMarker1 = L.marker(startLatLng, {
                     draggable: true
-                }).addTo(sharedRoute.data); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
+                }); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
 
                 var targetMarker1 = L.marker(endLatLng, {
                     draggable: true,
                     icon: redIcon
-                }).addTo(sharedRoute.data); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
+                }); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
+
+                sharedRoute.sourceMarker = {
+                    startLatLng: startLatLng //,startPointName
+                };
+
+                sharedRoute.targetMarker = {
+                    endLatLng: endLatLng,
+                    redIcon: redIcon //,endPointName
+                };
 
                 findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
+
                 //targetMarker1.openPopup();
                 //sourceMarker1.openPopup();
 
@@ -180,9 +191,9 @@ angular.module('app.main.controllers')
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
-                    if (map.hasLayer(sharedRoute.data)) {
-                        map.removeLayer(sharedRoute.data);
-                        sharedRoute.sendData(new L.FeatureGroup());
+                    if(sharedRoute.hasPlanned){
+                        map.removeLayer(sharedRoute.markerLayer);
+                        map.removeLayer(sharedRoute.routeLayer);
                     }
 
                     $.ajax({
@@ -201,8 +212,11 @@ angular.module('app.main.controllers')
                             }
                         },
                         complete: function() {
-                            source.addTo(sharedRoute.data); //.bindPopup(startPointName, { closeOnClick: false,autoPan: false}).openPopup()
-                            target.addTo(sharedRoute.data); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
+                            sharedRoute.sourceMarker.startLatLng = source.getLatLng();
+                            sharedRoute.targetMarker.endLatLng = target.getLatLng();
+
+                            //source.addTo(sharedRoute.data); //.bindPopup(startPointName, { closeOnClick: false,autoPan: false}).openPopup()
+                            //target.addTo(sharedRoute.data); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
                             findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
                             //source.openPopup();
                             //target.openPopup();
@@ -215,9 +229,9 @@ angular.module('app.main.controllers')
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
-                    if (map.hasLayer(sharedRoute.data)) {
-                        map.removeLayer(sharedRoute.data);
-                        sharedRoute.sendData(new L.FeatureGroup());
+                    if(sharedRoute.hasPlanned){
+                        map.removeLayer(sharedRoute.markerLayer);
+                        map.removeLayer(sharedRoute.routeLayer);
                     }
 
                     $.ajax({
@@ -236,8 +250,10 @@ angular.module('app.main.controllers')
                             }
                         },
                         complete: function() {
-                            source.addTo(sharedRoute.data); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
-                            target.addTo(sharedRoute.data); //.bindPopup(endPointName, { closeOnClick: false, autoPan: false}).openPopup()
+                            sharedRoute.sourceMarker.startLatLng = source.getLatLng();
+                            sharedRoute.targetMarker.endLatLng = target.getLatLng();
+                            //source.addTo(sharedRoute.data); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
+                            //target.addTo(sharedRoute.data); //.bindPopup(endPointName, { closeOnClick: false, autoPan: false}).openPopup()
                             findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
                             //source.openPopup();
                             //target.openPopup();
@@ -263,9 +279,7 @@ angular.module('app.main.controllers')
             title: 'Invalid Start & End Points',
             template: 'Please select a valid start and end point.'
         });
-
         alertPopup.then(function(res) {
-
         });
     };
 
@@ -276,9 +290,7 @@ angular.module('app.main.controllers')
             title: 'Invalid Start Point',
             template: 'Please select a valid start point and try again.'
         });
-
         alertPopup.then(function(res) {
-
         });
     };
 
@@ -288,9 +300,7 @@ angular.module('app.main.controllers')
             title: 'Invalid End Point',
             template: 'Please select a valid end point and try again.'
         });
-
         alertPopup.then(function(res) {
-
         });
     };
 
@@ -315,7 +325,8 @@ function displayInfo(searchVal, lat, lng, type) {
 }
 
 function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope, $state, $ionicPopup, sharedRoute) {
-    map.addLayer(sharedRoute.data);
+    sharedRoute.hasPlanned = true;
+    sharedRoute.routeLayer = new L.FeatureGroup().addTo(map);
     var travelOptions = r360.travelOptions();
     travelOptions.addSource(sourceMarker1);
     travelOptions.addTarget(targetMarker1);
@@ -323,9 +334,15 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
 
     // define what happens if everything goes smoothly
     var successCallBack = function(routes) {
+        //var polylineCoords = [];
         for (var i = 0; i < routes.length; i++) {
             var route = routes[i];
-            r360.LeafletUtil.fadeIn(sharedRoute.data, route, 1000, "travelDistance");
+            //sharedRoute.routeLayer = new L.Polyline(route.points, { color: 'green', weight: 8,  dashArray: '10,10' });
+            r360.LeafletUtil.fadeIn(sharedRoute.routeLayer, route, 1000, "travelDistance");
+            sharedRoute.markerLayer = new L.layerGroup([sourceMarker1, targetMarker1]);
+            sharedRoute.routepoints = route.points;
+            //map.addLayer(sharedRoute.routeLayer);
+            map.addLayer(sharedRoute.markerLayer);
         }
     };
 

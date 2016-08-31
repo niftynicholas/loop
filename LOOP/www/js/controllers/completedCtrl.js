@@ -32,7 +32,12 @@ angular.module('app.main.controllers')
         }
     });
 
-    sharedRoute.sendData(new L.FeatureGroup());
+    leafletData.getMap("cycle").then(function(map) {
+        if(sharedRoute.hasPlanned){
+            map.removeLayer(sharedRoute.markerLayer);
+            map.removeLayer(sharedRoute.routeLayer);
+        }
+    });
 
     var data = dataShare.getData();
     $scope.distance = data.distance;

@@ -46,15 +46,20 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
 
 .factory('sharedRoute', function () {
     var service = {};
-    service.data = false;
-    service.sendData = function (data) {
-        this.data = data;
-    };
-    service.getData = function () {
-        return this.data;
-    };
+    service.routeLayer = null;
+    service.markerLayer = null;
+    service.sourceMarker = {};
+    service.targetMarker = {};
+    service.routepoints = [];
+    service.hasPlanned = false;
+
     service.clearData = function () {
-        this.data = false;
+        this.routeLayer = null;
+        this.markerLayer = null;
+        this.sourceMarker = {};
+        this.targetMarker = {};
+        this.routepoints = [];
+        this.hasPlanned = false;
     };
     return service;
 })

@@ -170,7 +170,7 @@ angular.module('app.main.controllers')
     osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
     osm = L.tileLayer(osmUrl, {maxZoom: 17, attribution: osmAttrib, rotate:true});
 
-    var map = new L.Map('map', {
+    var map = new L.Map('inprogress', {
         zoom: 15,
         layers: [osm],
         rotate: true
@@ -192,12 +192,22 @@ angular.module('app.main.controllers')
     }).addTo(map);
 
     //***************************** ON MAP CREATION ****************************************
-    if (map.hasLayer(sharedRoute.data)) {
-        map.removeLayer(sharedRoute.data);
+
+    if(sharedRoute.hasPlanned){
+        var sourceMarker1 = L.marker(sharedRoute.sourceMarker.startLatLng, {
+            draggable: true
+        }); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
+
+        var targetMarker1 = L.marker(sharedRoute.targetMarker.endLatLng, {
+            draggable: true,
+            icon: sharedRoute.targetMarker.redIcon
+        }); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
+        L.layerGroup([sourceMarker1, targetMarker1]).addTo(map);
+        //var polyline = new L.Polyline(sharedRoute.routepoints, { color: 'green', weight: 8,  dashArray: '10,10' });
+        var polyline = new L.Polyline(sharedRoute.routepoints, { color: 'green', weight: 5});
+        map.addLayer(polyline);
     }
-    if(sharedRoute.data != false){
-        map.addLayer(sharedRoute.data);
-    }
+
     $scope.$broadcast('timer-start');
     $scope.timerRunning = true;
 
