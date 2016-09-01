@@ -106,7 +106,7 @@ angular.module('app.main.controllers')
 
     $scope.ratingsCallback = function(rating) {
         window.plugins.toast.showWithOptions({
-                message: "Rating Received",
+                message: "Rating Updated",
                 duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
                 position: "bottom",
                 addPixelsY: -40 // added a negative value to move it up a bit (default 0)

@@ -26,6 +26,7 @@ angular.module('app.main.controllers')
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
+                    console.log(response.data);
                     localStorage.setItem("login_state", "true");
                     localStorage.setItem("token", response.data.token);
                     localStorage.setItem("dateOfBirth", response.data.dateOfBirth);
@@ -35,6 +36,8 @@ angular.module('app.main.controllers')
                     localStorage.setItem("username", response.data.username);
                     localStorage.setItem("weight", response.data.weight);
                     localStorage.setItem("gender", response.data.gender);
+                    localStorage.setItem("profilePicture", response.data.profilePicture);
+                    console.log(localStorage.getItem("profilePicture"));
                     $scope.hide();
                     $state.go('tabsController.home');
                 },

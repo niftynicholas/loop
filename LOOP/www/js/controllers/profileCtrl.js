@@ -9,7 +9,14 @@ angular.module('app.main.controllers')
     if (isNaN($scope.weight)) {
         $scope.weight = 0;
     }
+
     $scope.name = localStorage.getItem("name");
+    $scope.profilePicture = localStorage.getItem("profilePicture");
+    console.log($scope.profilePicture);
+    if ($scope.profilePicture == 'undefined') {
+        $scope.profilePicture = 'img/profile-placeholder.gif';
+    }
+    console.log($scope.profilePicture);
 
     $scope.logOut = function() {
         $ionicLoading.show({
@@ -41,8 +48,7 @@ angular.module('app.main.controllers')
             }],
             titleText: 'Upload Profile Photo',
             cancelText: 'Cancel',
-            cancel: function() {
-            },
+            cancel: function() {},
             buttonClicked: function(index) {
                 if (index == 0) {
                     $scope.addImage();
@@ -233,13 +239,13 @@ angular.module('app.main.controllers')
                     'Content-Type': 'application/json'
                 },
                 data: {
-                    image:dataURL,
-                    token:localStorage.getItem("token")
+                    image: dataURL,
+                    token: localStorage.getItem("token")
                 }
             }).then(function successCallback(response) {
-              console.log("success");
+                console.log("success");
             }, function errorCallback(response) {
-              console.log("failure");
+                console.log("failure");
             });
         }, function() {
             // User canceled or couldn't load image.
