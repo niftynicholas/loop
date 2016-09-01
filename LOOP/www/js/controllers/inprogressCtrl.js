@@ -195,12 +195,15 @@ angular.module('app.main.controllers')
 
     if(sharedRoute.hasPlanned){
         var sourceMarker1 = L.marker(sharedRoute.sourceMarker.startLatLng, {
-        }); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
+        }).bindPopup(sharedRoute.sourceMarker.startPointName, {closeOnClick: false,autoPan: false}); //.openPopup()
 
         var targetMarker1 = L.marker(sharedRoute.targetMarker.endLatLng, {
             icon: sharedRoute.targetMarker.redIcon
-        }); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
+        }).bindPopup(sharedRoute.targetMarker.endPointName, {closeOnClick: false,autoPan: false}); //.openPopup()
+
         L.layerGroup([sourceMarker1, targetMarker1]).addTo(map);
+        sourceMarker1.openPopup();
+        targetMarker1.openPopup();
         //var polyline = new L.Polyline(sharedRoute.routepoints, { color: 'green', weight: 8,  dashArray: '10,10' });
         var polyline = new L.Polyline(sharedRoute.routepoints, { color: '#76a273', weight: 5});
         map.addLayer(polyline);
