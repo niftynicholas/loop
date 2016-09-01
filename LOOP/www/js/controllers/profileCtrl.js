@@ -15,15 +15,18 @@ angular.module('app.main.controllers')
     $scope.profilePicture = localStorage.getItem("profilePicture");
     if ($scope.profilePicture == 'undefined') {
         $scope.profilePicture = 'img/profile-placeholder.gif';
+    } else {
+            $scope.profilePicture = "data:" + $scope.profilePicture;
     }
 
     $scope.logOut = function() {
         $ionicLoading.show({
             template: '<p>Logging Out...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
         });
-        localStorage.setItem('loggin_state', 'false');
 
         $timeout(function() {
+            localStorage.setItem('loggin_state', 'false');
+            localStorage.clear();
             $window.localStorage.clear();
             $ionicLoading.hide();
             $ionicHistory.clearCache();
