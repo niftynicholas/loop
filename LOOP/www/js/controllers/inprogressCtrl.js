@@ -168,7 +168,7 @@ angular.module('app.main.controllers')
 
     var osmUrl = 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
     osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
-    osm = L.tileLayer(osmUrl, {maxZoom: 17, attribution: osmAttrib, rotate:true});
+    osm = L.tileLayer(osmUrl, {maxZoom: 17, attribution: osmAttrib, rotate:true}).setZIndex(-100);
 
     var map = new L.Map('inprogress', {
         zoom: 15,
@@ -189,10 +189,10 @@ angular.module('app.main.controllers')
         fillOpacity: 0.9,
         stroke: false,
         clickable: false,
-    }).addTo(map);
+    }).addTo(map).bringToFront();
 
     //***************************** ON MAP CREATION ****************************************
-
+    var plannedRoute = null;
     if(sharedRoute.hasPlanned){
         var sourceMarker1 = L.marker(sharedRoute.sourceMarker.startLatLng, {
         }).bindPopup(sharedRoute.sourceMarker.startPointName, {closeOnClick: false,autoPan: false}); //.openPopup()
@@ -205,8 +205,8 @@ angular.module('app.main.controllers')
         sourceMarker1.openPopup();
         targetMarker1.openPopup();
         //var polyline = new L.Polyline(sharedRoute.routepoints, { color: 'green', weight: 8,  dashArray: '10,10' });
-        var polyline = new L.Polyline(sharedRoute.routepoints, { color: '#76a273', weight: 5});
-        map.addLayer(polyline);
+        plannedRoute = new L.Polyline(sharedRoute.routepoints, { color: '#76a273', weight: 5});
+        map.addLayer(plannedRoute);
     }
 
     $scope.$broadcast('timer-start');
@@ -232,7 +232,6 @@ angular.module('app.main.controllers')
     dataShare.clearData();
     //***************************** ON WATCH ****************************************
     var setWatch = true;
-
     setInterval(function() {
         $deviceGyroscope.getCurrent().then(function(result) {
             console.log("X: " + result.x);
@@ -269,7 +268,7 @@ angular.module('app.main.controllers')
                 if (polyline != null) {
                     map.removeLayer(polyline);
                 }
-                polyline = new L.Polyline(latlngs, { color: '#1abc9c', weight: 8 });
+                polyline = new L.Polyline(latlngs, { color: '#1abc9c', weight: 8 }).bringToFront();
                 map.addLayer(polyline);
                 currentLoc.bringToFront();
 
@@ -282,7 +281,18 @@ angular.module('app.main.controllers')
             console.log("Location not found");
             //alert('Location nt found');
         });
+
     }, 3000); //every 3s
+
+    setInterval(function() { //readjust layering
+        if(plannedRoute != null){
+            plannedRoute.bringToFront(); //L.Polyline
+        }
+        if(polyline != null){
+            polyline.bringToFront(); //L.Polyline
+        }
+        currentLoc.bringToFront(); //L.Circle
+    }, 1000);
 
     $scope.$on('timer-tick', function(event, data) {
         $scope.duration = data.millis / 1000.0;
