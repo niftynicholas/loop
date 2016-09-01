@@ -365,7 +365,7 @@ L.Popup = L.Layer.extend({
 
 		var bottom = this._containerBottom = -offset.y,
 		    left = this._containerLeft = -Math.round(this._containerWidth / 2) + offset.x;
-
+			
 		if (this._zoomAnimated) {
 			if (this._map._rotate) {
 				// rotation relative to the marker's anchor
@@ -480,10 +480,9 @@ L.Map.include({
 			return this;
 		}
 
-		//************ REMOVE AUTO CLOSE ***************
-		// if (this._popup && this._popup.options.autoClose) {
-		// 	this.closePopup();
-		// }
+		if (this._popup && this._popup.options.autoClose) {
+			this.closePopup();
+		}
 
 		this._popup = popup;
 		return this.addLayer(popup);
