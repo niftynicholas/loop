@@ -166,20 +166,22 @@ angular.module('app.main.controllers')
 
                 var sourceMarker1 = L.marker(startLatLng, {
                     draggable: true
-                }); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
+                }).bindPopup(startPointName, {closeOnClick: false,autoPan: false}); //
 
                 var targetMarker1 = L.marker(endLatLng, {
                     draggable: true,
                     icon: redIcon
-                }); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
+                }).bindPopup(endPointName, {closeOnClick: false,autoPan: false}); //
 
                 sharedRoute.sourceMarker = {
-                    startLatLng: startLatLng //,startPointName
+                    startLatLng: startLatLng,
+                    startPointName: startPointName
                 };
 
                 sharedRoute.targetMarker = {
                     endLatLng: endLatLng,
-                    redIcon: redIcon //,endPointName
+                    redIcon: redIcon,
+                    endPointName: endPointName
                 };
 
                 findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
@@ -213,8 +215,12 @@ angular.module('app.main.controllers')
                         },
                         complete: function() {
                             sharedRoute.sourceMarker.startLatLng = source.getLatLng();
+                            sharedRoute.sourceMarker.startPointName = startPointName;
                             sharedRoute.targetMarker.endLatLng = target.getLatLng();
+                            sharedRoute.targetMarker.endPointName = endPointName;
 
+                            source.bindPopup(startPointName, { closeOnClick: false,autoPan: false});
+                            target.bindPopup(endPointName, {closeOnClick: false,autoPan: false});
                             //source.addTo(sharedRoute.data); //.bindPopup(startPointName, { closeOnClick: false,autoPan: false}).openPopup()
                             //target.addTo(sharedRoute.data); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
                             findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
@@ -251,7 +257,12 @@ angular.module('app.main.controllers')
                         },
                         complete: function() {
                             sharedRoute.sourceMarker.startLatLng = source.getLatLng();
+                            sharedRoute.sourceMarker.startPointName = startPointName;
                             sharedRoute.targetMarker.endLatLng = target.getLatLng();
+                            sharedRoute.targetMarker.endPointName = endPointName;
+
+                            source.bindPopup(startPointName, { closeOnClick: false,autoPan: false});
+                            target.bindPopup(endPointName, {closeOnClick: false,autoPan: false});
                             //source.addTo(sharedRoute.data); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
                             //target.addTo(sharedRoute.data); //.bindPopup(endPointName, { closeOnClick: false, autoPan: false}).openPopup()
                             findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
@@ -343,6 +354,8 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
             sharedRoute.routepoints = route.points;
             //map.addLayer(sharedRoute.routeLayer);
             map.addLayer(sharedRoute.markerLayer);
+            targetMarker1.openPopup();
+            sourceMarker1.openPopup();
         }
     };
 
