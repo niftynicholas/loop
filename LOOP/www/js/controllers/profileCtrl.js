@@ -9,7 +9,13 @@ angular.module('app.main.controllers')
     if (isNaN($scope.weight)) {
         $scope.weight = 0;
     }
+
     $scope.name = localStorage.getItem("name");
+
+    $scope.profilePicture = localStorage.getItem("profilePicture");
+    if ($scope.profilePicture == 'undefined') {
+        $scope.profilePicture = 'img/profile-placeholder.gif';
+    }
 
     $scope.logOut = function() {
         $ionicLoading.show({
@@ -41,8 +47,7 @@ angular.module('app.main.controllers')
             }],
             titleText: 'Upload Profile Photo',
             cancelText: 'Cancel',
-            cancel: function() {
-            },
+            cancel: function() {},
             buttonClicked: function(index) {
                 if (index == 0) {
                     $scope.addImage();
@@ -209,10 +214,11 @@ angular.module('app.main.controllers')
             circle: true
         }).then(function(canvas) {
             dataURL = canvas.toDataURL("image/jpeg", 0.1);
-            // FOR WEEKIANL: Pass this dataURL to the server
 
             profilePhoto = document.createElement('img');
             profilePhoto.src = dataURL;
+            localStorage.setItem("profilePicture", dataURL);
+            $scope.profilePicture = dataURL;
 
             // Style your image here
             profilePhoto.style.width = '100px';
@@ -225,7 +231,8 @@ angular.module('app.main.controllers')
             if (element) {
                 element.innerHTML = "";
             }
-            document.querySelector('.cropped-photo').appendChild(profilePhoto);
+            document.querySelector('.cropped-photo').appendChild(profilePhoto);           
+
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/uploadProfilePicture",
                 method: 'POST',
@@ -233,14 +240,11 @@ angular.module('app.main.controllers')
                     'Content-Type': 'application/json'
                 },
                 data: {
-                    image:dataURL,
-                    token:localStorage.getItem("token")
+                    image: dataURL,
+                    token: localStorage.getItem("token")
                 }
             }).then(function successCallback(response) {
-              console.log("success");
-            }, function errorCallback(response) {
-              console.log("failure");
-            });
+            }, function errorCallback(response) {});
         }, function() {
             // User canceled or couldn't load image.
         });
