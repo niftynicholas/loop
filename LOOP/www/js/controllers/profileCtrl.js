@@ -70,7 +70,11 @@ angular.module('app.main.controllers')
             allowEdit: false,
             encodingType: Camera.EncodingType.JPEG,
             popoverOptions: CameraPopoverOptions,
-            correctOrientation: true
+            correctOrientation: true,
+            saveToPhotoAlbum: true,
+            targetWidth: 800,
+            targetHeight: 800,
+            quality: 50
         };
 
         $cordovaCamera.getPicture(options).then(function(imageData) {
@@ -145,7 +149,7 @@ angular.module('app.main.controllers')
                     maximumImagesCount: 1, // Max number of selected images, I'm using only one for this example
                     width: 800,
                     height: 800,
-                    quality: 80 // Higher is better
+                    quality: 50 // Higher is better
                 };
 
                 $cordovaImagePicker.getPictures(options).then(function(results) {
@@ -209,11 +213,11 @@ angular.module('app.main.controllers')
     $scope.crop = function(image) {
         $jrCrop.crop({
             url: image,
-            width: 200,
-            height: 200,
+            width: 160,
+            height: 160,
             circle: true
         }).then(function(canvas) {
-            dataURL = canvas.toDataURL("image/jpeg", 0.1);
+            dataURL = canvas.toDataURL("image/jpeg", 0.5);
 
             profilePhoto = document.createElement('img');
             profilePhoto.src = dataURL;
@@ -231,7 +235,7 @@ angular.module('app.main.controllers')
             if (element) {
                 element.innerHTML = "";
             }
-            document.querySelector('.cropped-photo').appendChild(profilePhoto);           
+            document.querySelector('.cropped-photo').appendChild(profilePhoto);
 
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/uploadProfilePicture",
