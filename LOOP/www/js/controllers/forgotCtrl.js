@@ -12,7 +12,7 @@ angular.module('app.main.controllers')
                 'Content-Type': 'application/json'
             },
             data: {
-                emailAddress: $scope.input.emailAddress
+                email: $scope.input.emailAddress
             }
         }).then(function successCallback(response) {
             $state.go('login');
