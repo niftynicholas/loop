@@ -10,6 +10,9 @@ angular.module('app.main.controllers')
     var bicycle_parking;
     var drinking_water;
     var geotaggedComments;
+    var food;
+    var pcn;
+    var intraTownCyclingPath;
 
     $.ajax({
         dataType: 'json',
@@ -26,6 +29,9 @@ angular.module('app.main.controllers')
             bicycle_rental = response.bicycleRental;
             bicycle_parking = response.bicycleParking;
             drinking_water = response.drinkingWater;
+            food = response.food;
+            pcn = response.pcn;
+            intraTownCyclingPath = response.intraTownCyclingPath;
         }
     });
 
@@ -56,6 +62,29 @@ angular.module('app.main.controllers')
         },
         layers: {
             overlays: {
+                pcn: {
+                    name: 'Park Connector Network',
+                    type: 'geoJSONAwesomeMarker',
+                    data: pcn,
+                    visible: false
+                },
+                food: {
+                    name: 'Food',
+                    type: 'geoJSONAwesomeMarker',
+                    data: food,
+                    visible: false,
+                    icon: {
+                        icon: 'coffee',
+                        markerColor: 'pink',
+                        prefix: 'fa'
+                    }
+                },
+                intraTownCyclingPath: {
+                    name: 'Intra-Town Cycling Paths',
+                    type: 'geoJSONAwesomeMarker',
+                    data: intraTownCyclingPath,
+                    visible: false
+                },
                 toilets: {
                     name: 'Toilets',
                     type: 'geoJSONAwesomeMarker',
