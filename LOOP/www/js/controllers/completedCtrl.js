@@ -144,9 +144,9 @@ angular.module('app.main.controllers')
                 },
                 data: {
                     token: localStorage.getItem("token"),
-                    startDateTimeStamp: data.startDateTimeStamp, //Need the datetimestamp from the start of clicking the start activity
+                    startDateTimeStamp: data.startDateTimeStamp,
                     distance: data.distance,
-                    duration: data.durationInMillis,
+                    duration: data.durationInSeconds,
                     averageSpeed: data.averageSpeed,
                     calories: data.calories,
                     ratings: $scope.rating || 2,

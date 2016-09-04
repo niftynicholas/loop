@@ -6,7 +6,7 @@ angular.module('app.main.controllers')
     $scope.averageSpeed = 0;
     $scope.calories = 0;
     $scope.duration = 0; //In seconds
-    $scope.durationInMillis = 0;
+    $scope.durationInSeconds = 0;
     $scope.MET = 8; //FINAL variable to be determined by activity type
     //$scope.age = 25;      //To be retrieve from database
     //$scope.gender = 'M';  //To be retrieve from database
@@ -320,7 +320,7 @@ angular.module('app.main.controllers')
 
     $scope.$on('timer-stopped', function (event, data){
         $scope.duration = data.millis / 1000.0;
-        $scope.durationInMillis = data.millis;
+        $scope.durationInSeconds = data.millis/1000.0;
     });
 
     map.on("dragend", function () {
@@ -351,7 +351,7 @@ angular.module('app.main.controllers')
                     averageSpeed: $scope.averageSpeed,
                     calories: $scope.calories,
                     path: latlngs,
-                    durationInMillis: $scope.durationInMillis,
+                    durationInSeconds: $scope.durationInSeconds,
                     startDateTimeStamp: $scope.startDateTimeStamp,
                     geotagsInfo: geotagsInfo
                 };
