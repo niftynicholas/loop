@@ -36,7 +36,7 @@ angular.module('app.main.controllers')
                 historyRoot: true
             });
             $state.go('landing');
-        }, 30);
+        }, 2000);
     }
 
     // This is to display the action sheet

@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova','jrCrop','deviceGyroscope'])
+angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova','jrCrop','deviceGyroscope','ionic-native-transitions'])
     .filter('digits', function() {
         return function(input) {
             if (input < 10) input = '0' + input;
@@ -21,6 +21,36 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     })
 
 .factory('dataShare', function() {
+    var service = {};
+    service.data = false;
+    service.sendData = function(data) {
+        this.data = data;
+    };
+    service.getData = function() {
+        return this.data;
+    };
+    service.clearData = function() {
+        this.data = false;
+    };
+    return service;
+})
+
+.factory('mapData', function() {
+    var service = {};
+    service.data = false;
+    service.sendData = function(data) {
+        this.data = data;
+    };
+    service.getData = function() {
+        return this.data;
+    };
+    service.clearData = function() {
+        this.data = false;
+    };
+    return service;
+})
+
+.factory('homeData', function() {
     var service = {};
     service.data = false;
     service.sendData = function(data) {
@@ -73,6 +103,20 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
 .config(function($ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
     $ionicConfigProvider.navBar.alignTitle('center')
+})
+
+.config(function($ionicNativeTransitionsProvider){
+    $ionicNativeTransitionsProvider.setDefaultTransition({
+        type: 'fade',
+        duration: 500
+    });
+})
+
+.config(function($ionicNativeTransitionsProvider){
+    $ionicNativeTransitionsProvider.setDefaultBackTransition({
+        type: 'slide',
+        direction: 'right'
+    });
 })
 
 .run(function($ionicPlatform) {

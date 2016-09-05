@@ -8,7 +8,13 @@ angular.module('app.routes', [])
     // Each state's controller can be found in controllers.js
     $stateProvider
 
-        .state('landing', {
+        .state('loading', {
+        url: '/loading',
+        templateUrl: 'templates/loading.html',
+        controller: 'loadingCtrl'
+    })
+
+    .state('landing', {
         cache: false,
         url: '/landing',
         templateUrl: 'templates/landing.html',
@@ -169,5 +175,5 @@ angular.module('app.routes', [])
         controller: 'editProfileCtrl'
     })
 
-    $urlRouterProvider.otherwise('/landing')
+    $urlRouterProvider.otherwise('/loading')
 });
