@@ -10,7 +10,7 @@ angular.module('app.main.controllers')
     var bicycle_parking;
     var drinking_water;
     var geotaggedComments;
-    var food;
+    var food_beverage;
     var pcn;
     var intraTownCyclingPath;
 
@@ -29,7 +29,7 @@ angular.module('app.main.controllers')
             bicycle_rental = response.bicycleRental;
             bicycle_parking = response.bicycleParking;
             drinking_water = response.drinkingWater;
-            food = response.food;
+            food_beverage = response.food;
             pcn = response.pcn;
             intraTownCyclingPath = response.intraTownCyclingPath;
         }
@@ -66,16 +66,16 @@ angular.module('app.main.controllers')
                     name: 'Park Connector Network',
                     type: 'geoJSONAwesomeMarker',
                     data: pcn,
-                    visible: false
+                    visible: false,
                 },
-                food: {
-                    name: 'Food',
+                food_beverage: {
+                    name: 'Food & Beverage',
                     type: 'geoJSONAwesomeMarker',
-                    data: food,
+                    data: food_beverage,
                     visible: false,
                     icon: {
-                        icon: 'coffee',
-                        markerColor: 'pink',
+                        icon: 'cutlery',
+                        markerColor: 'red',
                         prefix: 'fa'
                     }
                 },
