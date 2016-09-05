@@ -14,6 +14,12 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
         }
     })
 
+    .filter('km', function() {
+        return function(input) {
+            return (parseFloat(input) / 1000).toFixed(2);
+        }
+    })
+
 .factory('dataShare', function() {
     var service = {};
     service.data = false;

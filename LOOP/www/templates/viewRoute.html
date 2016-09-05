@@ -23,7 +23,7 @@
                 <i class="icon ion-clock"></i>Estimated Duration: {{duration}} minutes
             </a>
             <a class="item item-icon-left" href="#">
-                <i class="icon ion-ios-location"></i> Distance: {{distance}} km
+                <i class="icon ion-ios-location"></i> Distance: {{distance | km}} km
             </a>
             <div class="item item-divider">
                 Comments
@@ -38,7 +38,7 @@
                 <!-- <a class="item item-avatar" href="#" ng-repeat="c in comments">
                     <img src="img/profile-placeholder.gif"> -->
                     <h2><b>{{c.username === username && "Me" || c.username}}</b></h2>
-                    <p>{{c.comment}}</p>
+                    <p style="overflow: initial; white-space: initial;">{{c.comment}}</p>
                 </a>
                 <form>
                     <div class="item item-input-inset">
