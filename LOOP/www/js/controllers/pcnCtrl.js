@@ -1,8 +1,21 @@
 angular.module('app.main.controllers')
 
-.controller('pcnCtrl', function($scope, leafletData, $timeout) {
+.controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, $http) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
+
+    $scope.show = function() {
+        $ionicLoading.show({
+            template: '<p>Loading Map...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        });
+    };
+
+    $scope.hide = function() {
+        $ionicLoading.hide();
+    };
+
+$scope.show();
+
 
     var shelters;
     var toilets;
@@ -10,75 +23,49 @@ angular.module('app.main.controllers')
     var bicycle_parking;
     var drinking_water;
     var geotaggedComments;
-    var food_beverage;
     var pcn;
     var intraTownCyclingPath;
 
-    $.ajax({
-        dataType: 'json',
-        url: 'https://sgcycling-sgloop.rhcloud.com/api/cyclist/amenity/getAmenities',
-        async: false,
+
+    $http({
+        url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/amenity/getAmenities",
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         data: {
             token: localStorage.getItem("token")
-        },
-        success: function(response) {
-            geotaggedComments = response.geotaggedComments;
-            shelters = response.shelter;
-            toilets = response.toilets;
-            bicycle_rental = response.bicycleRental;
-            bicycle_parking = response.bicycleParking;
-            drinking_water = response.drinkingWater;
-            food_beverage = response.food;
-            pcn = response.pcn;
-            intraTownCyclingPath = response.intraTownCyclingPath;
         }
-    });
+    }).then(function successCallback(response) {
+            geotaggedComments = response.data.geotaggedComments;
+            shelters = response.data.shelter;
+            toilets = response.data.toilets;
+            bicycle_rental = response.data.bicycleRental;
+            bicycle_parking = response.data.bicycleParking;
+            drinking_water = response.data.drinkingWater;
+            pcn = response.data.pcn;
+            intraTownCyclingPath = response.data.intraTownCyclingPath;
 
-    angular.extend($scope, {
-        center: {
-            lat: 1.3521,
-            lng: 103.8198,
-            zoom: 11
-        },
-        paths: {
-            currentLoc: {
-                type: 'circleMarker',
-                fillColor: '#4183D7',
-                opacity: 80,
-                fillOpacity: 0.9,
-                stroke: false,
-                clickable: false,
-                latlngs: [0, 0],
-                radius: 10
-            },
-        },
-        tiles: {
-            url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
-        },
-        defaults: {
-            scrollWheelZoom: true,
-            zoomControl: true
-        },
-        layers: {
-            overlays: {
+
+
+            $scope.layers = {overlays: {
                 pcn: {
                     name: 'Park Connector Network',
                     type: 'geoJSONAwesomeMarker',
                     data: pcn,
                     visible: false,
                 },
-                food_beverage: {
-                    name: 'Food & Beverage',
-                    type: 'geoJSONAwesomeMarker',
-                    data: food_beverage,
-                    visible: false,
-                    icon: {
-                        icon: 'cutlery',
-                        markerColor: 'red',
-                        prefix: 'fa'
-                    }
-                },
+                // food_beverage: {
+                //     name: 'Food & Beverage',
+                //     type: 'geoJSONAwesomeMarker',
+                //     data: food_beverage,
+                //     visible: false,
+                //     icon: {
+                //         icon: 'cutlery',
+                //         markerColor: 'red',
+                //         prefix: 'fa'
+                //     }
+                // },
                 intraTownCyclingPath: {
                     name: 'Intra-Town Cycling Paths',
                     type: 'geoJSONAwesomeMarker',
@@ -140,43 +127,134 @@ angular.module('app.main.controllers')
                         prefix: 'fa'
                     }
                 }
-            }
+
+            }};
+
+            leafletData.getMap("pcn").then(function(map) {
+
+                function onEachFeature(feature, layer) {
+                    if (feature.properties && feature.properties.comment) {
+                        layer.bindPopup(feature.properties.comment);
+                    }
+                }
+                var geoJsonLayer = L.geoJson(geotaggedComments, {
+                    onEachFeature: onEachFeature
+                });
+
+                var geotaggedCommentsButton = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-geotagged-comments',
+                        icon: 'fa-map-marker',
+                        title: 'Add Geotagged Comments',
+                        onClick: function(control) {
+                            map.addLayer(geoJsonLayer);
+                            control.state('remove-geotagged-comments');
+                        }
+                    }, {
+                        stateName: 'remove-geotagged-comments',
+                        title: 'Remove Geotagged Comments',
+                        icon: 'fa-undo',
+                        onClick: function(control) {
+                            map.removeLayer(geoJsonLayer);
+                            control.state('add-geotagged-comments');
+                        }
+                    }]
+                });
+                geotaggedCommentsButton.addTo(map);
+
+            });
+            $scope.hide();
+        },
+        function errorCallback(response) {
+
+        });
+    // $.ajax({
+    //     dataType: 'json',
+    //     url: 'https://sgcycling-sgloop.rhcloud.com/api/cyclist/amenity/getAmenities',
+    //     async: false,
+    //     method: 'POST',
+    //     data: {
+    //         token: localStorage.getItem("token")
+    //     },
+    //     success: function(response) {
+    //         geotaggedComments = response.geotaggedComments;
+    //         shelters = response.shelter;
+    //         toilets = response.toilets;
+    //         bicycle_rental = response.bicycleRental;
+    //         bicycle_parking = response.bicycleParking;
+    //         drinking_water = response.drinkingWater;
+    //         pcn = response.pcn;
+    //         intraTownCyclingPath = response.intraTownCyclingPath;
+    //
+    //     }
+    // });
+
+
+    angular.extend($scope, {
+        center: {
+            lat: 1.3521,
+            lng: 103.8198,
+            zoom: 11
+        },
+        paths: {
+            currentLoc: {
+                type: 'circleMarker',
+                fillColor: '#4183D7',
+                opacity: 80,
+                fillOpacity: 0.9,
+                stroke: false,
+                clickable: false,
+                latlngs: [0, 0],
+                radius: 10
+            },
+        },
+        tiles: {
+            url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
+        },
+        defaults: {
+            scrollWheelZoom: true,
+            zoomControl: true
+        },
+        layers: {
+
         }
     });
 
     leafletData.getMap("pcn").then(function(map) {
 
-        function onEachFeature(feature, layer) {
-            if (feature.properties && feature.properties.comment) {
-                layer.bindPopup(feature.properties.comment);
-            }
-        }
-        var geoJsonLayer = L.geoJson(geotaggedComments, {
-            onEachFeature: onEachFeature
-        });
-
-        var geotaggedCommentsButton = L.easyButton({
-            id: 'animated-marker-toggle',
-            type: 'replace',
-            states: [{
-                stateName: 'add-geotagged-comments',
-                icon: 'fa-map-marker',
-                title: 'Add Geotagged Comments',
-                onClick: function(control) {
-                    map.addLayer(geoJsonLayer);
-                    control.state('remove-geotagged-comments');
-                }
-            }, {
-                stateName: 'remove-geotagged-comments',
-                title: 'Remove Geotagged Comments',
-                icon: 'fa-undo',
-                onClick: function(control) {
-                    map.removeLayer(geoJsonLayer);
-                    control.state('add-geotagged-comments');
-                }
-            }]
-        });
-        geotaggedCommentsButton.addTo(map);
+        // function onEachFeature(feature, layer) {
+        //     if (feature.properties && feature.properties.comment) {
+        //         layer.bindPopup(feature.properties.comment);
+        //     }
+        // }
+        // var geoJsonLayer = L.geoJson(geotaggedComments, {
+        //     onEachFeature: onEachFeature
+        // });
+        //
+        // var geotaggedCommentsButton = L.easyButton({
+        //     id: 'animated-marker-toggle',
+        //     type: 'replace',
+        //     states: [{
+        //         stateName: 'add-geotagged-comments',
+        //         icon: 'fa-map-marker',
+        //         title: 'Add Geotagged Comments',
+        //         onClick: function(control) {
+        //             map.addLayer(geoJsonLayer);
+        //             control.state('remove-geotagged-comments');
+        //         }
+        //     }, {
+        //         stateName: 'remove-geotagged-comments',
+        //         title: 'Remove Geotagged Comments',
+        //         icon: 'fa-undo',
+        //         onClick: function(control) {
+        //             map.removeLayer(geoJsonLayer);
+        //             control.state('add-geotagged-comments');
+        //         }
+        //     }]
+        // });
+        // geotaggedCommentsButton.addTo(map);
 
         setInterval(function() {
             map.invalidateSize();
@@ -202,6 +280,7 @@ angular.module('app.main.controllers')
             console.log('Location access denied.');
         });
     });
+
 
     $scope.locateMe = function() {
         leafletData.getMap("pcn").then(function(map) {
