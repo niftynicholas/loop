@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova','jrCrop','deviceGyroscope','ionic-native-transitions'])
+angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova','jrCrop','deviceGyroscope'])
     .filter('digits', function() {
         return function(input) {
             if (input < 10) input = '0' + input;
@@ -105,19 +105,19 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     $ionicConfigProvider.navBar.alignTitle('center')
 })
 
-.config(function($ionicNativeTransitionsProvider){
-    $ionicNativeTransitionsProvider.setDefaultTransition({
-        type: 'fade',
-        duration: 500
-    });
-})
-
-.config(function($ionicNativeTransitionsProvider){
-    $ionicNativeTransitionsProvider.setDefaultBackTransition({
-        type: 'slide',
-        direction: 'right'
-    });
-})
+// .config(function($ionicNativeTransitionsProvider){
+//     $ionicNativeTransitionsProvider.setDefaultTransition({
+//         type: 'fade',
+//         duration: 500
+//     });
+// })
+//
+// .config(function($ionicNativeTransitionsProvider){
+//     $ionicNativeTransitionsProvider.setDefaultBackTransition({
+//         type: 'slide',
+//         direction: 'right'
+//     });
+// })
 
 .run(function($ionicPlatform) {
 
