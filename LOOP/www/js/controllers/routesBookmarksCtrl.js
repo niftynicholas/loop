@@ -44,7 +44,7 @@ angular.module('app.main.controllers')
 
             for (var i = 0; i < $scope.routes.length; i++) {
                 var route = $scope.routes[i];
-                routeCID = "" + route.cid;
+                route.cid = "bookmark" + route.cid;
                 geom = JSON.parse(route.geom);
                 console.log("TOP");
                 console.log(geom);
@@ -67,7 +67,7 @@ angular.module('app.main.controllers')
                 }
 
                 coordinates = temp;
-                getRouteMap(routeCID, geom, myStyle, coordinates, leafletData);
+                getRouteMap(route.cid, geom, myStyle, coordinates, leafletData);
             }
         }
     });
