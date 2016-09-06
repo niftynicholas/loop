@@ -233,24 +233,24 @@ angular.module('app.main.controllers')
     //***************************** ON WATCH ****************************************
     var setWatch = true;
     setInterval(function() {
-        $deviceGyroscope.getCurrent().then(function(result) {
-            console.log("X: " + result.x);
-            console.log("Y: " + result.y);
-            console.log("Y: " + result.z);
-            $scope.currentSpeed = Math.round(Math.abs(result.y) * 18.0/5.0);
-        }, function(err) {
-            // An error occurred. Show a message to the user
-            console.log("Cannot find Acceleration");
-            //****************** Use Geolocation to Calculate Current Speed ******************
-            // var coordinates = $scope.coordsinfo;
-            // var latestCoord = coordinates[coordinates.length - 1];
-            // var secondLatestCoord = coordinates[coordinates.length - 2];
-            // var curSpd = geolib.getSpeed(secondLatestCoord, latestCoord);
-            // $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
-        });
+        // $deviceGyroscope.getCurrent().then(function(result) {
+        //     console.log("X: " + result.x);
+        //     console.log("Y: " + result.y);
+        //     console.log("Y: " + result.z);
+        //     $scope.currentSpeed = Math.round(Math.abs(result.y) * 18.0/5.0);
+        // }, function(err) {
+        //     // An error occurred. Show a message to the user
+        //     console.log("Cannot find Acceleration");
+        //     //****************** Use Geolocation to Calculate Current Speed ******************
+        //     // var coordinates = $scope.coordsinfo;
+        //     // var latestCoord = coordinates[coordinates.length - 1];
+        //     // var secondLatestCoord = coordinates[coordinates.length - 2];
+        //     // var curSpd = geolib.getSpeed(secondLatestCoord, latestCoord);
+        //     // $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
+        // });
 
         $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
-            console.log("lat: " + position.coords.latitude + "lng: " + position.coords.longitude);
+            //console.log("lat: " + position.coords.latitude + "lng: " + position.coords.longitude);
             $scope.currentLoc = new L.LatLng(position.coords.latitude, position.coords.longitude);
             if (setWatch) {
                 map.setView($scope.currentLoc, 18);
@@ -265,6 +265,13 @@ angular.module('app.main.controllers')
             });
 
             if (latlngs.length >= 2) {
+                var latestCoord = $scope.coordsinfo[$scope.coordsinfo.length - 1];
+                var secondLatestCoord = $scope.coordsinfo[$scope.coordsinfo.length - 2];
+                var curSpd = geolib.getSpeed(secondLatestCoord, latestCoord);
+                if(!isNaN(curSpd)){
+                    $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
+                }
+
                 if (polyline != null) {
                     map.removeLayer(polyline);
                 }
