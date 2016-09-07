@@ -17,12 +17,6 @@
   <preference name="InAppBrowserStorageEnabled" value="True"/>
   <preference name="SuppressesIncrementalRendering" value="True"/>
   <preference name="windows-target-version" value="10.0"/>
-  <preference name="ShowSplashScreenSpinner" value="false"/>
-  <preference name="SplashScreen" value="screen"/>
-  <preference name="AutoHideSplashScreen" value="false"/>
-  <preference name="SplashScreenDelay" value="10000"/>
-  <preference name="FadeSplashScreen" value="true"/>
-  <preference name="FadeSplashScreenDuration" value="1.0"/>
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>
