@@ -24,6 +24,7 @@ angular.module('app.main.controllers')
             }
         }).then(function successCallback(response) {
                 homeData.sendData(response.data.data);
+                console.log("Data for Home Tab has been loaded.");
             },
             function errorCallback(response) {
 
@@ -43,6 +44,7 @@ angular.module('app.main.controllers')
             },
         }).then(function successCallback(response) {
                 mapData.sendData(response.data);
+                console.log("Data for Map Tab has been loaded.");
             },
             function errorCallback(response) {
 
@@ -53,7 +55,7 @@ angular.module('app.main.controllers')
     $timeout(function() {
         $scope.hide();
         $state.go('landing');
-    }, 5000);
+    }, 4000);
     $scope.getHomeData();
     $scope.getMapData();
 })

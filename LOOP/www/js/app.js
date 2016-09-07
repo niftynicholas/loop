@@ -122,6 +122,7 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
 .run(function($ionicPlatform) {
 
     $ionicPlatform.ready(function() {
+        navigator.splashscreen.hide();
 
         var permissions = cordova.plugins.permissions;
         permissions.hasPermission(permissions.ACCESS_COARSE_LOCATION, checkPermissionCallback, null);

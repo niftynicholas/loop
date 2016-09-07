@@ -40,15 +40,11 @@ angular.module('app.main.controllers')
         },
         success: function(response) {
             $scope.routes = response.data;
-            console.log("Received " + $scope.routes.length + " routes...");
 
             for (var i = 0; i < $scope.routes.length; i++) {
                 var route = $scope.routes[i];
                 route.cid = "bookmark" + route.cid;
                 geom = JSON.parse(route.geom);
-                console.log("TOP");
-                console.log(geom);
-                console.log("Preparing drawing properties for Route CID " + route.cid + "...");
 
                 var myStyle = {
                     weight: 8,
@@ -80,9 +76,6 @@ angular.module('app.main.controllers')
 
 function getRouteMap(routeCID, geom, myStyle, coordinates, leafletData) {
     leafletData.getMap(routeCID).then(function(map) {
-        console.log("BOTTOM");
-        console.log(geom);
-        console.log("Drawing on Leaflet ID " + routeCID + "...");
         L.geoJson(geom, {
             style: myStyle
         }).addTo(map);

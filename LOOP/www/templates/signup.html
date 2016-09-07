@@ -11,7 +11,7 @@
                 <!-- Email -->
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.email.$invalid && signupForm.$submitted, 'no-errors' : signupForm.email.$valid  && signupForm.$submitted}">
                     <span class="input-label">Email</span>
-                    <input type="email" name="email" ng-model="input.email" required>
+                    <input type="email" name="email" ng-model="input.email" required record-availability-validator="https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/checkEmailAvailability">
                 </label>
                 <div class="error-container" ng-show="signupForm.email.$error && signupForm.$submitted" ng-messages="signupForm.email.$error">
                     <div ng-messages-include="error-list.html"></div>
@@ -27,7 +27,7 @@
                 <!-- Username -->
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.username.$invalid && signupForm.$submitted, 'no-errors' : signupForm.username.$valid  && signupForm.$submitted}">
                     <span class="input-label">Username</span>
-                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" required>
+                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" required record-availability-validator="https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/checkUsernameAvailability">
                 </label>
                 <div class="error-container" ng-show="signupForm.username.$error && signupForm.$submitted" ng-messages="signupForm.username.$error">
                     <div ng-messages-include="error-list.html"></div>
@@ -71,4 +71,11 @@
     <div class="error" ng-message="minlength">
         <i class="ion-information-circled"></i> Minimum length is 8 characters
     </div>
+    <div class="error" ng-message="recordingLoading">
+        <i class="ion-information-circled"></i> Checking...
+    </div>
+    <div class="error" ng-message="recordAvailable">
+        <i class="ion-information-circled"></i> Unavailable
+    </div>
+
 </script>

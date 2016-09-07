@@ -36,7 +36,7 @@ angular.module('app.main.controllers')
                     localStorage.setItem("weight", response.data.weight);
                     localStorage.setItem("gender", response.data.gender);
                     localStorage.setItem("profilePicture", response.data.profilePicture);
-                    console.log(response.data.token);
+                    console.log(response.data);
                     $scope.hide();
                     $state.go('tabsController.home');
                 },
