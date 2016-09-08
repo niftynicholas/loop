@@ -32,13 +32,19 @@ angular.module('app.main.controllers')
             },
         },
         tiles: {
-            url: 'https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q'
+            url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
         },
         defaults: {
             scrollWheelZoom: true,
             zoomControl: true
         },
         layers: {
+
+        }
+    });
+
+    $scope.$on("$ionicView.afterEnter", function() {
+        $scope.layers = {
             overlays: {
                 pcn: {
                     name: 'Park Connector Network',
@@ -107,67 +113,66 @@ angular.module('app.main.controllers')
                         prefix: 'fa'
                     }
                 }
-
             }
-        }
-    });
+        };
 
-    leafletData.getMap("pcn").then(function(map) {
-        function onEachFeature(feature, layer) {
-            if (feature.properties && feature.properties.comment) {
-                layer.bindPopup(feature.properties.comment);
-            }
-        }
-        var geoJsonLayer = L.geoJson(geotaggedComments, {
-            onEachFeature: onEachFeature
-        });
-
-        var geotaggedCommentsButton = L.easyButton({
-            id: 'animated-marker-toggle',
-            type: 'replace',
-            states: [{
-                stateName: 'add-geotagged-comments',
-                icon: 'fa-map-marker',
-                title: 'Add Geotagged Comments',
-                onClick: function(control) {
-                    map.addLayer(geoJsonLayer);
-                    control.state('remove-geotagged-comments');
+        leafletData.getMap("pcn").then(function(map) {
+            function onEachFeature(feature, layer) {
+                if (feature.properties && feature.properties.comment) {
+                    layer.bindPopup(feature.properties.comment);
                 }
-            }, {
-                stateName: 'remove-geotagged-comments',
-                title: 'Remove Geotagged Comments',
-                icon: 'fa-undo',
-                onClick: function(control) {
-                    map.removeLayer(geoJsonLayer);
-                    control.state('add-geotagged-comments');
-                }
-            }]
-        });
-        geotaggedCommentsButton.addTo(map);
-
-        setInterval(function() {
-            map.invalidateSize();
-        }, 3000); //every 3s
-        map.locate({
-            watch: true,
-            enableHighAccuracy: false
-        });
-        map.on('locationfound', function(e) {
-            $scope.currentLocation = {
-                lat: e.latlng.lat,
-                lng: e.latlng.lng
-            };
-            if ($scope.firstLoad) {
-                map.setView($scope.currentLocation, 16);
-                $scope.firstLoad = false;
             }
-            $scope.paths.currentLoc.latlngs = [];
-            $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
-            $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
-        });
-        map.on('locationerror', function(e) {
-            console.log('Location access denied.');
-        });
+            var geoJsonLayer = L.geoJson(geotaggedComments, {
+                onEachFeature: onEachFeature
+            });
+
+            var geotaggedCommentsButton = L.easyButton({
+                id: 'animated-marker-toggle',
+                type: 'replace',
+                states: [{
+                    stateName: 'add-geotagged-comments',
+                    icon: 'fa-map-marker',
+                    title: 'Add Geotagged Comments',
+                    onClick: function(control) {
+                        map.addLayer(geoJsonLayer);
+                        control.state('remove-geotagged-comments');
+                    }
+                }, {
+                    stateName: 'remove-geotagged-comments',
+                    title: 'Remove Geotagged Comments',
+                    icon: 'fa-undo',
+                    onClick: function(control) {
+                        map.removeLayer(geoJsonLayer);
+                        control.state('add-geotagged-comments');
+                    }
+                }]
+            });
+            geotaggedCommentsButton.addTo(map);
+
+            setInterval(function() {
+                map.invalidateSize();
+            }, 3000); //every 3s
+            map.locate({
+                watch: true,
+                enableHighAccuracy: false
+            });
+            map.on('locationfound', function(e) {
+                $scope.currentLocation = {
+                    lat: e.latlng.lat,
+                    lng: e.latlng.lng
+                };
+                if ($scope.firstLoad) {
+                    map.setView($scope.currentLocation, 16);
+                    $scope.firstLoad = false;
+                }
+                $scope.paths.currentLoc.latlngs = [];
+                $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
+                $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
+            });
+            map.on('locationerror', function(e) {
+                console.log('Location access denied.');
+            });
+        })
     });
 
     $scope.locateMe = function() {

@@ -1,9 +1,9 @@
 angular.module('app.main.controllers')
 
 .controller('homeCtrl', function($scope, homeData, routeName, $state, $http, leafletData) {
-    $scope.$on("$ionicView.afterEnter", function() {
-        $scope.routes = homeData.getData();
+    $scope.routes = homeData.getData();
 
+    $scope.$on("$ionicView.afterEnter", function() {
         for (var i = 0; i < $scope.routes.length; i++) {
             var counter = i;
             var routeCID = $scope.routes[i].cid;
