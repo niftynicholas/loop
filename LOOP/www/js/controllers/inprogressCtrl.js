@@ -168,7 +168,7 @@ angular.module('app.main.controllers')
 
     var osmUrl = 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
     osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
-    osm = L.tileLayer(osmUrl, {maxZoom: 17, attribution: osmAttrib, rotate:true}).setZIndex(-100);
+    osm = L.tileLayer(osmUrl, {maxZoom: 17, attribution: osmAttrib, rotate:true, edgeBufferTiles: 2}).setZIndex(-100);
 
     var map = new L.Map('inprogress', {
         zoom: 15,
@@ -183,7 +183,7 @@ angular.module('app.main.controllers')
     //Adding the GeoTags Layer into Map
     geotags.addTo(map);
 
-    var currentLoc = L.circle([0, 0], 10, {
+    var currentLoc = L.circleMarker([0, 0], {
         fillColor: '#4183D7', //DarkSlateGray
         opacity: 80,
         fillOpacity: 0.9,

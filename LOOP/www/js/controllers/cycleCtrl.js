@@ -25,12 +25,12 @@ angular.module('app.main.controllers')
                 radius: 10
             },
         },
-        tiles: {
-            url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-            options: {
-                attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
-            }
-        },
+        // tiles: {
+        //     url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
+        //     options: {
+        //         attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+        //     }
+        // },
         defaults: {
             scrollWheelZoom: true,
             zoomControl: true,
@@ -40,12 +40,10 @@ angular.module('app.main.controllers')
     });
 
     leafletData.getMap("cycle").then(function(map) {
-        // var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
-        //     attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
-        //     //edgeBufferTiles: 2
-        //     //subdomains: ['a', 'b', 'c'],
-        //     //buffer: 8
-        // }).addTo(map);
+        var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
+            attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+            edgeBufferTiles: 2
+        }).addTo(map);
         setInterval(function() {
             map.invalidateSize();
         }, 3000); //every 3s
