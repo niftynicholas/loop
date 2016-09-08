@@ -137,7 +137,8 @@ angular.module('app.main.controllers')
             },
             data: {
                 token: localStorage.getItem("token"),
-                cid: routeCID
+                cid: routeCID,
+                dateTimeStamp: new Date().getTime()
             }
         }).then(function successCallback(response) {
             },
