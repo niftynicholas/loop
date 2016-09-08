@@ -3,6 +3,7 @@ angular.module('app.main.controllers')
 .controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
+    $scope.loadedGeotaggedComments = false;
     var response = mapData.getData();
     var geotaggedComments = response.geotaggedComments;
     var shelters = response.shelter;
@@ -31,9 +32,6 @@ angular.module('app.main.controllers')
                 radius: 10
             },
         },
-        tiles: {
-            url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
-        },
         defaults: {
             scrollWheelZoom: true,
             zoomControl: true
@@ -41,6 +39,12 @@ angular.module('app.main.controllers')
         layers: {
 
         }
+    });
+
+    leafletData.getMap("pcn").then(function(map) {
+        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q', {
+            edgeBufferTiles: 2
+        }).addTo(map);
     });
 
     $scope.$on("$ionicView.afterEnter", function() {
@@ -117,7 +121,7 @@ angular.module('app.main.controllers')
         };
 
         leafletData.getMap("pcn").then(function(map) {
-            if($scope.firstLoad){
+            if(!$scope.loadedGeotaggedComments){
                 function onEachFeature(feature, layer) {
                     if (feature.properties && feature.properties.comment) {
                         layer.bindPopup(feature.properties.comment);
@@ -149,7 +153,7 @@ angular.module('app.main.controllers')
                     }]
                 });
                 geotaggedCommentsButton.addTo(map);
-                $scope.firstLoad = false;
+                $scope.loadedGeotaggedComments = true;
             }
 
             setInterval(function() {
