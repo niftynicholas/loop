@@ -117,37 +117,40 @@ angular.module('app.main.controllers')
         };
 
         leafletData.getMap("pcn").then(function(map) {
-            function onEachFeature(feature, layer) {
-                if (feature.properties && feature.properties.comment) {
-                    layer.bindPopup(feature.properties.comment);
+            if($scope.firstLoad){
+                function onEachFeature(feature, layer) {
+                    if (feature.properties && feature.properties.comment) {
+                        layer.bindPopup(feature.properties.comment);
+                    }
                 }
-            }
-            var geoJsonLayer = L.geoJson(geotaggedComments, {
-                onEachFeature: onEachFeature
-            });
+                var geoJsonLayer = L.geoJson(geotaggedComments, {
+                    onEachFeature: onEachFeature
+                });
 
-            var geotaggedCommentsButton = L.easyButton({
-                id: 'animated-marker-toggle',
-                type: 'replace',
-                states: [{
-                    stateName: 'add-geotagged-comments',
-                    icon: 'fa-map-marker',
-                    title: 'Add Geotagged Comments',
-                    onClick: function(control) {
-                        map.addLayer(geoJsonLayer);
-                        control.state('remove-geotagged-comments');
-                    }
-                }, {
-                    stateName: 'remove-geotagged-comments',
-                    title: 'Remove Geotagged Comments',
-                    icon: 'fa-undo',
-                    onClick: function(control) {
-                        map.removeLayer(geoJsonLayer);
-                        control.state('add-geotagged-comments');
-                    }
-                }]
-            });
-            geotaggedCommentsButton.addTo(map);
+                var geotaggedCommentsButton = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-geotagged-comments',
+                        icon: 'fa-map-marker',
+                        title: 'Add Geotagged Comments',
+                        onClick: function(control) {
+                            map.addLayer(geoJsonLayer);
+                            control.state('remove-geotagged-comments');
+                        }
+                    }, {
+                        stateName: 'remove-geotagged-comments',
+                        title: 'Remove Geotagged Comments',
+                        icon: 'fa-undo',
+                        onClick: function(control) {
+                            map.removeLayer(geoJsonLayer);
+                            control.state('add-geotagged-comments');
+                        }
+                    }]
+                });
+                geotaggedCommentsButton.addTo(map);
+                $scope.firstLoad = false;
+            }
 
             setInterval(function() {
                 map.invalidateSize();
