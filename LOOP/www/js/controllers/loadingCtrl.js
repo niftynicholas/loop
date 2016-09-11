@@ -34,7 +34,7 @@ angular.module('app.main.controllers')
     //Removal of token
     $scope.getMapData = function() {
         $http({
-            url: 'https://sgcycling-sgloop.rhcloud.com/api/cyclist/amenity/getAmenities',
+            url: 'https://sgcycling-sgloop.rhcloud.com/api/cyclist/map/getMapData',
             method: 'POST',
             async: false,
             headers: {
