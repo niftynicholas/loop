@@ -26,12 +26,14 @@ angular.module('app.main.controllers')
                     username: $scope.input.username,
                     password: $scope.input.password,
                     name: $scope.input.name,
-                    email: $scope.input.email
+                    email: $scope.input.email,
+                    dateTimeStamp: new Date().getTime()
                 }
             }).then(function successCallback(response) {
                 $scope.hide();
                 $state.go('verify');
             }, function errorCallback(response) {
+                console.log(JSON.stringify(response, null, 4));
                 $scope.hide();
                 $scope.showAlert();
             });

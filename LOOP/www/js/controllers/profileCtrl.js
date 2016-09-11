@@ -2,6 +2,8 @@ angular.module('app.main.controllers')
 
 .controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window, $cordovaCamera, $cordovaFile, $ionicActionSheet, $cordovaImagePicker, $ionicPlatform, $ionicModal, $jrCrop, $http) {
     $scope.height = parseFloat(localStorage.getItem("height"));
+    $scope.totalCalories = parseFloat(localStorage.getItem("totalCalories"));
+    $scope.numActivities = parseInt(localStorage.getItem("numActivities"));
     if (isNaN($scope.height)) {
         $scope.height = 0;
     }
