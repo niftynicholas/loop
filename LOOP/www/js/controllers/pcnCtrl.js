@@ -13,6 +13,7 @@ angular.module('app.main.controllers')
     var drinking_water = response.drinkingWater;
     var pcn = response.pcn;
     var intraTownCyclingPath = response.intraTownCyclingPath;
+    var food = response.food;
 
     angular.extend($scope, {
         center: {
@@ -70,6 +71,17 @@ angular.module('app.main.controllers')
                     icon: {
                         icon: 'male',
                         markerColor: 'black',
+                        prefix: 'fa'
+                    }
+                },
+                food: {
+                    name: 'F&B',
+                    type: 'geoJSONAwesomeMarker',
+                    data: food,
+                    visible: false,
+                    icon: {
+                        icon: 'cutlery',
+                        markerColor: 'red',
                         prefix: 'fa'
                     }
                 },
