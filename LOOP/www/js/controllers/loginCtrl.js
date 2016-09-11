@@ -16,7 +16,7 @@ angular.module('app.main.controllers')
         if (form.$valid) {
             $scope.show();
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/login",
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/loginlogin",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -27,18 +27,31 @@ angular.module('app.main.controllers')
                 }
             }).then(function successCallback(response) {
                     localStorage.setItem("login_state", "true");
-                    localStorage.setItem("token", response.data.token);
-                    localStorage.setItem("dateOfBirth", response.data.dateOfBirth);
-                    localStorage.setItem("email", response.data.email);
-                    localStorage.setItem("height", response.data.height);
-                    localStorage.setItem("name", response.data.name);
-                    localStorage.setItem("username", response.data.username);
-                    localStorage.setItem("weight", response.data.weight);
-                    localStorage.setItem("gender", response.data.gender);
-                    localStorage.setItem("profilePicture", response.data.profilePicture);
-                    console.log(response.data);
+                    localStorage.setItem("token", response.data.user.token);
+                    localStorage.setItem("dateOfBirth", response.data.user.dateOfBirth);
+                    localStorage.setItem("email", response.data.user.email);
+                    localStorage.setItem("height", response.data.user.height);
+                    localStorage.setItem("name", response.data.user.name);
+                    localStorage.setItem("username", response.data.user.username);
+                    localStorage.setItem("weight", response.data.user.weight);
+                    localStorage.setItem("gender", response.data.user.gender);
+                    localStorage.setItem("profilePicture", response.data.user.profilePicture);
+
+                    //Stores the top 5 popular routes
+                    localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+
+                    //Stores the top 5 bookmarked Routes
+                    localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+
+                    //Stores the top 5 User's routes
+                    localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
                     $scope.hide();
                     $state.go('tabsController.home');
+                    /*
+                    popularRoutes:result[1],
+                    bookmarkedRoutes:result[2],
+                    userRoutes:result[3]
+                    */
                 },
                 function errorCallback(response) {
                     $scope.hide();

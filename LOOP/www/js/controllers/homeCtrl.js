@@ -1,74 +1,76 @@
 angular.module('app.main.controllers')
 
-.controller('homeCtrl', function($scope, homeData, routeName, $state, $http, leafletData) {
-    $scope.routes = homeData.getData();
+.controller('homeCtrl', function($scope, homeData, routeName, $state, $http, $timeout, $parse,leafletData) {
+
+    //Retrieves and parses the popularRoutes that was retrieved when the user logged in
+    $scope.routes = JSON.parse(localStorage.getItem("popularRoutes"));
+
+    //Pre-existing scope variable
     $scope.firstLoad = true;
-    $scope.$on("$ionicView.afterEnter", function() {
-        if($scope.firstLoad){
-            for (var i = 0; i < $scope.routes.length; i++) {
-                var counter = i;
-                var routeCID = $scope.routes[i].cid;
 
-                $.ajax({
-                    dataType: 'json',
-                    url: 'https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getRoute',
-                    async: false,
-                    method: 'POST',
-                    data: {
-                        cid: routeCID,
-                        token: localStorage.getItem("token")
-                    },
-                    success: function(response) {
-                        var json = response;
-                        $scope.routes[counter]["geojson"] = json.route;
-                        $scope.routes[counter]["distance"] = json.distance;
-                        $scope.routes[counter]["duration"] = json.duration;
-                        $scope.routes[counter]["noOfComments"] = json.comments.length;
+    //Default Style
+    $scope.myStyle = {
+        weight: 8,
+        opacity: 1,
+        color: '#022F40'
+    };
 
-                        var coordinates = JSON.parse(response.route).coordinates;
+    //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method
+    $scope.count = 0;
 
-                        // Swap lat lng position for fitBounds()
-                        var temp = [];
-                        for (var i = 0; i < coordinates.length; i++) {
-                            var temp2 = [];
-                            temp2.push(coordinates[i][1]);
-                            temp2.push(coordinates[i][0]);
-                            temp.push(temp2);
-                        }
+    //Used for the leafletData.getMap() to find the map with the cid
+    $scope.cidList = [];
 
-                        coordinates = temp;
+    //Used for drawing the line inside the retrieved map
+    $scope.geojsonList = [];
 
-                        var geojson = JSON.parse(json.route);
-                        var myStyle = {
-                            weight: 8,
-                            opacity: 1,
-                            color: '#022F40'
-                        }
+    //Used for fitbound of the retrieved map
+    $scope.coordinatesList = [];
 
-                        leafletData.getMap((routeCID)).then(function(map) {
-                            map.fitBounds(
-                                coordinates, {
-                                    animate: true,
-                                    reset: true,
-                                    padding: [25, 25],
-                                    maxZoom: 16
-                                }
-                            );
-                            map.invalidateSize();
+    //Method that is called after 0seconds after the template has loaded using the $timeout that calls this method
+    var init = function() {
+        if ($scope.firstLoad) {
 
-                            L.geoJson(geojson, {
-                                style: myStyle
-                            }).addTo(map);
-                        })
-                    }
-                })
-            }
-            $scope.firstLoad = false;
+          //Retrieves the length of the popularRoutes array containing individual routes sorted by ranking
+          var len = $scope.routes.length;
+          for (var i = 0; i < len; i++) {
+
+              //Pushes the Cid, geojson, fitbound coordinates into the respective scope variables
+              $scope.cidList.push($scope.routes[i].cid);
+              $scope.geojsonList.push($scope.routes[i].route);
+              $scope.coordinatesList.push($scope.routes[i].envelope);
+              $scope.firstLoad = false;
+          }
+          //Loops through the number of routes retrieved to configure the relevant maps
+          for (var i = 0; i < $scope.cidList.length; i++) {
+              var cid = $scope.cidList[i];
+              leafletData.getMap(cid).then(function(map) {
+                  //Retrieving the count to retrieve the relevant geojson and fitbound
+                  var count = $scope.count;
+                  var geojson = $scope.geojsonList[count];
+                  var coordinates = $scope.coordinatesList[count];
+                  map.fitBounds(
+                      coordinates, {
+                          animate: true,
+                          reset: true,
+                          padding: [25, 25],
+                          maxZoom: 16
+                      }
+                  );
+                  L.geoJson(geojson, {
+                      style: $scope.myStyle
+                  }).addTo(map);
+                  map.invalidateSize();
+                  $scope.count = $scope.count + 1;
+              })
+          }
         }
+    };
+    //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
+    //Test whether the timeout is still required, not tested by Wee Kian
+    $timeout(init, 0);
 
-
-    });
-
+    //Can dump the route data inside here to not need to call getRoute API
     $scope.viewRoute = function(cid) {
         routeName.sendData(cid);
         $state.go("viewRoute");

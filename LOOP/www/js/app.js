@@ -20,6 +20,12 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
         }
     })
 
+    .filter('min', function() {
+        return function(input) {
+            return (input / 60);
+        }
+    })
+
 .factory('dataShare', function() {
     var service = {};
     service.data = false;

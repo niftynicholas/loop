@@ -6,15 +6,15 @@
                 <b>{{route.name}}</b></br>
                 </br>
                 <div data-tap-disabled="true" style="height:30vh;">
-                    <leaflet id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
+                    <leaflet ng-attr-id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
                 </div>
                 <br>
                 <div class="row" >
                     <div class="col-90" style="padding: 0 !important;">
-                        <p><b>Distance:</b> {{route.distance | km}} km <b>Duration:</b> {{route.duration}} mins</p>
+                        <p><b>Distance:</b> {{route.distance | km}} km <b>Duration:</b> {{route.duration | min}} mins</p>
                     </div>
                     <div class="col-10" style="padding: 0 !important;">
-                        <p style="width=20%;" align="right">{{route.noOfComments}} <i class="icon ion-ios-chatbubble-outline"></i></p>
+                        <p style="width=20%;" align="right">{{route.comments.length || 0}} <i class="icon ion-ios-chatbubble-outline"></i></p>
                     </div>
                 </div>
             </ion-item>
