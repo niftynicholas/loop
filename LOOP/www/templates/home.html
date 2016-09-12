@@ -9,7 +9,7 @@
                     <leaflet ng-attr-id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
                 </div>
                 <br>
-                <div class="row" >
+                <div class="row">
                     <div class="col-90" style="padding: 0 !important;">
                         <p><b>Distance:</b> {{route.distance | km}} km <b>Duration:</b> {{route.duration | min}} mins</p>
                     </div>
@@ -19,5 +19,7 @@
                 </div>
             </ion-item>
         </ion-list>
+        <ion-infinite-scroll  ng-if="checkHasMoreRoutes()" on-infinite="loadMore()" distance="1%">
+        </ion-infinite-scroll>
     </ion-content>
 </ion-view>
