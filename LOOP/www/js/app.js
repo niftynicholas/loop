@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova','jrCrop','deviceGyroscope'])
+angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova', 'jrCrop', 'deviceGyroscope'])
     .filter('digits', function() {
         return function(input) {
             if (input < 10) input = '0' + input;
@@ -14,17 +14,21 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
         }
     })
 
-    .filter('km', function() {
-        return function(input) {
-            return (parseFloat(input) / 1000).toFixed(2);
-        }
-    })
+.filter('km', function() {
+    return function(input) {
+        return (parseFloat(input) / 1000).toFixed(2);
+    }
+})
 
-    .filter('min', function() {
-        return function(input) {
-            return (input / 60);
+.filter('duration', function() {
+    return function(input) {
+        if (input < 60) {
+            return Math.round(parseFloat(input)) + " seconds";
+        } else {
+            return (parseFloat(input) / 60) + " minutes";
         }
-    })
+    }
+})
 
 .factory('dataShare', function() {
     var service = {};
@@ -71,22 +75,22 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     return service;
 })
 
-.factory('routeName',function(){
+.factory('routeName', function() {
     var service = {};
     service.data = false;
-    service.sendData = function (data) {
+    service.sendData = function(data) {
         this.data = data;
     };
-    service.getData = function () {
+    service.getData = function() {
         return this.data;
     };
-    service.clearData = function () {
+    service.clearData = function() {
         this.data = false;
     };
     return service;
 })
 
-.factory('sharedRoute', function () {
+.factory('sharedRoute', function() {
     var service = {};
     service.routeLayer = null;
     service.markerLayer = null;
@@ -95,7 +99,7 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     service.routepoints = [];
     service.hasPlanned = false;
 
-    service.clearData = function () {
+    service.clearData = function() {
         this.routeLayer = null;
         this.markerLayer = null;
         this.sourceMarker = {};
