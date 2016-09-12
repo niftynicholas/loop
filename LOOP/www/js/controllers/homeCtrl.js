@@ -125,7 +125,9 @@ angular.module('app.main.controllers')
                 from: $scope.count
             }
         }).then(function successCallback(response) {
+                console.log("Count: " + $scope.count);
                 var additionalPopularRoutes = response.data.popularRoutes;
+                console.log("Added " + additionalPopularRoutes.length + " more routes.")
                 if (additionalPopularRoutes.length < 5) {
                     $scope.hasMoreRoutes = false;
                 }
@@ -134,19 +136,19 @@ angular.module('app.main.controllers')
                 reinit();
             },
             function errorCallback(response) {
-                console.log("error");
+
             });
     };
 
-    $scope.$on('$stateChangeSuccess', function() {
-        $scope.loadMore();
-    });
+    // $scope.$on('$stateChangeSuccess', function() {
+    //     $scope.loadMore();
+    // });
 
     //Can dump the route data inside here to not need to call getRoute API
     $scope.viewRoute = function(index) {
         routeName.sendData({
-          route : $scope.routes[index],
-          index : index
+            route: $scope.routes[index],
+            index: index
         });
         $state.go("viewRoute");
     }
