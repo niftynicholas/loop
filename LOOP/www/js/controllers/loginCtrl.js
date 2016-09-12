@@ -35,9 +35,25 @@ angular.module('app.main.controllers')
                     localStorage.setItem("username", response.data.user.username);
                     localStorage.setItem("weight", response.data.user.weight);
                     localStorage.setItem("gender", response.data.user.gender);
-                    localStorage.setItem("numActivities", response.data.user.numActivities);
-                    localStorage.setItem("totalCalories", response.data.user.totalCalories);
-                    localStorage.setItem("avgCalories", response.data.user.avgCalories);
+
+                    if (response.data.user.numActivities == null) {
+                        localStorage.setItem("numActivities", 0);
+                    } else {
+                        localStorage.setItem("numActivities", response.data.user.numActivities);
+                    }
+
+                    if (response.data.user.totalCalories == null) {
+                        localStorage.setItem("totalCalories", 0);
+                    } else {
+                        localStorage.setItem("totalCalories", response.data.user.totalCalories);
+                    }
+
+                    if (response.data.user.avgCalories == null) {
+                        localStorage.setItem("avgCalories", 0);
+                    } else {
+                        localStorage.setItem("avgCalories", response.data.user.avgCalories);
+                    }
+
                     localStorage.setItem("profilePicture", response.data.user.profilePicture);
 
                     //Stores the top 5 popular routes

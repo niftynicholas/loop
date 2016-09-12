@@ -4,6 +4,7 @@ angular.module('app.main.controllers')
     $scope.height = parseFloat(localStorage.getItem("height"));
     $scope.totalCalories = parseFloat(localStorage.getItem("totalCalories"));
     $scope.numActivities = parseInt(localStorage.getItem("numActivities"));
+
     if (isNaN($scope.height)) {
         $scope.height = 0;
     }
@@ -15,10 +16,11 @@ angular.module('app.main.controllers')
     $scope.name = localStorage.getItem("name");
 
     $scope.profilePicture = localStorage.getItem("profilePicture");
-    if ($scope.profilePicture == 'undefined') {
-        $scope.profilePicture = 'img/profile-placeholder.gif';
+
+    if ($scope.profilePicture == "null") {
+        $scope.profilePicture = '../img/profile-placeholder.gif';
     } else {
-            $scope.profilePicture = "data:" + $scope.profilePicture;
+        $scope.profilePicture = "data:" + $scope.profilePicture;
     }
 
     $scope.logOut = function() {
@@ -252,8 +254,7 @@ angular.module('app.main.controllers')
                     image: dataURL,
                     token: localStorage.getItem("token")
                 }
-            }).then(function successCallback(response) {
-            }, function errorCallback(response) {});
+            }).then(function successCallback(response) {}, function errorCallback(response) {});
         }, function() {
             // User canceled or couldn't load image.
         });
