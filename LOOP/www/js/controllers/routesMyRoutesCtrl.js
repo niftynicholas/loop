@@ -6,6 +6,10 @@ angular.module('app.main.controllers')
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
         console.log($scope.routes);
     //Pre-existing scope variable
+    $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+    $scope.$on('$ionicView.enter', function(){
+      $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+    });
     $scope.firstLoad = true;
 
     //Default Style

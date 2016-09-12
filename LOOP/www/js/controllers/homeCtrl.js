@@ -4,8 +4,11 @@ angular.module('app.main.controllers')
 
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("popularRoutes"));
+    $scope.routeComments = JSON.parse(localStorage.getItem("popularRoutes"));
     $scope.hasMoreRoutes = true;
-
+    $scope.$on('$ionicView.enter', function(){
+      $scope.routeComments = JSON.parse(localStorage.getItem("popularRoutes"));
+    });
     $scope.checkHasMoreRoutes = function() {
         return $scope.hasMoreRoutes;
     }
@@ -46,6 +49,7 @@ angular.module('app.main.controllers')
             $scope.cidList.push($scope.routes[i].cid);
             $scope.geojsonList.push($scope.routes[i].route);
             $scope.coordinatesList.push($scope.routes[i].envelope);
+            console.log(JSON.stringify($scope.routes[i], null, 4));
         }
         //Loops through the number of routes retrieved to configure the relevant maps
         for (var i = $scope.count; i < $scope.cidList.length; i++) {
@@ -133,6 +137,7 @@ angular.module('app.main.controllers')
                     $scope.hasMoreRoutes = false;
                 }
                 $scope.routes = $scope.routes.concat(response.data.popularRoutes);
+                localStorage.setItem("popularRoutes", JSON.stringify($scope.routes));
                 $scope.$broadcast('scroll.infiniteScrollComplete');
                 reinit();
             },

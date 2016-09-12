@@ -5,7 +5,10 @@ angular.module('app.main.controllers')
         //Retrieves and parses the popularRoutes that was retrieved when the user logged in
         $scope.routes = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
         console.log($scope.routes);
-
+        $scope.routeComments = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
+        $scope.$on('$ionicView.enter', function(){
+          $scope.routeComments = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
+        });
         //Pre-existing scope variable
         $scope.firstLoad = true;
 

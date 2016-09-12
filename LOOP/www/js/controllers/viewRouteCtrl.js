@@ -6,6 +6,7 @@ angular.module('app.main.controllers')
     var routesType = routeName.getData().routesType;
     var routes = JSON.parse(localStorage.getItem(routesType));
     $scope.route = routes[index];
+    console.log(JSON.stringify($scope.route, null, 4));
     $scope.stars = Math.round($scope.route.ratings);
     $scope.ratings = $scope.route.ratings + "";
     $scope.readOnly = true;
