@@ -37,11 +37,11 @@ angular.module('app.main.controllers')
 
         //Retrieves the length of the popularRoutes array containing individual routes sorted by ranking
         var len = $scope.routes.length;
-        console.log("len " + len);
-        console.log($scope.count);
+        //console.log("len " + len);
+        //console.log($scope.count);
         for (var i = $scope.count; i < len; i++) {
-            console.log("count is " + i);
-            console.log("cid is " + $scope.routes[i].cid);
+            //console.log("count is " + i);
+            //console.log("cid is " + $scope.routes[i].cid);
             //Pushes the Cid, geojson, fitbound coordinates into the respective scope variables
             $scope.cidList.push($scope.routes[i].cid);
             $scope.geojsonList.push($scope.routes[i].route);
@@ -143,8 +143,11 @@ angular.module('app.main.controllers')
     });
 
     //Can dump the route data inside here to not need to call getRoute API
-    $scope.viewRoute = function(cid) {
-        routeName.sendData(cid);
+    $scope.viewRoute = function(index) {
+        routeName.sendData({
+          route : $scope.routes[index],
+          index : index
+        });
         $state.go("viewRoute");
     }
 

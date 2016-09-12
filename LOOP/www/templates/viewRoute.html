@@ -6,35 +6,35 @@
             </a>
         </ion-nav-buttons>
     </ion-nav-bar>
-        <ion-nav-title>{{routeName}}</ion-nav-title>
+        <ion-nav-title>{{route.name}}</ion-nav-title>
     <ion-content>
         <div data-tap-disabled="true" style="height:30vh;">
             <leaflet id="viewRoute" lf-center="center" tiles="tiles" defaults="defaults" geojson="geojson" height="100%" width="100%"></leaflet>
         </div>
         <div class="list">
             <div class="item item-divider">
-                Average Rating ({{ratings}})
+                Average Rating ({{route.ratings}})
             </div>
             <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
             <div class="item item-divider">
                 Summary
             </div>
             <a class="item item-icon-left" href="#">
-                <i class="icon ion-clock"></i>Estimated Duration: {{duration}} minutes
+                <i class="icon ion-clock"></i>Estimated Duration: {{route.duration | duration}}
             </a>
             <a class="item item-icon-left" href="#">
-                <i class="icon ion-ios-location"></i> Distance: {{distance | km}} km
+                <i class="icon ion-ios-location"></i> Distance: {{route.distance | km}} km
             </a>
             <div class="item item-divider">
                 Comments
             </div>
             <div class="list">
                 <!-- If there is no comment -->
-                <a class="item" href="#" ng-if="!(comments.length !== 0)">There are no comments yet.</a>
+                <a class="item" href="#" ng-if="!(route.comments.length !== 0)">There are no comments yet.</a>
 
                 <!-- If there are comments -->
 
-                <a class="item" href="#" ng-repeat="c in comments">
+                <a class="item" href="#" ng-repeat="c in route.comments">
                 <!-- <a class="item item-avatar" href="#" ng-repeat="c in comments">
                     <img src="img/profile-placeholder.gif"> -->
                     <h2><b>{{c.username === username && "Me" || c.username}}</b></h2>
@@ -54,8 +54,8 @@
         </div>
     </ion-content>
     <ion-footer-bar class="bar-light">
-        <button style="width:49%;" ng-class="{'button icon-left ion-bookmark button-positive':isbookmarked===false,'button icon-left ion-bookmark button-stable':isbookmarked===true }" ng-click="bookmark()">
-            {{isbookmarked === true && "Unbookmark" || "Bookmark"}}
+        <button style="width:49%;" ng-class="{'button icon-left ion-bookmark button-positive':route.isbookmarked===false,'button icon-left ion-bookmark button-stable':route.isbookmarked===true }" ng-click="bookmark()">
+            {{route.isbookmarked === true && "Unbookmark" || "Bookmark"}}
         </button>
         <button style="width:49%;" class="button icon-left ion-android-bicycle button-balanced" ui-sref="tabsController.cycle">
             Cycle
