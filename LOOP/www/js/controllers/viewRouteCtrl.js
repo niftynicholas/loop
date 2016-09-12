@@ -158,6 +158,11 @@ angular.module('app.main.controllers')
 
 
     leafletData.getMap("viewRoute").then(function(map) {
+        var osmUrl = 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
+        osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+        osm = L.tileLayer(osmUrl, {maxZoom: 17, attribution: osmAttrib, rotate:true, edgeBufferTiles: 2});
+        map.addLayer(osm);
+
         map.fitBounds(
             $scope.route.envelope, {
                 animate: true,
@@ -242,12 +247,6 @@ angular.module('app.main.controllers')
             lat: 1.3521,
             lng: 103.8198,
             zoom: 11
-        },
-        tiles: {
-            url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-            options: {
-                attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
-            }
         },
         defaults: {
             scrollWheelZoom: true,
