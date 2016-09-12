@@ -1,8 +1,11 @@
 angular.module('app.main.controllers')
 
-.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, routeName, $http, $state, dataShare) {
+.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, routeName, $http, $state, dataShare, viewSharedRoute) {
     $scope.username = localStorage.getItem("username");
-    $scope.route = routeName.getData().route;
+    var index = routeName.getData().index;
+    var routesType = routeName.getData().routesType;
+    var routes = JSON.parse(localStorage.getItem(routesType));
+    $scope.route = routes[index];
     //console.log(JSON.stringify($scope.route, null, 4));
     $scope.stars = Math.round($scope.route.ratings);
     $scope.ratings = $scope.route.ratings + "";
@@ -10,6 +13,148 @@ angular.module('app.main.controllers')
     $scope.input = {
       comment : ""
     }
+
+    $scope.input = {
+        comment: ""
+    };
+
+    $scope.postComment = function() {
+        if ($scope.input.comment.length > 0) {
+            if ($scope.route.comments === null) {
+              $scope.route.comments = [{
+                comment: $scope.input.comment,
+                username: $scope.username
+              }];
+            } else {
+              $scope.route.comments.push({
+                  comment: $scope.input.comment,
+                  username: $scope.username
+              });
+            }
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/addComment",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    cid: $scope.route.cid,
+                    token: localStorage.getItem("token"),
+                    comment: {
+                        comment:$scope.input.comment,
+                        username:$scope.username,
+                        dateTimeStamp:new Date().getTime()
+                    }
+                }
+
+            }).then(function successCallback(response) {
+                  console.log("success");
+            },
+            function errorCallback(response) {
+                  console.log("error with sending http request for posting comment to server");
+            });
+            $scope.input.comment = "";
+            updateRoute();
+        }
+    };
+    /*
+    var index = routeName.getData().index;
+    var routesType = routeName.getData().routesType;
+    var routes = JSON.parse(localStorage.getItem(routesType));
+    $scope.route = routes[index];
+    */
+    var updateRoute = function() {
+      var popularRoutes = JSON.parse(localStorage.getItem("popularRoutes"));
+      for (var i = 0; i < popularRoutes.length; i++) {
+          var current = popularRoutes[i];
+          if (current.cid === $scope.route.cid) {
+            popularRoutes[i] = $scope.route;
+            break;
+          }
+      }
+      localStorage.setItem("popularRoutes", JSON.stringify(popularRoutes));
+
+      var bookmarkedRoutes = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
+      for (var i = 0; i < bookmarkedRoutes.length; i++) {
+          var current = bookmarkedRoutes[i];
+          if (current.cid === $scope.route.cid) {
+            bookmarkedRoutes[i] = $scope.route;
+            break;
+          }
+      }
+      localStorage.setItem("bookmarkedRoutes", JSON.stringify(bookmarkedRoutes));
+
+      var userRoutes = JSON.parse(localStorage.getItem("userRoutes"));
+      for (var i = 0; i < userRoutes.length; i++) {
+          var current = userRoutes[i];
+          if (current.cid === $scope.route.cid) {
+            userRoutes[i] = $scope.route;
+            break;
+          }
+      }
+      localStorage.setItem("userRoutes", JSON.stringify(userRoutes));
+    };
+
+    var addBookmark = function() {
+      var bookmarkedRoutes = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
+      //console.log(JSON.stringify(bookmarkedRoutes, null, 4));
+      bookmarkedRoutes.unshift($scope.route);
+      localStorage.setItem("bookmarkedRoutes", JSON.stringify(bookmarkedRoutes));
+      //console.log(JSON.stringify(bookmarkedRoutes, null, 4));
+      var popularRoutes = JSON.parse(localStorage.getItem("popularRoutes"));
+      for (var i = 0; i < popularRoutes.length; i++) {
+          var current = popularRoutes[i];
+          if (current.cid === $scope.route.cid) {
+            popularRoutes[i] = $scope.route;
+            break;
+          }
+      }
+      localStorage.setItem("popularRoutes", JSON.stringify(popularRoutes));
+
+      var userRoutes = JSON.parse(localStorage.getItem("userRoutes"));
+      for (var i = 0; i < userRoutes.length; i++) {
+          var current = userRoutes[i];
+          if (current.cid === $scope.route.cid) {
+            userRoutes[i] = $scope.route;
+            break;
+          }
+      }
+      localStorage.setItem("userRoutes", JSON.stringify(userRoutes));
+    };
+
+    var removeBookmark = function() {
+      var bookmarkedRoutes = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
+      console.log(JSON.stringify(bookmarkedRoutes.length));
+      for (var i = 0; i < bookmarkedRoutes.length ; i++) {
+        var current = bookmarkedRoutes[i];
+        if (current.cid === $scope.route.cid) {
+          bookmarkedRoutes.splice(i, 1);
+          break;
+        }
+      }
+      console.log(JSON.stringify(bookmarkedRoutes.length));
+      localStorage.setItem("bookmarkedRoutes", JSON.stringify(bookmarkedRoutes));
+
+      var popularRoutes = JSON.parse(localStorage.getItem("popularRoutes"));
+      for (var i = 0; i < popularRoutes.length; i++) {
+          var current = popularRoutes[i];
+          if (current.cid === $scope.route.cid) {
+            popularRoutes[i] = $scope.route;
+            break;
+          }
+      }
+      localStorage.setItem("popularRoutes", JSON.stringify(popularRoutes));
+
+      var userRoutes = JSON.parse(localStorage.getItem("userRoutes"));
+      for (var i = 0; i < userRoutes.length; i++) {
+          var current = userRoutes[i];
+          if (current.cid === $scope.route.cid) {
+            userRoutes[i] = $scope.route;
+            break;
+          }
+      }
+      localStorage.setItem("userRoutes", JSON.stringify(userRoutes));
+    };
 
 
     leafletData.getMap("viewRoute").then(function(map) {
@@ -43,8 +188,9 @@ angular.module('app.main.controllers')
 
 
     $scope.cycle = function() {
-        dataShare.sendData(coordinates);
-        $state.go("cycle");
+        viewSharedRoute.routeLayer = $scope.route.route;
+        viewSharedRoute.hasPlanned = true;
+        $state.go("inprogress");
     }
 
     $scope.goBack = function() {
@@ -69,6 +215,7 @@ angular.module('app.main.controllers')
             },
             function errorCallback(response) {
             })
+        addBookmark();
       } else {
         $scope.route.isbookmarked = false;
         $http({
@@ -85,7 +232,9 @@ angular.module('app.main.controllers')
             },
             function errorCallback(response) {
             })
+            removeBookmark();
       }
+      updateRoute();
     }
 
     angular.extend($scope, {
@@ -109,17 +258,8 @@ angular.module('app.main.controllers')
             style: {
                 weight: 8,
                 opacity: 1,
-                color: '#022F40'
+                color: '#09493E'
             }
         }
     });
 })
-    /*
-
-
-
-    /**
-     * Rating Stars
-     *//*
-
-})*/

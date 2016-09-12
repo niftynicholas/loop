@@ -71,8 +71,11 @@ angular.module('app.main.controllers')
         $timeout(init, 0);
 
         //Can dump the route data inside here to not need to call getRoute API
-        $scope.viewRoute = function(cid) {
-            routeName.sendData(cid);
+        $scope.viewRoute = function(index) {
+            routeName.sendData({
+                index: index,
+                routesType : "bookmarkedRoutes"
+            });
             $state.go("viewRoute");
         }
 

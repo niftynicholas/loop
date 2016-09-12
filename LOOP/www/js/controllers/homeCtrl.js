@@ -17,7 +17,7 @@ angular.module('app.main.controllers')
     $scope.myStyle = {
         weight: 8,
         opacity: 1,
-        color: '#022F40'
+        color: '#09493E'
     };
 
     //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method
@@ -147,8 +147,8 @@ angular.module('app.main.controllers')
     //Can dump the route data inside here to not need to call getRoute API
     $scope.viewRoute = function(index) {
         routeName.sendData({
-            route: $scope.routes[index],
-            index: index
+            index: index,
+            routesType : "popularRoutes"
         });
         $state.go("viewRoute");
     }
