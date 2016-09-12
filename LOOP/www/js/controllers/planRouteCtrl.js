@@ -16,7 +16,6 @@ angular.module('app.main.controllers')
         },
         success: function(data) {
             token = data.GetToken[0].NewToken;
-            console.log(token);
         }
     });
 
@@ -339,6 +338,7 @@ function displayInfo(searchVal, lat, lng, type) {
 
 function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope, $state, $ionicPopup, sharedRoute) {
     sharedRoute.hasPlanned = true;
+    sharedRoute.hasPlannedRoute = true;
     sharedRoute.routeLayer = new L.FeatureGroup().addTo(map);
     var travelOptions = r360.travelOptions();
     travelOptions.addSource(sourceMarker1);

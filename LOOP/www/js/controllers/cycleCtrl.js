@@ -1,9 +1,22 @@
 angular.module('app.main.controllers')
 
-.controller('cycleCtrl', function($scope, $state, leafletData, dataShare, $ionicHistory, $timeout, $cordovaGeolocation) {
+.controller('cycleCtrl', function($scope, $state, leafletData, dataShare, $ionicHistory, $timeout, $cordovaGeolocation, sharedRoute) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
     $scope.timestamp = 0;
+
+    $scope.hasPlannedRoute = function() {
+        return sharedRoute.hasPlannedRoute;
+    }
+
+    $scope.clearPlannedRoute = function() {
+        leafletData.getMap("cycle").then(function(map) {
+            map.removeLayer(sharedRoute.markerLayer);
+            map.removeLayer(sharedRoute.routeLayer);
+        });
+        sharedRoute.hasPlanned = false;
+        sharedRoute.hasPlannedRoute = false;
+    }
 
     angular.extend($scope, {
         center: {
@@ -41,7 +54,10 @@ angular.module('app.main.controllers')
 
         setInterval(function() {
             map.invalidateSize();
-            $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+            $cordovaGeolocation.getCurrentPosition({
+                timeout: 3000,
+                enableHighAccuracy: true
+            }).then(function(position) {
                 $scope.currentLocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
@@ -82,13 +98,19 @@ angular.module('app.main.controllers')
     }
 
     $scope.locateMe = function() {
-        if(typeof $scope.currentLocation.lat !== "undefined"){
+        if (typeof $scope.currentLocation.lat !== "undefined") {
             leafletData.getMap("cycle").then(function(map) {
                 map.setView($scope.currentLocation);
             });
-        }else{
-            $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
-                map.setView({lat: position.coords.latitude, lng: position.coords.longitude});
+        } else {
+            $cordovaGeolocation.getCurrentPosition({
+                timeout: 3000,
+                enableHighAccuracy: true
+            }).then(function(position) {
+                map.setView({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
             }, function(err) {
                 console.log("Location not found");
             });

@@ -50,6 +50,7 @@ angular.module('app.main.controllers')
         //Loops through the number of routes retrieved to configure the relevant maps
         for (var i = $scope.count; i < $scope.cidList.length; i++) {
             var cid = $scope.cidList[i];
+            console.log(cid);
             leafletData.getMap(cid).then(function(map) {
                 //Retrieving the count to retrieve the relevant geojson and fitbound
                 var count = $scope.count;

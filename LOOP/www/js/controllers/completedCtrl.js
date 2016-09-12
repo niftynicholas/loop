@@ -2,6 +2,8 @@ angular.module('app.main.controllers')
 
 .controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http, sharedRoute) {
     $scope.username = localStorage.getItem("username");
+    sharedRoute.hasPlannedRoute = false;
+
     $scope.input = {
         isShared: false,
         comment: ""
@@ -25,7 +27,7 @@ angular.module('app.main.controllers')
         },
         paths: {
             p1: {
-                color: '#008000',
+                color: '#09493E',
                 weight: 8,
                 latlngs: [], //{ lat: 51.50, lng: -0.082 }
             }

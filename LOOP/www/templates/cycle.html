@@ -1,5 +1,8 @@
 <ion-view title="Cycle" hide-back-button="true">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
+    <ion-nav-buttons side="left">
+        <button class="button" ng-if="hasPlannedRoute()" ng-click="clearPlannedRoute()">CLEAR</button>
+    </ion-nav-buttons>
     <ion-nav-buttons side="right">
         <button class="button button-icon icon ion-android-locate" ng-click="locateMe()"></button>
     </ion-nav-buttons>
@@ -7,10 +10,7 @@
         <div class="row" style="display: flex; justify-content: center; align-items: center;height:12%">
             <div class="col">
                 <button class="button button-clear button-balanced" style="width:100%;" ui-sref="tabsController.routes.myRoutes">
-                    <p class="button-paragraph">
-                        <b>Route ></b>
-                        <br>None Selected
-                    </p>
+                    <b>Browse Routes</b>
                 </button>
             </div>
             <div class="col">

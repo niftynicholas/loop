@@ -23,9 +23,9 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
 .filter('duration', function() {
     return function(input) {
         if (input < 60) {
-            return Math.round(parseFloat(input)) + " seconds";
+            return Math.round(parseFloat(input)).toFixed(2) + " seconds";
         } else {
-            return (parseFloat(input) / 60) + " minutes";
+            return (parseFloat(input) / 60).toFixed(2) + " minutes";
         }
     }
 })
@@ -92,6 +92,7 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
 
 .factory('sharedRoute', function() {
     var service = {};
+    service.hasPlannedRoute = false;
     service.routeLayer = null;
     service.markerLayer = null;
     service.sourceMarker = {};
@@ -114,7 +115,7 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     var service = {};
     service.routeLayer = null;
     service.hasPlanned = false;
-    
+
     service.clearData = function() {
         this.routeLayer = null;
         this.hasPlanned = false;

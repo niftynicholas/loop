@@ -30,7 +30,7 @@
             </div>
             <div class="list">
                 <!-- If there is no comment -->
-                <a class="item" href="#" ng-if="!(route.comments.length !== 0)">There are no comments yet.</a>
+                <a class="item" href="#" ng-if="route.comments == null">There are no comments yet.</a>
 
                 <!-- If there are comments -->
 

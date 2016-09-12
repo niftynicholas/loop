@@ -4,6 +4,7 @@ angular.module('app.main.controllers')
 
         //Retrieves and parses the popularRoutes that was retrieved when the user logged in
         $scope.routes = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
+        console.log($scope.routes);
 
         //Pre-existing scope variable
         $scope.firstLoad = true;
@@ -12,7 +13,7 @@ angular.module('app.main.controllers')
         $scope.myStyle = {
             weight: 8,
             opacity: 1,
-            color: '#022F40'
+            color: '#09493E'
         };
 
         //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method

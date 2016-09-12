@@ -1,18 +1,14 @@
 <ion-view title="My Routes">
     <ion-content class="has-tabs-top">
         <ion-list>
-            <ion-item class="item-thumbnail-right  " id="routes-list-item5" ui-sref="viewRoute">
-                <img src="img/ecl.png">
-                <h2>Eastern Coastal Loop</h2>
+            <ion-item class="item item-thumbnail-left" ng-repeat="route in routes" ng-click="viewRoute($index)">
+                <div data-tap-disabled="true" style="position: absolute; top: 10px; left: 10px; max-width: 80px; max-height: 80px; width: 100%; height: 100%;">
+                    <leaflet ng-attr-id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
+                </div>
+                <h2>{{route.name}}</h2>
+                <p>Distance: {{route.distance | km}} km</br>Duration: {{route.duration | duration}}</br>Comments: {{route.comments.length||0}}</p>
             </ion-item>
-            <ion-item class="item-thumbnail-right  " id="routes-list-item6" ui-sref="viewRoute">
-                <img src="img/cul.png">
-                <h2>Central Urban Loop</h2>
-            </ion-item>
-            <ion-item class="item-thumbnail-right" id="routes-list-item7" ui-sref="viewRoute">
-                <img src="img/nerl.png">
-                <h2>North Eastern Riverine Loop</h2>
-            </ion-item>
+            <ion-item class="item" style="text-align: center;" ng-if="!(routes.length !== 0)">You do not have any route recorded.</ion-item>
         </ion-list>
     </ion-content>
 </ion-view>
