@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, dataShare, $ionicPlatform, sharedRoute, $cordovaGeolocation) {
+.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, dataShare, $ionicPlatform, sharedRoute, $cordovaGeolocation, viewSharedRoute) {
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
@@ -206,8 +206,20 @@ angular.module('app.main.controllers')
         sourceMarker1.openPopup();
         targetMarker1.openPopup();
         //var polyline = new L.Polyline(sharedRoute.routepoints, { color: 'green', weight: 8,  dashArray: '10,10' });
-        plannedRoute = new L.Polyline(sharedRoute.routepoints, { color: '#76a273', weight: 5});
+        plannedRoute = new L.Polyline(sharedRoute.routepoints, { color: '#09493E', weight: 5});
         map.addLayer(plannedRoute);
+    }
+
+    if(viewSharedRoute.hasPlanned){
+        plannedRoute = L.geoJson(viewSharedRoute.routeLayer,{
+            style: {
+                "color": "#09493E",
+                "weight": 5,
+                "opacity": 1
+            }
+        });
+        map.addLayer(plannedRoute);
+        viewSharedRoute.routeLayer = null;
     }
 
     $scope.$broadcast('timer-start');
@@ -261,7 +273,7 @@ angular.module('app.main.controllers')
                 if (polyline != null) {
                     map.removeLayer(polyline);
                 }
-                polyline = new L.Polyline(latlngs, { color: '#1abc9c', weight: 8 }).bringToFront();
+                polyline = new L.Polyline(latlngs, { color: '#1ABC9C', weight: 8 }).bringToFront();
                 map.addLayer(polyline);
                 currentLoc.bringToFront();
 

@@ -57,7 +57,7 @@
         <button style="width:49%;" ng-class="{'button icon-left ion-bookmark button-positive':route.isbookmarked===false,'button icon-left ion-bookmark button-stable':route.isbookmarked===true }" ng-click="bookmark()">
             {{route.isbookmarked === true && "Unbookmark" || "Bookmark"}}
         </button>
-        <button style="width:49%;" class="button icon-left ion-android-bicycle button-balanced" ui-sref="tabsController.cycle">
+        <button style="width:49%;" class="button icon-left ion-android-bicycle button-balanced" ng-click="cycle()">
             Cycle
         </button>
     </ion-footer-bar>

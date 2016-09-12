@@ -110,6 +110,18 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     return service;
 })
 
+.factory('viewSharedRoute', function() {
+    var service = {};
+    service.routeLayer = null;
+    service.hasPlanned = false;
+    
+    service.clearData = function() {
+        this.routeLayer = null;
+        this.hasPlanned = false;
+    };
+    return service;
+})
+
 .config(function($ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
     $ionicConfigProvider.navBar.alignTitle('center')
