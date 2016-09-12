@@ -25,13 +25,15 @@ angular.module('app.main.controllers')
     }
 
     $('#startPoint').focus(function() {
-        $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
-            $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + "Current Location" + '</div>');
-        }, function(err) {
-            if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
-                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
-            }
-        });
+        if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
+            $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
+        }else{
+            $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + "Current Location" + '</div>');
+            }, function(err) {
+                console.log("Location not found");
+            });
+        }
     });
 
     $('#startPoint').focusout(function() {

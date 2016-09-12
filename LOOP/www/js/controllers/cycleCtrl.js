@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('cycleCtrl', function($scope, $state, leafletData, dataShare, $ionicHistory, $timeout) {
+.controller('cycleCtrl', function($scope, $state, leafletData, dataShare, $ionicHistory, $timeout, $cordovaGeolocation) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
     $scope.timestamp = 0;
@@ -25,12 +25,6 @@ angular.module('app.main.controllers')
                 radius: 10
             },
         },
-        // tiles: {
-        //     url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-        //     options: {
-        //         attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
-        //     }
-        // },
         defaults: {
             scrollWheelZoom: true,
             zoomControl: true,
@@ -38,61 +32,32 @@ angular.module('app.main.controllers')
             maxZoom: 20
         }
     });
-
+    //To Parameterise edgeBufferTiles / setInterval to Seconds
     leafletData.getMap("cycle").then(function(map) {
         var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
             attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
             edgeBufferTiles: 2
         }).addTo(map);
+
         setInterval(function() {
             map.invalidateSize();
-        }, 3000); //every 3s
-        map.locate({
-            watch: true,
-            enableHighAccuracy: false
-        });
-        map.on('locationfound', function(e) {
-            $scope.currentLocation = {
-                lat: e.latlng.lat,
-                lng: e.latlng.lng
-            };
-            if ($scope.firstLoad) {
-                map.setView($scope.currentLocation, 16);
-                $scope.firstLoad = false;
-            }
-            $scope.paths.currentLoc.latlngs = [];
-            $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
-            $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
-            $scope.timestamp = e.timestamp;
-        });
-        map.on('locationerror', function(e) {
-            console.log('Location access denied.');
-        });
-
-        /* KML LAYER
-        var kmlLayer = omnivore.kml("js/Park_Connector_Loop.kml").addTo(map);
-        var style = {
-            color: 'black'
-        };
-        var style2 = {
-            color: 'green'
-        };
-        console.log(kmlLayer);
-        console.log(kmlLayer._layers);
-        console.log(kmlLayer.getLayerId(0));
-
-        kmlLayer.on('ready', function(layer) {
-            var count = 0;
-            this.eachLayer(function(layer) {
-                count = count + 1;
-                if (count % 2 == 0) {
-                    layer.setStyle(style);
-                } else {
-                    layer.setStyle(style2);
+            $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+                $scope.currentLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                if ($scope.firstLoad) {
+                    map.setView($scope.currentLocation, 16);
+                    $scope.firstLoad = false;
                 }
-
+                $scope.paths.currentLoc.latlngs = [];
+                $scope.paths.currentLoc.latlngs.push(position.coords.latitude);
+                $scope.paths.currentLoc.latlngs.push(position.coords.longitude);
+                $scope.timestamp = position.timestamp;
+            }, function(err) {
+                console.log("Location not found");
             });
-        });*/
+        }, 3000); //every 3s
     });
 
     $scope.startActivity = function() {
@@ -117,9 +82,17 @@ angular.module('app.main.controllers')
     }
 
     $scope.locateMe = function() {
-        leafletData.getMap("cycle").then(function(map) {
-            map.setView($scope.currentLocation);
-        });
+        if(typeof $scope.currentLocation.lat !== "undefined"){
+            leafletData.getMap("cycle").then(function(map) {
+                map.setView($scope.currentLocation);
+            });
+        }else{
+            $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+                map.setView({lat: position.coords.latitude, lng: position.coords.longitude});
+            }, function(err) {
+                console.log("Location not found");
+            });
+        }
     }
 
     $scope.options = {

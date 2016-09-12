@@ -42,6 +42,10 @@ angular.module('app.main.controllers')
         }
     });
 
+    $ionicLoading.show({
+        template: '<p>Loading Map...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+    });
+
     leafletData.getMap("pcn").then(function(map) {
         L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q', {
             edgeBufferTiles: 2
@@ -192,6 +196,7 @@ angular.module('app.main.controllers')
                 console.log('Location access denied.');
             });
         })
+        $ionicLoading.hide();
     });
 
     $scope.locateMe = function() {

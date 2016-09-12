@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, dataShare, $ionicPlatform, sharedRoute, $cordovaGeolocation, $deviceGyroscope) {
+.controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, dataShare, $ionicPlatform, sharedRoute, $cordovaGeolocation) {
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
@@ -12,6 +12,7 @@ angular.module('app.main.controllers')
     //$scope.gender = 'M';  //To be retrieve from database
     $scope.weight = 60.0; //To be retrieve from database
     $scope.coordsinfo = []; //stores coordinates information e.g. {lat: xxx, lng: xxx, time: xxx}
+    $scope.currentLoc = null;
     var latlngs = [];
     var polyline = null;
     var data;
@@ -233,21 +234,6 @@ angular.module('app.main.controllers')
     //***************************** ON WATCH ****************************************
     var setWatch = true;
     setInterval(function() {
-        // $deviceGyroscope.getCurrent().then(function(result) {
-        //     console.log("X: " + result.x);
-        //     console.log("Y: " + result.y);
-        //     console.log("Y: " + result.z);
-        //     $scope.currentSpeed = Math.round(Math.abs(result.y) * 18.0/5.0);
-        // }, function(err) {
-        //     // An error occurred. Show a message to the user
-        //     console.log("Cannot find Acceleration");
-        //     //****************** Use Geolocation to Calculate Current Speed ******************
-        //     // var coordinates = $scope.coordsinfo;
-        //     // var latestCoord = coordinates[coordinates.length - 1];
-        //     // var secondLatestCoord = coordinates[coordinates.length - 2];
-        //     // var curSpd = geolib.getSpeed(secondLatestCoord, latestCoord);
-        //     // $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
-        // });
 
         $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
             //console.log("lat: " + position.coords.latitude + "lng: " + position.coords.longitude);
@@ -337,7 +323,15 @@ angular.module('app.main.controllers')
     });
 
     $scope.locateMe = function () {
-        map.setView($scope.currentLoc, 18);
+        if($scope.currentLoc != null){
+            map.setView($scope.currentLoc, 18);
+        }else{
+            $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+                map.setView({lat: position.coords.latitude, lng: position.coords.longitude});
+            }, function(err) {
+                console.log("Location not found");
+            });
+        }
         setWatch = true;
     }
 
@@ -398,15 +392,19 @@ angular.module('app.main.controllers')
             else if(typeof res === "undefined"){
                 console.log("You have cancelled Geotag");
             }else{
-                L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
-                geotagsInfo.push(
-                    {
-                        dateTimeStamp: new Date().getTime(),
-                        coordinates: $scope.currentLoc,
-                        comment: res
-                    }
-                );
-                console.log('Succesfully added');
+                if($scope.currentLoc != null){
+                    L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
+                    geotagsInfo.push(
+                        {
+                            dateTimeStamp: new Date().getTime(),
+                            coordinates: $scope.currentLoc,
+                            comment: res
+                        }
+                    );
+                    console.log('Succesfully added');
+                }else{
+                     alert("Current Location cannot be Found");
+                }
             }
         });
     };
