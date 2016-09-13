@@ -6,10 +6,13 @@ angular.module('app.main.controllers')
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
     //Pre-existing scope variable
     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+    $scope.hasMoreRoutes = true;
     $scope.$on('$ionicView.enter', function(){
         $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
     });
-    $scope.firstLoad = true;
+    $scope.checkHasMoreRoutes = function() {
+        return $scope.hasMoreRoutes;
+    }
 
     //Default Style
     $scope.myStyle = {
@@ -32,46 +35,71 @@ angular.module('app.main.controllers')
 
     //Method that is called after 0seconds after the template has loaded using the $timeout that calls this method
     var init = function() {
-        if ($scope.firstLoad) {
 
-            //Loops through the number of routes retrieved to configure the relevant maps
-            for (var i = 0; i < $scope.routes.length; i++) {
-                var cid = $scope.routes[i].cid;
-                leafletData.getMap(cid).then(function(map) {
-                    //Retrieving the count to retrieve the relevant geojson and fitbound
-                    var geojson = $scope.routes[$scope.count].route;
-                    var coordinates = $scope.routes[$scope.count].envelope;
-                    if(coordinates.length == 2){
-                        map.setView(coordinates, 16);
-                    }else{
-                        map.fitBounds(
-                            coordinates, {
-                                animate: true,
-                                reset: true,
-                                padding: [25, 25],
-                                maxZoom: 16
-                            }
-                        );
-                    }
-                    L.geoJson(geojson, {
-                        style: $scope.myStyle,
-                        pointToLayer: function (feature, latlng) {
-                            return L.circleMarker(latlng, {
-                                radius: 2,
-                                fillColor: "#09493E",
-                                color: "#09493E",
-                                opacity: 1});
-                            }
-                        }).addTo(map);
-                        map.invalidateSize();
-                        $scope.count = $scope.count + 1;
-                    })
+        //Loops through the number of routes retrieved to configure the relevant maps
+        for (var i = $scope.count; i < $scope.routes.length; i++) {
+            var cid = $scope.routes[i].cid;
+            leafletData.getMap(cid).then(function(map) {
+                //Retrieving the count to retrieve the relevant geojson and fitbound
+                var geojson = $scope.routes[$scope.count].route;
+                var coordinates = $scope.routes[$scope.count].envelope;
+                if(coordinates.length == 2){
+                    map.setView(coordinates, 16);
+                }else{
+                    map.fitBounds(
+                        coordinates, {
+                            animate: true,
+                            reset: true,
+                            padding: [25, 25],
+                            maxZoom: 16
+                        }
+                    );
                 }
+                L.geoJson(geojson, {
+                    style: $scope.myStyle,
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            radius: 2,
+                            fillColor: "#09493E",
+                            color: "#09493E",
+                            opacity: 1});
+                        }
+                    }).addTo(map);
+                    map.invalidateSize();
+                    $scope.count = $scope.count + 1;
+                })
             }
+
         };
         //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
         //Test whether the timeout is still required, not tested by Wee Kian
         $timeout(init, 0);
+
+        $scope.loadMore = function() {
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    token: localStorage.getItem("token"),
+                    from: $scope.count
+                }
+            }).then(function successCallback(response) {
+                var additionalUserRoutes = response.data.userRoutes;
+                if (additionalUserRoutes.length < 10) {
+                    $scope.hasMoreRoutes = false;
+                }
+                $scope.routes = $scope.routes.concat(response.data.userRoutes);
+                localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+                init();
+            },
+            function errorCallback(response) {
+                console.log("response not found");
+            });
+        };
 
         //Can dump the route data inside here to not need to call getRoute API
         $scope.viewRoute = function(index) {
