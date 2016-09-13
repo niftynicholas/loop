@@ -23,11 +23,10 @@ angular.module('app.main.controllers')
 
     $scope.input = {};
     $scope.changePW = function(form) {
-        $ionicLoading.show({
-            template: '<p>Checking...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
-        });
-
         if (form.$valid) {
+            $ionicLoading.show({
+                template: '<p>Checking...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+            });
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/login",
                 method: 'POST',
