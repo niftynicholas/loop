@@ -4,11 +4,10 @@ angular.module('app.main.controllers')
 
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
-        console.log($scope.routes);
     //Pre-existing scope variable
     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
     $scope.$on('$ionicView.enter', function(){
-      $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+        $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
     });
     $scope.firstLoad = true;
 
@@ -35,73 +34,73 @@ angular.module('app.main.controllers')
     var init = function() {
         if ($scope.firstLoad) {
 
-            //Retrieves the length of the popularRoutes array containing individual routes sorted by ranking
-            var len = $scope.routes.length;
-            for (var i = 0; i < len; i++) {
-
-                //Pushes the Cid, geojson, fitbound coordinates into the respective scope variables
-                $scope.cidList.push($scope.routes[i].cid);
-                $scope.geojsonList.push($scope.routes[i].route);
-                $scope.coordinatesList.push($scope.routes[i].envelope);
-                $scope.firstLoad = false;
-            }
             //Loops through the number of routes retrieved to configure the relevant maps
-            for (var i = 0; i < $scope.cidList.length; i++) {
-                var cid = $scope.cidList[i];
+            for (var i = 0; i < $scope.routes.length; i++) {
+                var cid = $scope.routes[i].cid;
                 leafletData.getMap(cid).then(function(map) {
                     //Retrieving the count to retrieve the relevant geojson and fitbound
-                    var count = $scope.count;
-                    var geojson = $scope.geojsonList[count];
-                    var coordinates = $scope.coordinatesList[count];
-                    map.fitBounds(
-                        coordinates, {
-                            animate: true,
-                            reset: true,
-                            padding: [25, 25],
-                            maxZoom: 16
-                        }
-                    );
+                    var geojson = $scope.routes[$scope.count].route;
+                    var coordinates = $scope.routes[$scope.count].envelope;
+                    if(coordinates.length == 2){
+                        map.setView(coordinates, 16);
+                    }else{
+                        map.fitBounds(
+                            coordinates, {
+                                animate: true,
+                                reset: true,
+                                padding: [25, 25],
+                                maxZoom: 16
+                            }
+                        );
+                    }
                     L.geoJson(geojson, {
-                        style: $scope.myStyle
-                    }).addTo(map);
-                    map.invalidateSize();
-                    $scope.count = $scope.count + 1;
-                })
+                        style: $scope.myStyle,
+                        pointToLayer: function (feature, latlng) {
+                            return L.circleMarker(latlng, {
+                                radius: 2,
+                                fillColor: "#09493E",
+                                color: "#09493E",
+                                opacity: 1});
+                            }
+                        }).addTo(map);
+                        map.invalidateSize();
+                        $scope.count = $scope.count + 1;
+                    })
+                }
             }
-        }
-    };
-    //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
-    //Test whether the timeout is still required, not tested by Wee Kian
-    $timeout(init, 0);
+        };
+        //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
+        //Test whether the timeout is still required, not tested by Wee Kian
+        $timeout(init, 0);
 
-    //Can dump the route data inside here to not need to call getRoute API
-    $scope.viewRoute = function(index) {
-        routeName.sendData({
-            index: index,
-            routesType: "userRoutes"
+        //Can dump the route data inside here to not need to call getRoute API
+        $scope.viewRoute = function(index) {
+            routeName.sendData({
+                index: index,
+                routesType: "userRoutes"
+            });
+            $state.go("viewRoute");
+        }
+
+        angular.extend($scope, {
+            center: {
+                lat: 1.3521,
+                lng: 103.8198,
+                zoom: 11
+            },
+            tiles: {
+                url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
+            },
+            defaults: {
+                dragging: false,
+                touchZoom: false,
+                scrollWheelZoom: false,
+                doubleClickZoom: false,
+                boxZoom: false,
+                tap: false,
+                zoomControl: false,
+                attributionControl: false,
+                keyboard: false
+            }
         });
-        $state.go("viewRoute");
-    }
-
-    angular.extend($scope, {
-        center: {
-            lat: 1.3521,
-            lng: 103.8198,
-            zoom: 11
-        },
-        tiles: {
-            url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
-        },
-        defaults: {
-            dragging: false,
-            touchZoom: false,
-            scrollWheelZoom: false,
-            doubleClickZoom: false,
-            boxZoom: false,
-            tap: false,
-            zoomControl: false,
-            attributionControl: false,
-            keyboard: false
-        }
-    });
-})
+    })

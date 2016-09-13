@@ -38,65 +38,16 @@ angular.module('app.main.controllers')
     //Method that is called after 0seconds after the template has loaded using the $timeout that calls this method
     var reinit = function() {
 
-        //Retrieves the length of the popularRoutes array containing individual routes sorted by ranking
-        var len = $scope.routes.length;
-        //console.log("len " + len);
-        //console.log($scope.count);
-        for (var i = $scope.count; i < len; i++) {
-            //console.log("count is " + i);
-            //console.log("cid is " + $scope.routes[i].cid);
-            //Pushes the Cid, geojson, fitbound coordinates into the respective scope variables
-            $scope.cidList.push($scope.routes[i].cid);
-            $scope.geojsonList.push($scope.routes[i].route);
-            $scope.coordinatesList.push($scope.routes[i].envelope);
-            console.log(JSON.stringify($scope.routes[i], null, 4));
-        }
         //Loops through the number of routes retrieved to configure the relevant maps
-        for (var i = $scope.count; i < $scope.cidList.length; i++) {
-            var cid = $scope.cidList[i];
-            console.log(cid);
+        for (var i = $scope.count; i < $scope.routes.length; i++) {
+            var cid = $scope.routes[i].cid;
             leafletData.getMap(cid).then(function(map) {
                 //Retrieving the count to retrieve the relevant geojson and fitbound
-                var count = $scope.count;
-                var geojson = $scope.geojsonList[count];
-                var coordinates = $scope.coordinatesList[count];
-                map.fitBounds(
-                    coordinates, {
-                        animate: true,
-                        reset: true,
-                        padding: [25, 25],
-                        maxZoom: 16
-                    }
-                );
-                L.geoJson(geojson, {
-                    style: $scope.myStyle
-                }).addTo(map);
-                map.invalidateSize();
-                $scope.count = $scope.count + 1;
-            })
-        }
-    }
-    var init = function() {
-        if ($scope.firstLoad) {
-
-            //Retrieves the length of the popularRoutes array containing individual routes sorted by ranking
-            var len = $scope.routes.length;
-            for (var i = 0; i < len; i++) {
-
-                //Pushes the Cid, geojson, fitbound coordinates into the respective scope variables
-                $scope.cidList.push($scope.routes[i].cid);
-                $scope.geojsonList.push($scope.routes[i].route);
-                $scope.coordinatesList.push($scope.routes[i].envelope);
-                $scope.firstLoad = false;
-            }
-            //Loops through the number of routes retrieved to configure the relevant maps
-            for (var i = 0; i < $scope.cidList.length; i++) {
-                var cid = $scope.cidList[i];
-                leafletData.getMap(cid).then(function(map) {
-                    //Retrieving the count to retrieve the relevant geojson and fitbound
-                    var count = $scope.count;
-                    var geojson = $scope.geojsonList[count];
-                    var coordinates = $scope.coordinatesList[count];
+                var geojson = $scope.routes[$scope.count].route;
+                var coordinates = $scope.routes[$scope.count].envelope;
+                if(coordinates.length == 2){
+                    map.setView(coordinates, 16);
+                }else{
                     map.fitBounds(
                         coordinates, {
                             animate: true,
@@ -105,14 +56,59 @@ angular.module('app.main.controllers')
                             maxZoom: 16
                         }
                     );
-                    L.geoJson(geojson, {
-                        style: $scope.myStyle
+                }
+                L.geoJson(geojson, {
+                    style: $scope.myStyle,
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            radius: 2,
+                            fillColor: "#09493E",
+                            color: "#09493E",
+                            opacity: 1});
+                        }
                     }).addTo(map);
                     map.invalidateSize();
                     $scope.count = $scope.count + 1;
                 })
             }
-        }
+    }
+    var init = function() {
+        if ($scope.firstLoad) {
+
+            //Loops through the number of routes retrieved to configure the relevant maps
+            for (var i = 0; i < $scope.routes.length; i++) {
+                var cid = $scope.routes[i].cid;
+                leafletData.getMap(cid).then(function(map) {
+                    //Retrieving the count to retrieve the relevant geojson and fitbound
+                    var geojson = $scope.routes[$scope.count].route;
+                    var coordinates = $scope.routes[$scope.count].envelope;
+                    if(coordinates.length == 2){
+                        map.setView(coordinates, 16);
+                    }else{
+                        map.fitBounds(
+                            coordinates, {
+                                animate: true,
+                                reset: true,
+                                padding: [25, 25],
+                                maxZoom: 16
+                            }
+                        );
+                    }
+                    L.geoJson(geojson, {
+                        style: $scope.myStyle,
+                        pointToLayer: function (feature, latlng) {
+                            return L.circleMarker(latlng, {
+                                radius: 2,
+                                fillColor: "#09493E",
+                                color: "#09493E",
+                                opacity: 1});
+                            }
+                        }).addTo(map);
+                        map.invalidateSize();
+                        $scope.count = $scope.count + 1;
+                    })
+                }
+            }
     };
     //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
     //Test whether the timeout is still required, not tested by Wee Kian
@@ -130,9 +126,7 @@ angular.module('app.main.controllers')
                 from: $scope.count
             }
         }).then(function successCallback(response) {
-                console.log("Count: " + $scope.count);
                 var additionalPopularRoutes = response.data.popularRoutes;
-                console.log("Added " + additionalPopularRoutes.length + " more routes.")
                 if (additionalPopularRoutes.length < 5) {
                     $scope.hasMoreRoutes = false;
                 }
