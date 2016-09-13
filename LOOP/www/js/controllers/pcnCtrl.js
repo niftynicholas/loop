@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData) {
+.controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData, $cordovaGeolocation) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
     $scope.loadedGeotaggedComments = false;
@@ -172,37 +172,49 @@ angular.module('app.main.controllers')
                 geotaggedCommentsButton.addTo(map);
                 $scope.loadedGeotaggedComments = true;
             }
-
             setInterval(function() {
                 map.invalidateSize();
+                $cordovaGeolocation.getCurrentPosition({
+                    timeout: 3000,
+                    enableHighAccuracy: true
+                }).then(function(position) {
+                    $scope.currentLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    if ($scope.firstLoad) {
+                        map.setView($scope.currentLocation, 16);
+                        $scope.firstLoad = false;
+                    }
+                    $scope.paths.currentLoc.latlngs = [];
+                    $scope.paths.currentLoc.latlngs.push(position.coords.latitude);
+                    $scope.paths.currentLoc.latlngs.push(position.coords.longitude);
+
+                }, function(err) {
+                    console.log("Location not found");
+                });
             }, 3000); //every 3s
-            map.locate({
-                watch: true,
-                enableHighAccuracy: false
-            });
-            map.on('locationfound', function(e) {
-                $scope.currentLocation = {
-                    lat: e.latlng.lat,
-                    lng: e.latlng.lng
-                };
-                if ($scope.firstLoad) {
-                    map.setView($scope.currentLocation, 16);
-                    $scope.firstLoad = false;
-                }
-                $scope.paths.currentLoc.latlngs = [];
-                $scope.paths.currentLoc.latlngs.push(e.latlng.lat);
-                $scope.paths.currentLoc.latlngs.push(e.latlng.lng);
-            });
-            map.on('locationerror', function(e) {
-                console.log('Location access denied.');
-            });
         })
         $ionicLoading.hide();
     });
 
     $scope.locateMe = function() {
-        leafletData.getMap("pcn").then(function(map) {
-            map.setView($scope.currentLocation);
-        });
+        if (typeof $scope.currentLocation.lat !== "undefined") {
+            leafletData.getMap("pcn").then(function(map) {
+                map.setView($scope.currentLocation);
+            });
+        } else {
+            $cordovaGeolocation.getCurrentPosition({
+                timeout: 3000,
+                enableHighAccuracy: true
+            }).then(function(position) {
+                map.setView({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
+            }, function(err) {
+                console.log("Location not found");
+            });
+        }
     }
 })

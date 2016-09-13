@@ -4,13 +4,15 @@ angular.module('app.main.controllers')
 
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
-        console.log($scope.routes);
     //Pre-existing scope variable
     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+    $scope.hasMoreRoutes = true;
     $scope.$on('$ionicView.enter', function(){
-      $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+        $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
     });
-    $scope.firstLoad = true;
+    $scope.checkHasMoreRoutes = function() {
+        return $scope.hasMoreRoutes;
+    }
 
     //Default Style
     $scope.myStyle = {
@@ -33,26 +35,17 @@ angular.module('app.main.controllers')
 
     //Method that is called after 0seconds after the template has loaded using the $timeout that calls this method
     var init = function() {
-        if ($scope.firstLoad) {
 
-            //Retrieves the length of the popularRoutes array containing individual routes sorted by ranking
-            var len = $scope.routes.length;
-            for (var i = 0; i < len; i++) {
-
-                //Pushes the Cid, geojson, fitbound coordinates into the respective scope variables
-                $scope.cidList.push($scope.routes[i].cid);
-                $scope.geojsonList.push($scope.routes[i].route);
-                $scope.coordinatesList.push($scope.routes[i].envelope);
-                $scope.firstLoad = false;
-            }
-            //Loops through the number of routes retrieved to configure the relevant maps
-            for (var i = 0; i < $scope.cidList.length; i++) {
-                var cid = $scope.cidList[i];
-                leafletData.getMap(cid).then(function(map) {
-                    //Retrieving the count to retrieve the relevant geojson and fitbound
-                    var count = $scope.count;
-                    var geojson = $scope.geojsonList[count];
-                    var coordinates = $scope.coordinatesList[count];
+        //Loops through the number of routes retrieved to configure the relevant maps
+        for (var i = $scope.count; i < $scope.routes.length; i++) {
+            var cid = $scope.routes[i].cid;
+            leafletData.getMap(cid).then(function(map) {
+                //Retrieving the count to retrieve the relevant geojson and fitbound
+                var geojson = $scope.routes[$scope.count].route;
+                var coordinates = $scope.routes[$scope.count].envelope;
+                if(coordinates.length == 2){
+                    map.setView(coordinates, 16);
+                }else{
                     map.fitBounds(
                         coordinates, {
                             animate: true,
@@ -61,47 +54,81 @@ angular.module('app.main.controllers')
                             maxZoom: 16
                         }
                     );
-                    L.geoJson(geojson, {
-                        style: $scope.myStyle
+                }
+                L.geoJson(geojson, {
+                    style: $scope.myStyle,
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            radius: 2,
+                            fillColor: "#09493E",
+                            color: "#09493E",
+                            opacity: 1});
+                        }
                     }).addTo(map);
                     map.invalidateSize();
                     $scope.count = $scope.count + 1;
                 })
             }
-        }
-    };
-    //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
-    //Test whether the timeout is still required, not tested by Wee Kian
-    $timeout(init, 0);
 
-    //Can dump the route data inside here to not need to call getRoute API
-    $scope.viewRoute = function(index) {
-        routeName.sendData({
-            index: index,
-            routesType: "userRoutes"
+        };
+        //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
+        //Test whether the timeout is still required, not tested by Wee Kian
+        $timeout(init, 0);
+
+        $scope.loadMore = function() {
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    token: localStorage.getItem("token"),
+                    from: $scope.count
+                }
+            }).then(function successCallback(response) {
+                var additionalUserRoutes = response.data.userRoutes;
+                if (additionalUserRoutes.length < 10) {
+                    $scope.hasMoreRoutes = false;
+                }
+                $scope.routes = $scope.routes.concat(response.data.userRoutes);
+                localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+                init();
+            },
+            function errorCallback(response) {
+                console.log("response not found");
+            });
+        };
+
+        //Can dump the route data inside here to not need to call getRoute API
+        $scope.viewRoute = function(index) {
+            routeName.sendData({
+                index: index,
+                routesType: "userRoutes"
+            });
+            $state.go("viewRoute");
+        }
+
+        angular.extend($scope, {
+            center: {
+                lat: 1.3521,
+                lng: 103.8198,
+                zoom: 11
+            },
+            tiles: {
+                url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
+            },
+            defaults: {
+                dragging: false,
+                touchZoom: false,
+                scrollWheelZoom: false,
+                doubleClickZoom: false,
+                boxZoom: false,
+                tap: false,
+                zoomControl: false,
+                attributionControl: false,
+                keyboard: false
+            }
         });
-        $state.go("viewRoute");
-    }
-
-    angular.extend($scope, {
-        center: {
-            lat: 1.3521,
-            lng: 103.8198,
-            zoom: 11
-        },
-        tiles: {
-            url: "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q"
-        },
-        defaults: {
-            dragging: false,
-            touchZoom: false,
-            scrollWheelZoom: false,
-            doubleClickZoom: false,
-            boxZoom: false,
-            tap: false,
-            zoomControl: false,
-            attributionControl: false,
-            keyboard: false
-        }
-    });
-})
+    })
