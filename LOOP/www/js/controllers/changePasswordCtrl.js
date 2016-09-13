@@ -1,6 +1,26 @@
 angular.module('app.main.controllers')
 
 .controller('changePasswordCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading, $ionicHistory, $timeout, $window) {
+    $scope.typeOld = "password";
+
+    $scope.toggleVisibilityOld = function() {
+        if ($scope.typeOld == "password") {
+            $scope.typeOld = "text";
+        } else if ($scope.typeOld == "text") {
+            $scope.typeOld = "password";
+        }
+    }
+
+    $scope.typeNew = "password";
+
+    $scope.toggleVisibilityNew = function() {
+        if ($scope.typeNew == "password") {
+            $scope.typeNew = "text";
+        } else if ($scope.typeNew == "text") {
+            $scope.typeNew = "password";
+        }
+    }
+
     $scope.input = {};
     $scope.changePW = function(form) {
         if (form.$valid) {

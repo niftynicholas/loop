@@ -2,15 +2,12 @@ angular.module('app.main.controllers')
 
 .controller('signupCtrl', function($scope, $ionicLoading, $ionicPopup, $state, $http) {
     $scope.type = "password";
-    console.log($scope.type);
 
     $scope.toggleVisibility = function() {
         if ($scope.type == "password") {
             $scope.type = "text";
-            console.log($scope.type);
         } else if ($scope.type == "text") {
             $scope.type = "password";
-            console.log($scope.type);
         }
     }
 
