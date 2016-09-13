@@ -27,16 +27,15 @@
                 <!-- Username -->
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.username.$invalid && signupForm.$submitted, 'no-errors' : signupForm.username.$valid  && signupForm.$submitted}">
                     <span class="input-label">Username</span>
-                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" required record-availability-validator="https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/checkUsernameAvailability">
+                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" ng-maxlength="20" required record-availability-validator="https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/checkUsernameAvailability">
                 </label>
                 <div class="error-container" ng-show="signupForm.username.$error && signupForm.$submitted" ng-messages="signupForm.username.$error">
                     <div ng-messages-include="error-list.html"></div>
                 </div>
                 <!-- Password -->
                 <label class="item item-input item-icon-right" ng-class="{ 'has-errors' : signupForm.password.$invalid && signupForm.$submitted, 'no-errors' : signupForm.password.$valid  && signupForm.$submitted}">
-                    <span class="input-label">Password</span><i class="icon ion-eye" on-touch="showPassword = !showPassword"></i>
-                    <input type="password" name="password" id="password" placeholder=" " ng-model="input.password" ng-hide="showPassword" required>
-                    <input type="text" name="password" id="passwordRaw" placeholder=" " ng-model="input.password" ng-show="showPassword" required>
+                    <span class="input-label">Password</span>
+                    <input type="password" name="password" id="password" placeholder=" " ng-model="input.password" ng-minlength="8" ng-maxlength="20" ui-show-password required>
                 </label>
                 <div class="error-container" ng-show="signupForm.password.$error && signupForm.$submitted" ng-messages="signupForm.password.$error">
                     <div ng-messages-include="error-list.html"></div>
@@ -70,6 +69,9 @@
     </div>
     <div class="error" ng-message="minlength">
         <i class="ion-information-circled"></i> Minimum length is 8 characters
+    </div>
+    <div class="error" ng-message="maxlength">
+        <i class="ion-information-circled"></i> Maximum length is 20 characters
     </div>
     <div class="error" ng-message="recordingLoading">
         <i class="ion-information-circled"></i> Checking...
