@@ -33,6 +33,30 @@ angular.module('app.main.controllers')
     //Used for fitbound of the retrieved map
     $scope.coordinatesList = [];
 
+    $scope.doRefresh = function(){
+
+        $http({
+            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                token: localStorage.getItem("token"),
+                to: $scope.count
+            }
+        }).then(function successCallback(response) {
+            $scope.routes = response.data.userRoutes;
+            localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
+            $scope.$broadcast('scroll.refreshComplete');
+            $scope.count = 0;
+            $timeout(init, 0);
+        },
+        function errorCallback(response) {
+            console.log("response not found");
+        });
+    }
+
     //Method that is called after 0seconds after the template has loaded using the $timeout that calls this method
     var init = function() {
 

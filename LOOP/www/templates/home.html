@@ -1,25 +1,26 @@
 <ion-view title="Home" hide-back-button="true">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
     <ion-content padding="true">
-        <ion-list>
-            <ion-item ng-repeat="route in routes" ng-click="viewRoute($index)">
-                <b>{{route.name}}</b></br>
-                </br>
-                <div data-tap-disabled="true" style="height:30vh;">
-                    <leaflet ng-attr-id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-90" style="padding: 0 !important;">
-                        <p><b>Distance:</b> {{route.distance | km}} km <b>Duration:</b> {{route.duration | duration}}</p>
-                    </div>
-                    <div class="col-10" style="padding: 0 !important;">
-                        <p style="width=20%;" align="right">{{routeComments[$index].comments.length || 0}} <i class="icon ion-ios-chatbubble-outline"></i></p>
-                    </div>
-                </div>
-            </ion-item>
-        </ion-list>
-        <ion-infinite-scroll ng-if="checkHasMoreRoutes()" on-infinite="loadMore()" distance="1%">
-        </ion-infinite-scroll>
-    </ion-content>
+        <ion-refresher pulling-text="Refeshing Routes" on-refresh="doRefresh()"></ion-refresher>
+    <ion-list>
+        <ion-item ng-repeat="route in routes" ng-click="viewRoute($index)">
+            <b>{{route.name}}</b></br>
+        </br>
+        <div data-tap-disabled="true" style="height:30vh;">
+            <leaflet ng-attr-id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-90" style="padding: 0 !important;">
+                <p><b>Distance:</b> {{route.distance | km}} km <b>Duration:</b> {{route.duration | duration}}</p>
+            </div>
+            <div class="col-10" style="padding: 0 !important;">
+                <p style="width=20%;" align="right">{{routeComments[$index].comments.length || 0}} <i class="icon ion-ios-chatbubble-outline"></i></p>
+            </div>
+        </div>
+    </ion-item>
+</ion-list>
+<ion-infinite-scroll ng-if="checkHasMoreRoutes()" on-infinite="loadMore()" distance="1%">
+</ion-infinite-scroll>
+</ion-content>
 </ion-view>

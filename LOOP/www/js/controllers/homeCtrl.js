@@ -32,8 +32,31 @@ angular.module('app.main.controllers')
     //Used for fitbound of the retrieved map
     $scope.coordinatesList = [];
 
-    var init = function() {
+    $scope.doRefresh = function(){
 
+        $http({
+            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getPopularRoutes",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                token: localStorage.getItem("token"),
+                to: $scope.count
+            }
+        }).then(function successCallback(response) {
+            $scope.routes = response.data.popularRoutes;
+            localStorage.setItem("popularRoutes", JSON.stringify($scope.routes));
+            $scope.$broadcast('scroll.refreshComplete');
+            $scope.count = 0;
+            $timeout(init, 0);
+        },
+        function errorCallback(response) {
+            console.log("response not found");
+        });
+    }
+
+    var init = function() {
         //Loops through the number of routes retrieved to configure the relevant maps
         for (var i = $scope.count; i < $scope.routes.length; i++) {
             var cid = $scope.routes[i].cid;
@@ -41,6 +64,7 @@ angular.module('app.main.controllers')
                 //Retrieving the count to retrieve the relevant geojson and fitbound
                 var geojson = $scope.routes[$scope.count].route;
                 var coordinates = $scope.routes[$scope.count].envelope;
+
                 if(coordinates.length == 2){
                     map.setView(coordinates, 16);
                 }else{
@@ -53,6 +77,7 @@ angular.module('app.main.controllers')
                         }
                     );
                 }
+
                 L.geoJson(geojson, {
                     style: $scope.myStyle,
                     pointToLayer: function (feature, latlng) {
@@ -63,6 +88,7 @@ angular.module('app.main.controllers')
                             opacity: 1});
                         }
                     }).addTo(map);
+
                     map.invalidateSize();
                     $scope.count = $scope.count + 1;
                 })
