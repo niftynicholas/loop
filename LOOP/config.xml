@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.ionictabs121641" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.teamnawty.loop14092016" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>LOOP</name>
-  <description>&#xD; An Ionic Framework and Cordova project.&#xD;&#xD;
-    </description>
-  <author email="you@example.com" href="http://example.com.com/">&#xD; Your Name Here&#xD;&#xD;
-    </author>
+  <description>LOOP is Singapore's very own cycling app. Discover and experience the cycling routes in Singapore.</description>
+  <author email="teamnawty@outlook.com">Team NAWTY</author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
