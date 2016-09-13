@@ -28,6 +28,7 @@ angular.module('app.routes', [])
     })
 
     .state('signup', {
+        cache: false,
         url: '/signup',
         templateUrl: 'templates/signup.html',
         controller: 'signupCtrl'
@@ -41,6 +42,7 @@ angular.module('app.routes', [])
     })
 
     .state('forgot', {
+        cache: false,
         url: '/forgot',
         templateUrl: 'templates/forgot.html',
         controller: 'forgotCtrl'

@@ -34,8 +34,8 @@
                 </div>
                 <!-- Password -->
                 <label class="item item-input item-icon-right" ng-class="{ 'has-errors' : signupForm.password.$invalid && signupForm.$submitted, 'no-errors' : signupForm.password.$valid  && signupForm.$submitted}">
-                    <span class="input-label">Password</span>
-                    <input type="password" name="password" id="password" placeholder=" " ng-model="input.password" ng-minlength="8" ng-maxlength="20" ui-show-password required>
+                    <span class="input-label">Password</span><i class="icon ion-eye" on-touch="toggleVisibility()"></i>
+                    <input type="{{type}}" name="password" id="password" ng-model="input.password" ng-minlength="8" ng-maxlength="20" required>
                 </label>
                 <div class="error-container" ng-show="signupForm.password.$error && signupForm.$submitted" ng-messages="signupForm.password.$error">
                     <div ng-messages-include="error-list.html"></div>
