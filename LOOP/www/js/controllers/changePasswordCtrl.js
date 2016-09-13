@@ -23,6 +23,10 @@ angular.module('app.main.controllers')
 
     $scope.input = {};
     $scope.changePW = function(form) {
+        $ionicLoading.show({
+            template: '<p>Checking...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        });
+
         if (form.$valid) {
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/login",
@@ -35,27 +39,26 @@ angular.module('app.main.controllers')
                     password: $scope.input.password
                 }
             }).then(function successCallback(response) {
-                    if ($scope.input.newPassword.length >= 8) {
-                        $http({
-                            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/updatePassword",
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            data: {
-                                token: localStorage.getItem("token"),
-                                password: $scope.input.newPassword
-                            }
-                        }).then(function successCallback(response) {
-                                $scope.showAlertPWSuccess();
-                            },
-                            function errorCallback(response) {
-                            });
-                    } else {
-                        $scope.showAlertPWShort();
-                    }
+                    $http({
+                        url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/updatePassword",
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: {
+                            token: localStorage.getItem("token"),
+                            password: $scope.input.newPassword
+                        }
+                    }).then(function successCallback(response) {
+                            $ionicLoading.hide();
+                            $scope.showAlertPWSuccess();
+                        },
+                        function errorCallback(response) {
+                            $ionicLoading.hide();
+                        });
                 },
                 function errorCallback(response) {
+                    $ionicLoading.hide();
                     $scope.showAlertPWMismatch();
                 });
         }
@@ -64,7 +67,7 @@ angular.module('app.main.controllers')
     $scope.showAlertPWMismatch = function() {
         var alertPopup = $ionicPopup.alert({
             title: 'Old Password Mismatch',
-            template: 'The Old Password you entered did not match our records. Please try again.'
+            template: 'The old password you entered did not match our records. Please try again.'
         });
 
         alertPopup.then(function(res) {

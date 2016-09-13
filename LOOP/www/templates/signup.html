@@ -35,7 +35,7 @@
                 <!-- Password -->
                 <label class="item item-input item-icon-right" ng-class="{ 'has-errors' : signupForm.password.$invalid && signupForm.$submitted, 'no-errors' : signupForm.password.$valid  && signupForm.$submitted}">
                     <span class="input-label">Password</span><i class="icon ion-eye" on-touch="toggleVisibility()"></i>
-                    <input type="{{type}}" name="password" id="password" ng-model="input.password" ng-minlength="8" ng-maxlength="20" required>
+                    <input type="{{type}}" name="password" id="password" ng-model="input.password" ng-minlength="8" required password-strength>
                 </label>
                 <div class="error-container" ng-show="signupForm.password.$error && signupForm.$submitted" ng-messages="signupForm.password.$error">
                     <div ng-messages-include="error-list.html"></div>
@@ -73,11 +73,16 @@
     <div class="error" ng-message="maxlength">
         <i class="ion-information-circled"></i> Maximum length is 20 characters
     </div>
-    <div class="error" ng-message="recordingLoading">
+    <div class="error" ng-message="recordLoading">
+        <i class="ion-information-circled"></i> Checking...
+    </div>
+    <div class="error" ng-message="checking">
         <i class="ion-information-circled"></i> Checking...
     </div>
     <div class="error" ng-message="recordAvailable">
         <i class="ion-information-circled"></i> Unavailable
     </div>
-
+    <div class="error" ng-message="strong">
+        <i class="ion-information-circled"></i> Passwords must have at least 8 characters and contain all of the following: uppercase letters, lowercase letters, numbers, and symbols.
+    </div>
 </script>

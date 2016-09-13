@@ -42,11 +42,9 @@ app.directive('recordAvailabilityValidator', ['$http', function($http) {
                         value: value
                     }
                 }).then(function successCallback(response) {
-                    console.log(response.data);
                     setAsLoading(false);
                     setAsAvailable(true);
                 }, function errorCallback(response) {
-                    console.log(response.data);
                     setAsLoading(false);
                     setAsAvailable(false);
                 });
@@ -56,3 +54,40 @@ app.directive('recordAvailabilityValidator', ['$http', function($http) {
         }
     }
 }]);
+
+// Passwords must have at least 8 characters and contain at least two of the following: uppercase letters, lowercase letters, numbers, and symbols.
+app.directive('passwordStrength', function() {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, ngModel) {
+            // regex
+            var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+            // var mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+
+            function setAsChecking(bool) {
+                ngModel.$setValidity('checking', !bool);
+            }
+
+            function setAsStrong(bool) {
+                ngModel.$setValidity('strong', bool);
+            }
+
+            ngModel.$parsers.push(function(value) {
+                if (!value || value.length == 0) return;
+
+                setAsChecking(true);
+                setAsStrong(false);
+
+                if (strongRegex.test(value)) {
+                    setAsChecking(false);
+                    setAsStrong(true);
+                } else {
+                    setAsChecking(false);
+                    setAsStrong(false);
+                }
+
+                return value;
+            })
+        }
+    }
+});
