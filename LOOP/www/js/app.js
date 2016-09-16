@@ -23,9 +23,9 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
 .filter('duration', function() {
     return function(input) {
         if (input < 60) {
-            return Math.round(parseFloat(input)).toFixed(2) + " seconds";
+            return Math.round(parseFloat(input)).toFixed(2) + " s";
         } else {
-            return (parseFloat(input) / 60).toFixed(2) + " minutes";
+            return (parseFloat(input) / 60).toFixed(2) + " min";
         }
     }
 })

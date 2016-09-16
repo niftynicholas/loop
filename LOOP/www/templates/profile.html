@@ -6,7 +6,7 @@
     <ion-content padding="true" class="has-header">
         <ion-list>
             <ion-item style="text-align:center;">
-                <div id="profilephoto" class="cropped-photo">
+                <div id="profilephoto" ng-click="show()" class="cropped-photo">
                     <img style="border-radius: 100%;" ng-src="{{profilePicture}}" width="100px" height="100px">
                 </div>
                 <a class="button button-clear button-positive" ng-click="show()">Change</a><br>

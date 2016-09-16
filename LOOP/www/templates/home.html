@@ -1,7 +1,7 @@
-<ion-view title="Home" hide-back-button="true">
+<ion-view title="Popular" hide-back-button="true">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
     <ion-content padding="true">
-        <ion-refresher pulling-text="Refeshing Routes" on-refresh="doRefresh()"></ion-refresher>
+        <ion-refresher pulling-text="Refreshing Routes" on-refresh="doRefresh()"></ion-refresher>
     <ion-list>
         <ion-item ng-repeat="route in routes" ng-click="viewRoute($index)">
             <b>{{route.name}}</b></br>
