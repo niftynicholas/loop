@@ -1,14 +1,14 @@
 angular.module('app.main.controllers')
 
 .controller('profileCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicHistory, $window, $cordovaCamera, $cordovaFile, $ionicActionSheet, $cordovaImagePicker, $ionicPlatform, $ionicModal, $jrCrop, $http) {
-    $scope.height = parseFloat(localStorage.getItem("height"));
+    $scope.height = Math.round(parseFloat(localStorage.getItem("height")));
     $scope.totalCalories = parseFloat(localStorage.getItem("totalCalories"));
     $scope.numActivities = parseInt(localStorage.getItem("numActivities"));
 
     if (isNaN($scope.height)) {
         $scope.height = 0;
     }
-    $scope.weight = parseFloat(localStorage.getItem("weight"));
+    $scope.weight = parseFloat(localStorage.getItem("weight")).toFixed(2);
     if (isNaN($scope.weight)) {
         $scope.weight = 0;
     }
