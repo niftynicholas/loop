@@ -337,8 +337,6 @@ function displayInfo(searchVal, lat, lng, type) {
 }
 
 function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope, $state, $ionicPopup, sharedRoute) {
-    sharedRoute.hasPlanned = true;
-    sharedRoute.hasPlannedRoute = true;
     sharedRoute.routeLayer = new L.FeatureGroup().addTo(map);
     var travelOptions = r360.travelOptions();
     travelOptions.addSource(sourceMarker1);
@@ -347,6 +345,8 @@ function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $s
 
     // define what happens if everything goes smoothly
     var successCallBack = function(routes) {
+        sharedRoute.hasPlanned = true;
+        sharedRoute.hasPlannedRoute = true;
         //var polylineCoords = [];
         for (var i = 0; i < routes.length; i++) {
             var route = routes[i];
