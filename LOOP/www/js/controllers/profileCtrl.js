@@ -14,8 +14,8 @@ angular.module('app.main.controllers')
     }
 
     $scope.name = localStorage.getItem("name");
-
-    $scope.profilePicture = localStorage.getItem("profilePicture");
+    $scope.uid = localStorage.getItem("uid");
+    $scope.profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
     if ($scope.profilePicture == "null") {
         $scope.profilePicture = 'img/profile-placeholder.gif';
     } else {

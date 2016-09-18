@@ -1,7 +1,11 @@
 angular.module('app.main.controllers')
 
 .controller('routesMyRoutesCtrl', function($scope, routeName, $state, $http, leafletData, $timeout) {
-
+    var profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
+    var uids = profilePictures.uids;
+    if (uids.length === 0) {
+      uids = 0;
+    }
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
     //Pre-existing scope variable
@@ -36,18 +40,21 @@ angular.module('app.main.controllers')
     $scope.doRefresh = function(){
 
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes",
+            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes2",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             data: {
                 token: localStorage.getItem("token"),
-                to: $scope.count
+                to: $scope.count,
+                uids : uids
             }
         }).then(function successCallback(response) {
             $scope.routes = response.data.userRoutes;
+            $scope.routeComments = response.data.userRoutes;
             localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
+            updateProfilePicture(response.data.profilePictures);
             $scope.$broadcast('scroll.refreshComplete');
             $scope.count = 0;
             $timeout(init, 0);
@@ -101,14 +108,15 @@ angular.module('app.main.controllers')
 
         $scope.loadMore = function() {
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes",
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes2",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 data: {
                     token: localStorage.getItem("token"),
-                    from: $scope.count
+                    from: $scope.count,
+                    uids:uids
                 }
             }).then(function successCallback(response) {
                 var additionalUserRoutes = response.data.userRoutes;
@@ -116,13 +124,27 @@ angular.module('app.main.controllers')
                     $scope.hasMoreRoutes = false;
                 }
                 $scope.routes = $scope.routes.concat(response.data.userRoutes);
+                $scope.routeComments = $scope.routeComments.concat(response.data.userRoutes);
                 localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
+                updateProfilePicture(response.data.profilePictures);
                 $scope.$broadcast('scroll.infiniteScrollComplete');
                 init();
             },
             function errorCallback(response) {
                 console.log("response not found");
             });
+        };
+
+        var updateProfilePicture = function(addPics) {
+            profilePictures.uids.concat(addPics.uids);
+            for (var count = 0; count < addPics.uids.length; count++) {
+              profilePictures[addPics.uids[count]] = addPics[addPics.uids[count]];
+            }
+            uids = profilePictures.uids;
+            if (uids.length === 0) {
+              uids = 0;
+            }
+            localStorage.setItem("profilePictures", JSON.stringify(profilePictures));
         };
 
         //Can dump the route data inside here to not need to call getRoute API

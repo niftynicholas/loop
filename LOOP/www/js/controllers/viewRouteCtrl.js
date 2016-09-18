@@ -2,6 +2,8 @@ angular.module('app.main.controllers')
 
 .controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, $ionicPopup, routeName, $http, $state, dataShare, viewSharedRoute) {
     $scope.username = localStorage.getItem("username");
+    $scope.profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
+    var uid = localStorage.getItem("uid");
     var index = routeName.getData().index;
     var routesType = routeName.getData().routesType;
     var routes = JSON.parse(localStorage.getItem(routesType));
@@ -17,11 +19,13 @@ angular.module('app.main.controllers')
         if ($scope.input.comment.length > 0) {
             if ($scope.route.comments === null) {
                 $scope.route.comments = [{
+                    uid : uid,
                     comment: $scope.input.comment,
                     username: $scope.username
                 }];
             } else {
                 $scope.route.comments.push({
+                    uid : uid,
                     comment: $scope.input.comment,
                     username: $scope.username
                 });

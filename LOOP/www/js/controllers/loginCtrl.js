@@ -35,16 +35,19 @@ angular.module('app.main.controllers')
                     localStorage.setItem("username", response.data.user.username);
                     localStorage.setItem("weight", response.data.user.weight);
                     localStorage.setItem("gender", response.data.user.gender);
+                    localStorage.setItem("uid", response.data.user.uid);
                     localStorage.setItem("numActivities", response.data.user.numActivities);
                     localStorage.setItem("totalCalories", response.data.user.totalCalories);
                     localStorage.setItem("avgCalories", response.data.user.avgCalories);
-                    localStorage.setItem("profilePicture", response.data.user.profilePicture);
+                    //localStorage.setItem("profilePicture", response.data.user.profilePicture);
                     //Stores the top 5 popular routes
                     localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
                     //Stores the top 5 bookmarked Routes
                     localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
                     //Stores the top 5 User's routes
                     localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                    //Stores the top profilePictures
+                    localStorage.setItem("profilePictures", JSON.stringify(response.data.profilePictures));
                     $scope.hide();
                     $state.go('tabsController.home');
                     /*

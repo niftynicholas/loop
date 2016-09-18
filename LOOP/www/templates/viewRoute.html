@@ -34,9 +34,9 @@
 
                 <!-- If there are comments -->
 
-                <a class="item" href="#" ng-repeat="c in route.comments">
-                <!-- <a class="item item-avatar" href="#" ng-repeat="c in comments">
-                    <img src="img/profile-placeholder.gif"> -->
+                <!--<a class="item" href="#" ng-repeat="c in route.comments">-->
+                <a class="item item-avatar" href="#" ng-repeat="c in route.comments">
+                    <img src="{{profilePictures[c.uid] || 'img/profile-placeholder.gif'}}">
                     <h2><b>{{c.username === username && "Me" || c.username}}</b></h2>
                     <p style="overflow: initial; white-space: initial;">{{c.comment}}</p>
                 </a>
