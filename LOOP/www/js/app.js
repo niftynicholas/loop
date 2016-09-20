@@ -113,10 +113,14 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
 
 .factory('viewSharedRoute', function() {
     var service = {};
+    service.cid = null;
+    service.startDateTimeStamp = null;
     service.routeLayer = null;
     service.hasPlanned = false;
 
     service.clearData = function() {
+        this.cid = null;
+        this.startDateTimeStamp = null;
         this.routeLayer = null;
         this.hasPlanned = false;
     };

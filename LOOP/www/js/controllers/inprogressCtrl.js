@@ -225,7 +225,7 @@ angular.module('app.main.controllers')
     $scope.$broadcast('timer-start');
     $scope.timerRunning = true;
 
-    $scope.startDateTimeStamp = dataShare.data.startDateTimeStamp;
+    $scope.startDateTimeStamp = dataShare.data.startDateTimeStamp || viewSharedRoute.startDateTimeStamp;
 
     if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
         //Pass currentLocation from cycle.html
@@ -366,9 +366,11 @@ angular.module('app.main.controllers')
                     path: latlngs,
                     durationInSeconds: $scope.durationInSeconds,
                     startDateTimeStamp: $scope.startDateTimeStamp,
-                    geotagsInfo: geotagsInfo
+                    geotagsInfo: geotagsInfo,
+                    referencedCID: viewSharedRoute.cid
                 };
                 dataShare.sendData(data); //pass as JS object
+                viewSharedRoute.clearData();
                 $state.go('completed');
 
             } else {

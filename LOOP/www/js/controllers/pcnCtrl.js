@@ -150,6 +150,7 @@ angular.module('app.main.controllers')
 
                 var geotaggedCommentsButton = L.easyButton({
                     id: 'animated-marker-toggle',
+                    position: 'topright',
                     type: 'replace',
                     states: [{
                         stateName: 'add-geotagged-comments',
@@ -169,7 +170,36 @@ angular.module('app.main.controllers')
                         }
                     }]
                 });
-                geotaggedCommentsButton.addTo(map);
+                // geotaggedCommentsButton.button.style.width = '200px';
+                // geotaggedCommentsButton.button.style.height = '100px';
+                // geotaggedCommentsButton.addTo(map);
+
+                // var test = L.easyButton({
+                //     id: 'animated-marker-toggle',
+                //     position: 'topright',
+                //     type: 'replace',
+                //     states: [{
+                //         stateName: 'add-geotagged-comments',
+                //         icon: 'fa-map-marker',
+                //         title: 'Add Geotagged Comments',
+                //         onClick: function(control) {
+                //             map.addLayer(geoJsonLayer);
+                //             control.state('remove-geotagged-comments');
+                //         }
+                //     }, {
+                //         stateName: 'remove-geotagged-comments',
+                //         title: 'Remove Geotagged Comments',
+                //         icon: 'fa-undo',
+                //         onClick: function(control) {
+                //             map.removeLayer(geoJsonLayer);
+                //             control.state('add-geotagged-comments');
+                //         }
+                //     }]
+                // });
+                // geotaggedCommentsButton.button.style.width = '200px';
+                // geotaggedCommentsButton.button.style.height = '100px';
+                // test.addTo(map);
+                L.easyBar([geotaggedCommentsButton],{position: 'topright'}).addTo(map);
                 $scope.loadedGeotaggedComments = true;
             }
             setInterval(function() {

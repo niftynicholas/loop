@@ -166,8 +166,8 @@ L.Control.EasyButton = L.Control.extend({
 
   _buildButton: function(){
 
-    this.button = L.DomUtil.create('button', '');
-
+    this.button = L.DomUtil.create('div', '');
+    
     if (this.options.id ){
       this.button.id = this.options.id;
     }

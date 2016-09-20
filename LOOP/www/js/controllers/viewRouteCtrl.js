@@ -219,6 +219,8 @@ angular.module('app.main.controllers')
 
             confirmPopup.then(function(res) {
                 if (res) {
+                    viewSharedRoute.startDateTimeStamp = new Date().getTime();
+                    viewSharedRoute.cid = $scope.route.cid;
                     viewSharedRoute.routeLayer = $scope.route.route;
                     viewSharedRoute.hasPlanned = true;
                     $state.go("inprogress");

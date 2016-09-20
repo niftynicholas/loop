@@ -139,7 +139,7 @@ angular.module('app.main.controllers')
             alert("No GPS Data was received");
         } else {
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/upload",
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/upload2",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -155,7 +155,8 @@ angular.module('app.main.controllers')
                     route: $scope.paths.p1.latlngs,
                     generalComments: $scope.comments,
                     geotagComments: data.geotagsInfo,
-                    isShared: $scope.input.isShared || false
+                    isShared: $scope.input.isShared || false,
+                    referencedCID: data.referencedCID || null
                 }
             }).then(function successCallback(response) {
                 dataShare.clearData();
