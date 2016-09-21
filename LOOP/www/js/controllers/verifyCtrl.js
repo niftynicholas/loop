@@ -1,9 +1,17 @@
 angular.module('app.main.controllers')
 
-.controller('verifyCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading, $timeout) {
+.controller('verifyCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading, $timeout, $ionicModal) {
+    $scope.input = {};
+
     $scope.show = function() {
         $ionicLoading.show({
             template: '<p>Verifying...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        });
+    };
+
+    $scope.showResend = function() {
+        $ionicLoading.show({
+            template: '<p>Resending...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
         });
     };
 
@@ -73,7 +81,73 @@ angular.module('app.main.controllers')
         });
 
         alertPopup.then(function(res) {
-            console.log('Thank you for not eating my delicious ice cream cone');
+
         });
     };
+
+    // Modal to Resend Verification code
+    $ionicModal.fromTemplateUrl('resend.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+    $scope.openModal = function() {
+        $scope.modal.show();
+    };
+    $scope.closeModal = function() {
+        $scope.modal.hide();
+    };
+    // Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+    });
+
+    $scope.resend = function(form) {
+        if (form.$valid) {
+            $scope.showResend();
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/resendVerificationEmail",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    email: $scope.input.email,
+                }
+            }).then(function successCallback(response) {
+                $scope.hide();
+                $scope.resendSuccess();
+            }, function errorCallback(response) {
+                $scope.hide();
+                $scope.resendFail();
+            });
+        }
+    }
+
+    // Verification Success
+    $scope.resendSuccess = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Resend Success',
+            template: 'The new verification has been sent to your email.'
+        });
+
+        alertPopup.then(function(res) {
+            $scope.closeModal();
+        });
+    };
+
+    // Verification Failure
+    $scope.resendFail = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Resend Failed',
+            template: 'The email you entered has not been registered or the account is already verified.'
+        });
+
+        alertPopup.then(function(res) {
+
+        });
+    };
+
+
 })

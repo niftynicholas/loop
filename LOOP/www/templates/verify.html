@@ -72,9 +72,45 @@
                     <button class="button icon ion-arrow-left-a button-light button-stretch" ng-click="delete()"></button>
                 </div>
             </div>
+        </div><br>
+        <div class="text-center">
+            <strong><a ng-click="openModal()">Resend Verification Code</a></strong>
         </div>
     </ion-content>
     <div class="bar bar-footer bar-positive">
         <div class="title" ng-click="verify()">Verify</div>
     </div>
 </ion-view>
+
+<script id="resend.html" type="text/ng-template">
+  <ion-modal-view>
+    <ion-header-bar class="bar-balanced">
+      <h1 class="title">Resend Code</h1>
+      <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+    </ion-header-bar>
+    <ion-content>
+        <form name="resendForm" novalidate="" ng-submit="resend(resendForm)">
+            <br><h4 style="text-align:center;"><b>Enter your email address and we will resend you a verification code shortly.</b></h4><br>
+            <div class="list">
+                <!-- Email -->
+                <label class="item item-input" ng-class="{ 'has-errors' : resendForm.email.$invalid && resendForm.$submitted, 'no-errors' : resendForm.email.$valid  && resendForm.$submitted}">
+                    <span class="input-label">Email</span>
+                    <input type="email" name="email" ng-model="input.email" required email>
+                </label>
+                <div class="error-container" ng-show="resendForm.email.$error && resendForm.$submitted" ng-messages="resendForm.email.$error">
+                    <div ng-messages-include="error-list.html"></div>
+                </div>
+            </div>
+            <button type="submit" class="button button-positive button-full">Resend</button>
+        </form>
+    </ion-content>
+  </ion-modal-view>
+  <script id="error-list.html" type="text/ng-template">
+      <div class="error" ng-message="email">
+          <i class="ion-information-circled"></i> Invalid Email
+      </div>
+      <div class="error" ng-message="required">
+          <i class="ion-information-circled"></i> Required Field
+      </div>
+  </script>
+</script>
