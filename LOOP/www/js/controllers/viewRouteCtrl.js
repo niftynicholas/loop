@@ -69,7 +69,6 @@ angular.module('app.main.controllers')
                 template: '<p>Deleting...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
             })
             if (res) {
-                console.log("delete comment");
                 $http({
                     url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/deleteComment",
                     method: 'POST',
@@ -83,7 +82,6 @@ angular.module('app.main.controllers')
                     }
                 }).then(function successCallback(response) {
                         $ionicLoading.hide();
-                        console.log("comment deleted successfully");
                     },
                     function errorCallback(response) {
                         $ionicLoading.hide();
@@ -98,9 +96,47 @@ angular.module('app.main.controllers')
         });
     }
 
-    // $scope.editComment = function() {
-    //     console.log("edit comment");
+    // $scope.editComment = function(commentID, dateTime) {
+    //     $http({
+    //         url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/editComment",
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         data: {
+    //             cid: commentID,
+    //             dateTimeStamp: dateTime,
+    //             token: localStorage.getItem("token")
+    //         }
+    //     }).then(function successCallback(response) {
+    //             $ionicLoading.hide();
+    //         },
+    //         function errorCallback(response) {
+    //             $ionicLoading.hide();
+    //             var alertPopup = $ionicPopup.alert({
+    //                 title: 'Unable to Delete Comment',
+    //                 template: 'There is a problem with the server. Please try again later.'
+    //             });
+    //         });
     // }
+
+    // Model to edit comment
+    // $ionicModal.fromTemplateUrl('editComment.html', {
+    //     scope: $scope,
+    //     animation: 'slide-in-up'
+    // }).then(function(modal) {
+    //     $scope.modal = modal;
+    // });
+    // $scope.openModal = function() {
+    //     $scope.modal.show();
+    // };
+    // $scope.closeModal = function() {
+    //     $scope.modal.hide();
+    // };
+    // // Cleanup the modal when we're done with it!
+    // $scope.$on('$destroy', function() {
+    //     $scope.modal.remove();
+    // });
 
     /*
     var index = routeName.getData().index;
