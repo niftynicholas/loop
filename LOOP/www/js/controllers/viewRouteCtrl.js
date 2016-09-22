@@ -1,12 +1,13 @@
 angular.module('app.main.controllers')
 
-.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, $ionicPopup, routeName, $http, $state, dataShare, viewSharedRoute) {
+.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, $ionicPopup, routeName, $http, $state, dataShare, viewSharedRoute, $ionicPopup, $ionicModal, $ionicLoading) {
     $scope.username = localStorage.getItem("username");
     $scope.profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
     var uid = localStorage.getItem("uid");
     var index = routeName.getData().index;
     var routesType = routeName.getData().routesType;
     var routes = JSON.parse(localStorage.getItem(routesType));
+    console.log(routes);
     $scope.route = routes[index];
     $scope.stars = Math.round($scope.route.ratings);
     $scope.ratings = $scope.route.ratings + "";
@@ -19,13 +20,13 @@ angular.module('app.main.controllers')
         if ($scope.input.comment.length > 0) {
             if ($scope.route.comments === null) {
                 $scope.route.comments = [{
-                    uid : uid,
+                    uid: uid,
                     comment: $scope.input.comment,
                     username: $scope.username
                 }];
             } else {
                 $scope.route.comments.push({
-                    uid : uid,
+                    uid: uid,
                     comment: $scope.input.comment,
                     username: $scope.username
                 });
@@ -47,15 +48,60 @@ angular.module('app.main.controllers')
                 }
 
             }).then(function successCallback(response) {
-                console.log("success");
-            },
-            function errorCallback(response) {
-                console.log("error with sending http request for posting comment to server");
-            });
+                    console.log("success");
+                },
+                function errorCallback(response) {
+                    console.log("error with sending http request for posting comment to server");
+                });
             $scope.input.comment = "";
             updateRoute();
         }
     };
+
+    $scope.deleteComment = function(commentID, dateTime) {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Delete Comment',
+            template: 'Are you sure you want to delete this comment?'
+        });
+
+        confirmPopup.then(function(res) {
+            $ionicLoading.show({
+                template: '<p>Deleting...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+            })
+            if (res) {
+                console.log("delete comment");
+                $http({
+                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/deleteComment",
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        cid: commentID,
+                        dateTimeStamp: dateTime,
+                        token: localStorage.getItem("token")
+                    }
+                }).then(function successCallback(response) {
+                        $ionicLoading.hide();
+                        console.log("comment deleted successfully");
+                    },
+                    function errorCallback(response) {
+                        $ionicLoading.hide();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Unable to Delete Comment',
+                            template: 'There is a problem with the server. Please try again later.'
+                        });
+                    });
+            } else {
+
+            }
+        });
+    }
+
+    // $scope.editComment = function() {
+    //     console.log("edit comment");
+    // }
+
     /*
     var index = routeName.getData().index;
     var routesType = routeName.getData().routesType;
@@ -154,18 +200,18 @@ angular.module('app.main.controllers')
 
     leafletData.getMap("viewRoute").then(function(map) {
         var osmUrl = 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
-        osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
-        osm = L.tileLayer(osmUrl, {
-            maxZoom: 17,
-            attribution: osmAttrib,
-            rotate: true,
-            edgeBufferTiles: 2
-        });
+            osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+            osm = L.tileLayer(osmUrl, {
+                maxZoom: 17,
+                attribution: osmAttrib,
+                rotate: true,
+                edgeBufferTiles: 2
+            });
         map.addLayer(osm);
 
-        if($scope.route.envelope.length == 2){
+        if ($scope.route.envelope.length == 2) {
             map.setView($scope.route.envelope, 16);
-        }else{
+        } else {
             map.fitBounds(
                 $scope.route.envelope, {
                     animate: true,
@@ -181,105 +227,106 @@ angular.module('app.main.controllers')
                 opacity: 1,
                 color: '#09493E'
             },
-            pointToLayer: function (feature, latlng) {
+            pointToLayer: function(feature, latlng) {
                 return L.circleMarker(latlng, {
                     radius: 2,
                     fillColor: "#09493E",
                     color: "#09493E",
-                    opacity: 1});
-                }
-            }).addTo(map);
-            map.invalidateSize();
-        })
-
-        $scope.ratingsObject = {
-            iconOn: 'ion-ios-star',
-            iconOff: 'ion-ios-star-outline',
-            iconOnColor: 'rgb(255,186,73)',
-            iconOffColor: 'rgb(255,186,73)',
-            rating: $scope.stars,
-            minRating: 0,
-            readOnly: true,
-            callback: function(rating) {
-                $scope.ratingsCallback(rating);
+                    opacity: 1
+                });
             }
-        };
+        }).addTo(map);
+        map.invalidateSize();
+    })
 
-        $scope.ratingsCallback = function(rating) {
-            $scope.rating = rating;
-        };
-
-
-        $scope.cycle = function() {
-            //  Show Popup
-            var confirmPopup = $ionicPopup.confirm({
-                title: 'Cycle Route',
-                template: 'Are you sure you would like to cycle this route?'
-            });
-
-            confirmPopup.then(function(res) {
-                if (res) {
-                    viewSharedRoute.startDateTimeStamp = new Date().getTime();
-                    viewSharedRoute.cid = $scope.route.cid;
-                    viewSharedRoute.routeLayer = $scope.route.route;
-                    viewSharedRoute.hasPlanned = true;
-                    $state.go("inprogress");
-
-                } else {
-                    console.log('Cancelled');
-                }
-            });
+    $scope.ratingsObject = {
+        iconOn: 'ion-ios-star',
+        iconOff: 'ion-ios-star-outline',
+        iconOnColor: 'rgb(255,186,73)',
+        iconOffColor: 'rgb(255,186,73)',
+        rating: $scope.stars,
+        minRating: 0,
+        readOnly: true,
+        callback: function(rating) {
+            $scope.ratingsCallback(rating);
         }
+    };
 
-        $scope.goBack = function() {
-            $ionicHistory.goBack();
-        };
+    $scope.ratingsCallback = function(rating) {
+        $scope.rating = rating;
+    };
 
-        $scope.bookmark = function() {
-            if ($scope.route.isbookmarked === false) {
-                $scope.route.isbookmarked = true;
-                $http({
-                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/bookmark",
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: {
-                        token: localStorage.getItem("token"),
-                        cid: $scope.route.cid,
-                        dateTimeStamp: new Date().getTime()
-                    }
-                }).then(function successCallback(response) {},
-                function errorCallback(response) {})
-                addBookmark();
+
+    $scope.cycle = function() {
+        //  Show Popup
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Cycle Route',
+            template: 'Are you sure you would like to cycle this route?'
+        });
+
+        confirmPopup.then(function(res) {
+            if (res) {
+                viewSharedRoute.startDateTimeStamp = new Date().getTime();
+                viewSharedRoute.cid = $scope.route.cid;
+                viewSharedRoute.routeLayer = $scope.route.route;
+                viewSharedRoute.hasPlanned = true;
+                $state.go("inprogress");
+
             } else {
-                $scope.route.isbookmarked = false;
-                $http({
-                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/removeBookmark",
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: {
-                        token: localStorage.getItem("token"),
-                        cid: $scope.route.cid
-                    }
-                }).then(function successCallback(response) {},
-                function errorCallback(response) {})
-                removeBookmark();
-            }
-            updateRoute();
-        }
-
-        angular.extend($scope, {
-            center: {
-                lat: 1.3521,
-                lng: 103.8198,
-                zoom: 11
-            },
-            defaults: {
-                scrollWheelZoom: true,
-                zoomControl: true
+                console.log('Cancelled');
             }
         });
-    })
+    }
+
+    $scope.goBack = function() {
+        $ionicHistory.goBack();
+    };
+
+    $scope.bookmark = function() {
+        if ($scope.route.isbookmarked === false) {
+            $scope.route.isbookmarked = true;
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/bookmark",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    token: localStorage.getItem("token"),
+                    cid: $scope.route.cid,
+                    dateTimeStamp: new Date().getTime()
+                }
+            }).then(function successCallback(response) {},
+                function errorCallback(response) {})
+            addBookmark();
+        } else {
+            $scope.route.isbookmarked = false;
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/removeBookmark",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    token: localStorage.getItem("token"),
+                    cid: $scope.route.cid
+                }
+            }).then(function successCallback(response) {},
+                function errorCallback(response) {})
+            removeBookmark();
+        }
+        updateRoute();
+    }
+
+    angular.extend($scope, {
+        center: {
+            lat: 1.3521,
+            lng: 103.8198,
+            zoom: 11
+        },
+        defaults: {
+            scrollWheelZoom: true,
+            zoomControl: true
+        }
+    });
+})
