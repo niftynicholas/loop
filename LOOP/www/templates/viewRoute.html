@@ -42,7 +42,7 @@
                         <br>
                         <div ng-if='c.username === username && "Me"' style="text-align: right;">
                             <!--<p ng-click="editComment(route.cid, c.datetimestamp)" style="display: inline;"><u>Edit</u></p>-->
-                            <p ng-click="deleteComment(route.cid, c.datetimestamp)" style="display: inline;"><u>Delete</u></p>
+                            <p ng-click="deleteComment(route.cid, c.datetimestamp, c.comment)" style="display: inline;"><u>Delete</u></p>
                         </div>
                     </p>
                 </a>

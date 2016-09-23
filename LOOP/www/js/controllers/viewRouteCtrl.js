@@ -16,19 +16,24 @@ angular.module('app.main.controllers')
         comment: ""
     };
 
+    var tempDateTimeStamp = "";
+
     $scope.postComment = function() {
+        var dts = new Date().getTime();
         if ($scope.input.comment.length > 0) {
             if ($scope.route.comments === null) {
                 $scope.route.comments = [{
                     uid: uid,
                     comment: $scope.input.comment,
-                    username: $scope.username
+                    username: $scope.username,
+                    datetimestamp: dts
                 }];
             } else {
                 $scope.route.comments.push({
                     uid: uid,
                     comment: $scope.input.comment,
-                    username: $scope.username
+                    username: $scope.username,
+                    datetimestamp: dts
                 });
             }
             $http({
@@ -58,17 +63,17 @@ angular.module('app.main.controllers')
         }
     };
 
-    $scope.deleteComment = function(commentID, dateTime) {
+    $scope.deleteComment = function(routeCID, dateTime, commentText) {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Delete Comment',
             template: 'Are you sure you want to delete this comment?'
         });
 
         confirmPopup.then(function(res) {
-            $ionicLoading.show({
-                template: '<p>Deleting...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
-            })
             if (res) {
+                $ionicLoading.show({
+                    template: '<p>Deleting...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+                })
                 $http({
                     url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/deleteComment",
                     method: 'POST',
@@ -76,18 +81,35 @@ angular.module('app.main.controllers')
                         'Content-Type': 'application/json'
                     },
                     data: {
-                        cid: commentID,
+                        cid: routeCID,
                         dateTimeStamp: dateTime,
                         token: localStorage.getItem("token")
                     }
                 }).then(function successCallback(response) {
+                        console.log(response);
+                        console.log($scope.route.comments);
+                        for (var i = 0; i < $scope.route.comments.length; i++) {
+                            var comment = $scope.route.comments[i];
+                            var tempUID = comment.uid;
+                            var tempDTS = comment.datetimestamp;
+                            var tempText = comment.comment;
+
+
+                            var thisUID = localStorage.getItem("uid");
+                            var thisDTS = dateTime;
+                            var thisText = commentText;
+                            if (thisUID == tempUID && thisDTS == tempDTS && thisText == tempText) {
+                                $scope.route.comments.splice(i, 1);
+                            }
+                        }
                         $ionicLoading.hide();
                     },
                     function errorCallback(response) {
+                        console.log(response);
                         $ionicLoading.hide();
                         var alertPopup = $ionicPopup.alert({
-                            title: 'Unable to Delete Comment',
-                            template: 'There is a problem with the server. Please try again later.'
+                            title: 'Server Error',
+                            template: 'Unable to delete comment. Please try again later.'
                         });
                     });
             } else {
