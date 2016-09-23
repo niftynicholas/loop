@@ -8,7 +8,6 @@ angular.module('app.main.controllers')
     }
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
-    console.log($scope.routes);
     //Pre-existing scope variable
     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
     $scope.hasMoreRoutes = true;
@@ -155,6 +154,32 @@ angular.module('app.main.controllers')
                 routesType: "userRoutes"
             });
             $state.go("viewRoute");
+        }
+
+        $scope.deleteRoute = function(cid){
+            $http({
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/deleteRoute",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    token: localStorage.getItem("token"),
+                    cid:cid
+                }
+            }).then(function successCallback(response) {
+                for(var i = 0; i<$scope.routes.length; i++){
+                    if($scope.routes[i].cid == cid){
+                        $scope.routes.splice(i,1);
+                        localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
+                        break;
+                    }
+                }
+                console.log('Route Deleted Successfully');
+            },
+            function errorCallback(response) {
+                console.log("response not found");
+            });
         }
 
         angular.extend($scope, {
