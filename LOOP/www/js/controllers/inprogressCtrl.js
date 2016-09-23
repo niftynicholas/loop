@@ -41,132 +41,6 @@ angular.module('app.main.controllers')
         $scope.previousIndex = data.previousIndex;
     });
 
-    // A tri-state control for map rotation. States are:
-    // Locked (default)
-    // Unlocked (user can pinch-rotate)
-    // Follow (rotation follows device orientation, if available)
-
-    L.Control.Bearing = L.Control.extend({
-
-        options: {
-            position: 'topleft',
-            closeOnZeroBearing: false
-        },
-
-        onAdd: function(map) {
-            this._onDeviceOrientation = L.Util.throttle(this._unthrottledOnDeviceOrientation, 100, this);
-
-            var container = this._container = L.DomUtil.create('div', 'leaflet-control-rotate leaflet-bar');
-
-            //this.button = L.Control.Zoom.prototype._createButton.call(this, 'R', 'leaflet-control-rotate', 'leaflet-control-rotate', container, this._toggleLock);
-
-            var glyphs = this._glyphs = L.DomUtil.create('div', 'leaflet-control-rotate-glyphs');
-            var north = this._north = L.DomUtil.create('div', 'leaflet-control-rotate-north');
-            north.innerHTML = 'N';
-
-            var arrow = this._arrow = L.DomUtil.create('div', 'leaflet-control-rotate-arrow');
-            arrow.innerHTML = '&uarr;';
-
-
-            // Copy-pasted from L.Control.Zoom
-            var link = this._link = L.DomUtil.create('a', 'leaflet-control-rotate-toggle', container);
-            glyphs.appendChild(north);
-            glyphs.appendChild(arrow);
-            link.appendChild(glyphs);
-            link.href = '#';
-            link.title = 'leaflet-control-rotate-toggle';
-
-
-            L.DomEvent
-            .on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
-            .on(link, 'click', L.DomEvent.stop)
-            .on(link, 'click', this._cycleState, this)
-            .on(link, 'click', this._refocusOnMap, this);
-
-            if (!L.Browser.any3d) {
-                L.DomUtil.addClass(link, 'leaflet-disabled');
-            }
-
-            this._restyle();
-
-            map.on('rotate', this._restyle.bind(this));
-
-            // State flag
-            this._follow = false;
-            this._canFollow = false;
-
-            if (this.options.closeOnZeroBearing && map.getBearing() === 0) {
-                container.style.display = 'none';
-            }
-
-            return container;
-        },
-
-        _cycleState: function(ev) {
-            var map = this._map;
-
-            if (!map) { return; }
-
-            if (!map.touchRotate.enabled() && !map.compassBearing.enabled()) {
-                // Go from disabled to touch
-                map.touchRotate.enable();
-
-                // 				console.log('state is now: touch rotate');
-            } else {
-
-                if (!map.compassBearing.enabled()) {
-                    // Go from touch to compass
-                    map.touchRotate.disable();
-                    map.compassBearing.enable();
-
-                    // 					console.log('state is now: compass');
-
-                    // It is possible that compass is not supported. If so,
-                    // the hangler will automatically go from compass to disabled.
-                } else {
-                    // Go from compass to disabled
-                    map.compassBearing.disable();
-
-                    // 					console.log('state is now: locked');
-
-                    map.setBearing(0);
-                    if (this.options.closeOnZeroBearing) {
-                        map.touchRotate.enable();
-                    }
-                }
-            }
-            this._restyle();
-        },
-
-        _restyle: function() {
-            if (this._map.options.rotate) {
-                var bearing = this._map.getBearing();
-                this._link.style.color = 'inherit';
-                if (this.options.closeOnZeroBearing && bearing) {
-                    this._container.style.display = 'block';
-                }
-
-                var cssTransform = 'rotate(' + bearing + 'deg)';
-                this._glyphs.style.transform = cssTransform;
-
-                if (map.compassBearing.enabled()) {
-                    this._glyphs.style.color = 'orange';
-                } else if (map.touchRotate.enabled()){
-                    this._glyphs.style.color = 'inherit';
-                } else {
-                    this._glyphs.style.color = 'grey';
-                    if (this.options.closeOnZeroBearing && map.getBearing() === 0) {
-                        this._container.style.display = 'none';
-                    }
-                }
-            } else {
-                L.DomUtil.addClass(link, 'leaflet-disabled');
-            }
-        }
-    });
-
-
-
     var osmUrl = 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
     osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
     osm = L.tileLayer(osmUrl, {maxZoom: 17, attribution: osmAttrib, rotate:true, edgeBufferTiles: 2}).setZIndex(-100);
@@ -174,12 +48,7 @@ angular.module('app.main.controllers')
     var map = new L.Map('inprogress', {
         zoom: 15,
         layers: [osm],
-        rotate: true
     }).setView([1.3521, 103.8198], 11);
-
-    //map.touchRotate.enable();
-    map.addControl(bearingControl = new L.Control.Bearing({closeOnZeroBearing: false}));
-    map.compassBearing.enable();
 
     //Adding the GeoTags Layer into Map
     geotags.addTo(map);
@@ -288,16 +157,6 @@ angular.module('app.main.controllers')
         });
 
     }, 3000); //every 3s
-
-    setInterval(function() { //readjust layering
-        if(plannedRoute != null){
-            plannedRoute.bringToFront(); //L.Polyline
-        }
-        if(polyline != null){
-            polyline.bringToFront(); //L.Polyline
-        }
-        currentLoc.bringToFront(); //L.Circle
-    }, 1000);
 
     $scope.$on('timer-tick', function(event, data) {
         $scope.duration = data.millis / 1000.0;
@@ -449,10 +308,3 @@ angular.module('app.main.controllers')
         });
     };
 })
-
-function resetHeading(ev) {
-    console.log(ev);
-    if (ev.heading !== null) {
-        map.setBearing(ev.heading);
-    }
-}
