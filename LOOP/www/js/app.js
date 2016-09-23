@@ -14,6 +14,12 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
         }
     })
 
+.filter('toFixed2', function() {
+    return function(input) {
+        return parseFloat(input).toFixed(2);
+    }
+})
+
 .filter('km', function() {
     return function(input) {
         return (parseFloat(input) / 1000).toFixed(2);

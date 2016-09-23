@@ -42,9 +42,9 @@ angular.module('app.main.controllers')
     });
 
     var data = dataShare.getData();
-    $scope.distance = data.distance;
+    $scope.distance = parseFloat(data.distance).toFixed(2);
     $scope.duration = data.duration;
-    $scope.averageSpeed = data.averageSpeed;
+    $scope.averageSpeed = parseFloat(data.averageSpeed).toFixed(2);
     $scope.calories = data.calories;
 
     var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

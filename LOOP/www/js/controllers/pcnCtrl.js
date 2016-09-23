@@ -15,6 +15,16 @@ angular.module('app.main.controllers')
     var intraTownCyclingPath = response.intraTownCyclingPath;
     var food = response.food;
 
+    function showCoordinates(e) {
+        alert(e.latlng);
+    }
+
+    function submitSuggestion(e) {
+        alert("We will add a marker here! " + e.latlng);
+        // GLOBAL GEOTAG HERE
+        // FOR USER TO SUBMIT SUGGESTIONS
+    }
+
     angular.extend($scope, {
         center: {
             lat: 1.3521,
@@ -35,7 +45,18 @@ angular.module('app.main.controllers')
         },
         defaults: {
             scrollWheelZoom: true,
-            zoomControl: true
+            zoomControl: true,
+            map: {
+                contextmenu: true,
+                contextmenuWidth: 140,
+                contextmenuItems: [{
+                    text: 'Show coordinates',
+                    callback: showCoordinates
+                }, {
+                    text: 'Submit Suggestion',
+                    callback: submitSuggestion
+                }]
+            }
         },
         layers: {
 
@@ -138,7 +159,7 @@ angular.module('app.main.controllers')
         };
 
         leafletData.getMap("pcn").then(function(map) {
-            if(!$scope.loadedGeotaggedComments){
+            if (!$scope.loadedGeotaggedComments) {
                 function onEachFeature(feature, layer) {
                     if (feature.properties && feature.properties.comment) {
                         layer.bindPopup(feature.properties.comment);
@@ -199,7 +220,9 @@ angular.module('app.main.controllers')
                 // geotaggedCommentsButton.button.style.width = '200px';
                 // geotaggedCommentsButton.button.style.height = '100px';
                 // test.addTo(map);
-                L.easyBar([geotaggedCommentsButton],{position: 'topright'}).addTo(map);
+                L.easyBar([geotaggedCommentsButton], {
+                    position: 'topright'
+                }).addTo(map);
                 $scope.loadedGeotaggedComments = true;
             }
             setInterval(function() {

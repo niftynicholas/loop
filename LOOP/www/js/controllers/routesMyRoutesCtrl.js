@@ -8,6 +8,7 @@ angular.module('app.main.controllers')
     }
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
+    console.log($scope.routes);
     //Pre-existing scope variable
     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
     $scope.hasMoreRoutes = true;
