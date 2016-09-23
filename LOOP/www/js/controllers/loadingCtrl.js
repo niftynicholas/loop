@@ -11,26 +11,6 @@ angular.module('app.main.controllers')
         $ionicLoading.hide();
     };
 
-    /*$scope.getHomeData = function() {
-        $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getNParkRoutes",
-            method: 'POST',
-            async: false,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                //token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIsInBlcm1pc3Npb25zIjpbInVzZXIiXSwiaWF0IjoxNDczMDk1NzcxfQ.uSS4fWPI8ssAbekZh5foyPAx-oR-oCnGhstOAAIcWVU'
-            }
-        }).then(function successCallback(response) {
-                homeData.sendData(response.data.data);
-                console.log("Data for Home Tab has been loaded.");
-            },
-            function errorCallback(response) {
-
-            })
-    }*/
-
     //Removal of token
     $scope.getMapData = function() {
         $http({
