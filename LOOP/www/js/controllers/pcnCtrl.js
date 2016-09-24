@@ -3,14 +3,14 @@ angular.module('app.main.controllers')
 .controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData, $cordovaGeolocation) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
-    $scope.loadedGeotaggedComments = false;
+    $scope.dataLoaded = false;
     var response = mapData.getData();
     var geotaggedComments = response.geotaggedComments;
     var shelters = response.shelter;
     var toilets = response.toilets;
-    var bicycle_rental = response.bicycleRental;
-    var bicycle_parking = response.bicycleParking;
-    var drinking_water = response.drinkingWater;
+    var bicycleRental = response.bicycleRental;
+    var bicycleParking = response.bicycleParking;
+    var drinkingWater = response.drinkingWater;
     var pcn = response.pcn;
     var intraTownCyclingPath = response.intraTownCyclingPath;
     var food = response.food;
@@ -57,9 +57,6 @@ angular.module('app.main.controllers')
                     callback: submitSuggestion
                 }]
             }
-        },
-        layers: {
-
         }
     });
 
@@ -75,155 +72,315 @@ angular.module('app.main.controllers')
     });
 
     $scope.$on("$ionicView.afterEnter", function() {
-        $scope.layers = {
-            overlays: {
-                pcn: {
-                    name: 'Park Connector Network',
-                    type: 'geoJSONAwesomeMarker',
-                    data: pcn,
-                    visible: false,
-                },
-                intraTownCyclingPath: {
-                    name: 'Intra-Town Cycling Paths',
-                    type: 'geoJSONAwesomeMarker',
-                    data: intraTownCyclingPath,
-                    visible: false
-                },
-                toilets: {
-                    name: 'Toilets',
-                    type: 'geoJSONAwesomeMarker',
-                    data: toilets,
-                    visible: false,
-                    icon: {
-                        icon: 'male',
-                        markerColor: 'black',
-                        prefix: 'fa'
-                    }
-                },
-                food: {
-                    name: 'F&B',
-                    type: 'geoJSONAwesomeMarker',
-                    data: food,
-                    visible: false,
-                    icon: {
-                        icon: 'cutlery',
-                        markerColor: 'red',
-                        prefix: 'fa'
-                    }
-                },
-                shelters: {
-                    name: 'Shelters',
-                    type: 'geoJSONAwesomeMarker',
-                    data: shelters,
-                    visible: false,
-                    icon: {
-                        icon: 'umbrella',
-                        markerColor: 'orange',
-                        prefix: 'fa'
-                    }
-                },
-                drinking_water: {
-                    name: 'Drinking Water Points',
-                    type: 'geoJSONAwesomeMarker',
-                    data: drinking_water,
-                    visible: false,
-                    icon: {
-                        icon: 'tint',
-                        markerColor: 'blue',
-                        prefix: 'fa'
-                    }
-                },
-                bicycle_parking: {
-                    name: 'Bicycle Parking Lots',
-                    type: 'geoJSONAwesomeMarker',
-                    data: bicycle_parking,
-                    visible: false,
-                    icon: {
-                        icon: 'bicycle',
-                        markerColor: 'gray',
-                        prefix: 'fa'
-                    }
-                },
-                bicycle_rental: {
-                    name: 'Bicycle Rentals',
-                    type: 'geoJSONAwesomeMarker',
-                    data: bicycle_rental,
-                    visible: false,
-                    icon: {
-                        icon: 'key',
-                        markerColor: 'green',
-                        prefix: 'fa'
-                    }
-                }
-            }
-        };
 
         leafletData.getMap("pcn").then(function(map) {
-            if (!$scope.loadedGeotaggedComments) {
+            if (!$scope.dataLoaded) {
                 function onEachFeature(feature, layer) {
                     if (feature.properties && feature.properties.comment) {
                         layer.bindPopup(feature.properties.comment);
                     }
                 }
-                var geoJsonLayer = L.geoJson(geotaggedComments, {
+                var geotaggedLayer = L.geoJson(geotaggedComments, {
+                    pointToLayer: function(feature, latlng) {
+                        var smallIcon = L.AwesomeMarkers.icon({
+                            icon: 'commenting',
+                            markerColor: 'cadetblue',
+                            prefix: 'fa'
+                        });
+                        return L.marker(latlng, {icon: smallIcon});
+                    },
                     onEachFeature: onEachFeature
                 });
 
-                var geotaggedCommentsButton = L.easyButton({
+                var geotaggedCommentsBtn = L.easyButton({
                     id: 'animated-marker-toggle',
                     position: 'topright',
                     type: 'replace',
                     states: [{
                         stateName: 'add-geotagged-comments',
-                        icon: 'fa-map-marker',
+                        icon: 'fa-commenting',
                         title: 'Add Geotagged Comments',
                         onClick: function(control) {
-                            map.addLayer(geoJsonLayer);
+                            map.addLayer(geotaggedLayer);
                             control.state('remove-geotagged-comments');
                         }
                     }, {
                         stateName: 'remove-geotagged-comments',
                         title: 'Remove Geotagged Comments',
-                        icon: 'fa-undo',
+                        icon: 'fa-times-circle',
                         onClick: function(control) {
-                            map.removeLayer(geoJsonLayer);
+                            map.removeLayer(geotaggedLayer);
                             control.state('add-geotagged-comments');
                         }
                     }]
                 });
-                // geotaggedCommentsButton.button.style.width = '200px';
-                // geotaggedCommentsButton.button.style.height = '100px';
-                // geotaggedCommentsButton.addTo(map);
 
-                // var test = L.easyButton({
-                //     id: 'animated-marker-toggle',
-                //     position: 'topright',
-                //     type: 'replace',
-                //     states: [{
-                //         stateName: 'add-geotagged-comments',
-                //         icon: 'fa-map-marker',
-                //         title: 'Add Geotagged Comments',
-                //         onClick: function(control) {
-                //             map.addLayer(geoJsonLayer);
-                //             control.state('remove-geotagged-comments');
-                //         }
-                //     }, {
-                //         stateName: 'remove-geotagged-comments',
-                //         title: 'Remove Geotagged Comments',
-                //         icon: 'fa-undo',
-                //         onClick: function(control) {
-                //             map.removeLayer(geoJsonLayer);
-                //             control.state('add-geotagged-comments');
-                //         }
-                //     }]
-                // });
-                // geotaggedCommentsButton.button.style.width = '200px';
-                // geotaggedCommentsButton.button.style.height = '100px';
-                // test.addTo(map);
-                L.easyBar([geotaggedCommentsButton], {
-                    position: 'topright'
-                }).addTo(map);
-                $scope.loadedGeotaggedComments = true;
+                var pcnLayer = L.geoJson(pcn);
+                var pcnBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'topright',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-pcn',
+                        icon: 'fa-road',
+                        title: 'Add PCN Layer',
+                        onClick: function(control) {
+                            map.addLayer(pcnLayer);
+                            control.state('remove-pcn');
+                        }
+                    }, {
+                        stateName: 'remove-pcn',
+                        title: 'Remove PCN Layer',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeLayer(pcnLayer);
+                            control.state('add-pcn');
+                        }
+                    }]
+                });
+
+                var intraTownCyclingPathLayer = L.geoJson(intraTownCyclingPath);
+                var intraTownCyclingPathBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'topright',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-intra-town-cycling',
+                        icon: 'fa-bicycle',
+                        title: 'Add IntraTown Cycling Path Layer',
+                        onClick: function(control) {
+                            map.addLayer(intraTownCyclingPathLayer);
+                            control.state('remove-intra-town-cycling');
+                        }
+                    }, {
+                        stateName: 'remove-intra-town-cycling',
+                        title: 'Remove IntraTown Cycling Path Layer',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeLayer(intraTownCyclingPathLayer);
+                            control.state('add-intra-town-cycling');
+                        }
+                    }]
+                });
+
+                var toiletsLayer = L.geoJson(toilets, {
+                    pointToLayer: function(feature, latlng) {
+                        var smallIcon = L.AwesomeMarkers.icon({
+                            icon: 'male',
+                            markerColor: 'black',
+                            prefix: 'fa'
+                        });
+                        return L.marker(latlng, {icon: smallIcon});
+                    },
+                    onEachFeature: onEachFeature
+                });
+                var toiletsBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'topright',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-toilets',
+                        icon: 'fa-male',
+                        title: 'Add Toilet Layer',
+                        onClick: function(control) {
+                            map.addLayer(toiletsLayer);
+                            control.state('remove-toilets');
+                        }
+                    }, {
+                        stateName: 'remove-toilets',
+                        title: 'Remove Toilet Layer',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeLayer(toiletsLayer);
+                            control.state('add-toilets');
+                        }
+                    }]
+                });
+
+                var foodLayer = L.geoJson(food, {
+                    pointToLayer: function(feature, latlng) {
+                        var smallIcon = L.AwesomeMarkers.icon({
+                            icon: 'cutlery',
+                            markerColor: 'red',
+                            prefix: 'fa'
+                        });
+                        return L.marker(latlng, {icon: smallIcon});
+                    },
+                    onEachFeature: onEachFeature
+                });
+                var foodBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'topright',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-food',
+                        icon: 'fa-cutlery',
+                        title: 'Add Food Layer',
+                        onClick: function(control) {
+                            map.addLayer(foodLayer);
+                            control.state('remove-food');
+                        }
+                    }, {
+                        stateName: 'remove-food',
+                        title: 'Remove Food Layer',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeLayer(foodLayer);
+                            control.state('add-food');
+                        }
+                    }]
+                });
+
+                var sheltersLayer = L.geoJson(shelters, {
+                    pointToLayer: function(feature, latlng) {
+                        var smallIcon = L.AwesomeMarkers.icon({
+                            icon: 'umbrella',
+                            markerColor: 'orange',
+                            prefix: 'fa'
+                        });
+                        return L.marker(latlng, {icon: smallIcon});
+                    },
+                    onEachFeature: onEachFeature
+                });
+                var sheltersBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'topright',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-shelters',
+                        icon: 'fa-umbrella',
+                        title: 'Add Shelter Layer',
+                        onClick: function(control) {
+                            map.addLayer(sheltersLayer);
+                            control.state('remove-shelters');
+                        }
+                    }, {
+                        stateName: 'remove-shelters',
+                        title: 'Remove Shelter Layer',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeLayer(sheltersLayer);
+                            control.state('add-shelters');
+                        }
+                    }]
+                });
+
+                var drinkingWaterLayer = L.geoJson(drinkingWater, {
+                    pointToLayer: function(feature, latlng) {
+                        var smallIcon = L.AwesomeMarkers.icon({
+                            icon: 'tint',
+                            markerColor: 'blue',
+                            prefix: 'fa'
+                        });
+                        return L.marker(latlng, {icon: smallIcon});
+                    },
+                    onEachFeature: onEachFeature
+                });
+                var drinkingWaterBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'topright',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-drinking-water',
+                        icon: 'fa-tint',
+                        title: 'Add Drinking Water Layer',
+                        onClick: function(control) {
+                            map.addLayer(drinkingWaterLayer);
+                            control.state('remove-drinking-water');
+                        }
+                    }, {
+                        stateName: 'remove-drinking-water',
+                        title: 'Remove Drinking Water Layer',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeLayer(drinkingWaterLayer);
+                            control.state('add-drinking-water');
+                        }
+                    }]
+                });
+
+                var bicycleParkingLayer = L.geoJson(bicycleParking, {
+                    pointToLayer: function(feature, latlng) {
+                        var smallIcon = L.AwesomeMarkers.icon({
+                            icon: 'lock',
+                            markerColor: 'gray',
+                            prefix: 'fa'
+                        });
+                        return L.marker(latlng, {icon: smallIcon});
+                    },
+                    onEachFeature: onEachFeature
+                });
+                var bicycleParkingBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'topright',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-bicycle-parking',
+                        icon: 'fa-lock',
+                        title: 'Add Bicyle Parking Layer',
+                        onClick: function(control) {
+                            map.addLayer(bicycleParkingLayer);
+                            control.state('remove-bicycle-parking');
+                        }
+                    }, {
+                        stateName: 'remove-bicycle-parking',
+                        title: 'Remove Bicycle Parking Layer',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeLayer(bicycleParkingLayer);
+                            control.state('add-bicycle-parking');
+                        }
+                    }]
+                });
+
+                var bicycleRentalLayer = L.geoJson(bicycleRental, {
+                    pointToLayer: function(feature, latlng) {
+                        var smallIcon = L.AwesomeMarkers.icon({
+                            icon: 'key',
+                            markerColor: 'green',
+                            prefix: 'fa'
+                        });
+                        return L.marker(latlng, {icon: smallIcon});
+                    },
+                    onEachFeature: onEachFeature
+                });
+                var bicycleRentalBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'topright',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-bicycle-rental',
+                        icon: 'fa-key',
+                        title: 'Add Bicycle Rental',
+                        onClick: function(control) {
+                            map.addLayer(bicycleRentalLayer);
+                            control.state('remove-bicycle-rental');
+                        }
+                    }, {
+                        stateName: 'remove-bicycle-rental',
+                        title: 'Remove Bicycle Rental',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeLayer(bicycleRentalLayer);
+                            control.state('add-bicycle-rental');
+                        }
+                    }]
+                });
+
+                // L.easyBar([geotaggedCommentsBtn, pcnBtn, intraTownCyclingPathBtn, toiletsBtn, foodBtn, sheltersBtn, drinkingWaterBtn, bicycleParkingBtn, bicycleRentalBtn], {
+                //     position: 'topright'
+                // }).addTo(map);
+                geotaggedCommentsBtn.addTo(map);
+                pcnBtn.addTo(map);
+                intraTownCyclingPathBtn.addTo(map);
+                toiletsBtn.addTo(map);
+                foodBtn.addTo(map);
+                sheltersBtn.addTo(map);
+                drinkingWaterBtn.addTo(map);
+                bicycleParkingBtn.addTo(map);
+                bicycleRentalBtn.addTo(map);
+
+                $scope.dataLoaded = true;
             }
             setInterval(function() {
                 map.invalidateSize();
