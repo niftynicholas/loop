@@ -44,7 +44,7 @@ angular.module('app.main.controllers')
     $scope.verify = function() {
         $scope.show();
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/verify",
+            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/verify2",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ angular.module('app.main.controllers')
             }
         }).then(function successCallback(response) {
             $scope.hide();
-            $scope.success();
+            $scope.success(response);
         }, function errorCallback(response) {
             $scope.hide();
             $scope.fail();
@@ -62,14 +62,35 @@ angular.module('app.main.controllers')
     };
 
     // Verification Success
-    $scope.success = function() {
+    $scope.success = function(response) {
         var alertPopup = $ionicPopup.alert({
             title: 'Verification Success',
-            template: 'You have successfully verified your account. You may proceed to login.'
+            template: 'You have successfully verified your account. We will log you in now.'
         });
 
         alertPopup.then(function(res) {
-            $state.go("login");
+            $ionicLoading.show({
+                template: '<p>Logging In...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+            });
+            localStorage.setItem("login_state", "true");
+            localStorage.setItem("token", response.data.user.token);
+            localStorage.setItem("dateOfBirth", response.data.user.dateOfBirth);
+            localStorage.setItem("email", response.data.user.email);
+            localStorage.setItem("height", response.data.user.height);
+            localStorage.setItem("name", response.data.user.name);
+            localStorage.setItem("username", response.data.user.username);
+            localStorage.setItem("weight", response.data.user.weight);
+            localStorage.setItem("gender", response.data.user.gender);
+            localStorage.setItem("uid", response.data.user.uid);
+            localStorage.setItem("numActivities", response.data.user.numActivities);
+            localStorage.setItem("totalCalories", response.data.user.totalCalories);
+            localStorage.setItem("avgCalories", response.data.user.avgCalories);
+            localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+            localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+            localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+            localStorage.setItem("profilePictures", JSON.stringify(response.data.profilePictures));
+            $scope.hide();
+            $state.go('tabsController.home');
         });
     };
 
