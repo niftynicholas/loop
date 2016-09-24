@@ -42,8 +42,13 @@ angular.module('app.main.controllers')
     });
 
     var osmUrl = 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
-    osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
-    osm = L.tileLayer(osmUrl, {maxZoom: 17, attribution: osmAttrib, rotate:true, edgeBufferTiles: 2}).setZIndex(-100);
+        osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+        osm = L.tileLayer(osmUrl, {
+            maxZoom: 17,
+            attribution: osmAttrib,
+            rotate: true,
+            edgeBufferTiles: 2
+        }).setZIndex(-100);
 
     var map = new L.Map('inprogress', {
         zoom: 15,
@@ -63,24 +68,32 @@ angular.module('app.main.controllers')
 
     //***************************** ON MAP CREATION ****************************************
     var plannedRoute = null;
-    if(sharedRoute.hasPlanned){
-        var sourceMarker1 = L.marker(sharedRoute.sourceMarker.startLatLng, {
-        }).bindPopup(sharedRoute.sourceMarker.startPointName, {closeOnClick: false,autoPan: false}); //.openPopup()
+    if (sharedRoute.hasPlanned) {
+        var sourceMarker1 = L.marker(sharedRoute.sourceMarker.startLatLng, {}).bindPopup(sharedRoute.sourceMarker.startPointName, {
+            closeOnClick: false,
+            autoPan: false
+        }); //.openPopup()
 
         var targetMarker1 = L.marker(sharedRoute.targetMarker.endLatLng, {
             icon: sharedRoute.targetMarker.redIcon
-        }).bindPopup(sharedRoute.targetMarker.endPointName, {closeOnClick: false,autoPan: false}); //.openPopup()
+        }).bindPopup(sharedRoute.targetMarker.endPointName, {
+            closeOnClick: false,
+            autoPan: false
+        }); //.openPopup()
 
         L.layerGroup([sourceMarker1, targetMarker1]).addTo(map);
         sourceMarker1.openPopup();
         targetMarker1.openPopup();
         //var polyline = new L.Polyline(sharedRoute.routepoints, { color: 'green', weight: 8,  dashArray: '10,10' });
-        plannedRoute = new L.Polyline(sharedRoute.routepoints, { color: '#09493E', weight: 5});
+        plannedRoute = new L.Polyline(sharedRoute.routepoints, {
+            color: '#09493E',
+            weight: 5
+        });
         map.addLayer(plannedRoute);
     }
 
-    if(viewSharedRoute.hasPlanned){
-        plannedRoute = L.geoJson(viewSharedRoute.routeLayer,{
+    if (viewSharedRoute.hasPlanned) {
+        plannedRoute = L.geoJson(viewSharedRoute.routeLayer, {
             style: {
                 "color": "#09493E",
                 "weight": 5,
@@ -116,7 +129,10 @@ angular.module('app.main.controllers')
     var setWatch = true;
     setInterval(function() {
 
-        $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+        $cordovaGeolocation.getCurrentPosition({
+            timeout: 3000,
+            enableHighAccuracy: true
+        }).then(function(position) {
             //console.log("lat: " + position.coords.latitude + "lng: " + position.coords.longitude);
             $scope.currentLoc = new L.LatLng(position.coords.latitude, position.coords.longitude);
             if (setWatch) {
@@ -135,14 +151,17 @@ angular.module('app.main.controllers')
                 var latestCoord = $scope.coordsinfo[$scope.coordsinfo.length - 1];
                 var secondLatestCoord = $scope.coordsinfo[$scope.coordsinfo.length - 2];
                 var curSpd = geolib.getSpeed(secondLatestCoord, latestCoord);
-                if(!isNaN(curSpd)){
+                if (!isNaN(curSpd)) {
                     $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
                 }
 
                 if (polyline != null) {
                     map.removeLayer(polyline);
                 }
-                polyline = new L.Polyline(latlngs, { color: '#1ABC9C', weight: 8 }).bringToFront();
+                polyline = new L.Polyline(latlngs, {
+                    color: '#1ABC9C',
+                    weight: 8
+                }).bringToFront();
                 map.addLayer(polyline);
                 currentLoc.bringToFront();
 
@@ -160,7 +179,7 @@ angular.module('app.main.controllers')
 
     $scope.$on('timer-tick', function(event, data) {
         $scope.duration = data.millis / 1000.0;
-        if($scope.distance != 0){
+        if ($scope.distance != 0) {
             var avgSpd = $scope.distance / ($scope.duration / 3600.0);
             $scope.averageSpeed = (Math.round(avgSpd * 100) / 100);
         }
@@ -182,23 +201,29 @@ angular.module('app.main.controllers')
         */
     });
 
-    $scope.$on('timer-stopped', function (event, data){
+    $scope.$on('timer-stopped', function(event, data) {
         $scope.duration = data.millis / 1000.0;
-        $scope.durationInSeconds = data.millis/1000.0;
+        $scope.durationInSeconds = data.millis / 1000.0;
     });
 
-    map.on("dragend", function () {
+    map.on("dragend", function() {
         if (setWatch) {
             setWatch = false;
         }
     });
 
-    $scope.locateMe = function () {
-        if($scope.currentLoc != null){
+    $scope.locateMe = function() {
+        if ($scope.currentLoc != null) {
             map.setView($scope.currentLoc, 18);
-        }else{
-            $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
-                map.setView({lat: position.coords.latitude, lng: position.coords.longitude});
+        } else {
+            $cordovaGeolocation.getCurrentPosition({
+                timeout: 3000,
+                enableHighAccuracy: true
+            }).then(function(position) {
+                map.setView({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
             }, function(err) {
                 console.log("Location not found");
             });
@@ -239,12 +264,12 @@ angular.module('app.main.controllers')
     };
 
     $scope.geotag = function() {
-        $scope.data = {};
+        $scope.data = { cat: "Others" };
         // An elaborate, custom popup
         var myPopup = $ionicPopup.show({
-            template: '<input type="text" ng-model="data.geotag">',
-            title: "What's going on here?",
-            subTitle: 'Share it with other users.',
+            template: '<div class="list"><label class="item item-input item-select"><div class="input-label">Category</div><select ng-model="data.cat"><option value="Construction">Construction</option><option value="Overgrown Tree Roots">Overgrown Tree Roots</option><option value="Path Obstruction">Path Obstruction</option><option value="Potholes">Potholes</option><option value="Suggestion">Suggestion</option><option value="Others">Others</option></select></label></div><input type="text" placeholder="Comments" ng-model="data.comment">',
+            title: "Any Comment or Suggestion?",
+            subTitle: 'Share it with other cyclists.',
             scope: $scope,
             buttons: [{
                 text: 'Cancel'
@@ -252,31 +277,36 @@ angular.module('app.main.controllers')
                 text: '<b>Save</b>',
                 type: 'button-positive',
                 onTap: function(e) {
-                    if($scope.data.geotag) return $scope.data.geotag;
-                    else $scope.data.geotag = "";
+                    $scope.data.geotag = 'Category: ' + $scope.data.cat + ', Comment: ' + $scope.data.comment;
+                    if ($scope.data.comment) return $scope.data.geotag;
+                    else $scope.data.comment = "";
                 }
             }]
         });
 
         myPopup.then(function(res) {
-            if($scope.data.geotag == ""){
-                console.log("You have entered an empty comment");
-            }
-            else if(typeof res === "undefined"){
-                console.log("You have cancelled Geotag");
-            }else{
-                if($scope.currentLoc != null){
+            if ($scope.data.comment == "") {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Opps!',
+                    template: 'We do not accept blank submissions.'
+                });
+
+                alertPopup.then(function(res) {
+
+                });
+            } else if (typeof res === "undefined") {
+
+            } else {
+                if ($scope.currentLoc != null) {
                     L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
-                    geotagsInfo.push(
-                        {
-                            dateTimeStamp: new Date().getTime(),
-                            coordinates: $scope.currentLoc,
-                            comment: res
-                        }
-                    );
+                    geotagsInfo.push({
+                        dateTimeStamp: new Date().getTime(),
+                        coordinates: $scope.currentLoc,
+                        comment: res
+                    });
                     console.log('Succesfully added');
-                }else{
-                     alert("Current Location cannot be Found");
+                } else {
+                    alert("Current Location cannot be Found");
                 }
             }
         });
