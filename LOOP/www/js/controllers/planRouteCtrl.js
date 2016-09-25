@@ -50,6 +50,7 @@ angular.module('app.main.controllers')
         var input = $('#startPoint').val();
         //To add Home / Office for Advanced Navigation Module
         if(input.length == 0){
+            $('#startResult').html("");
             if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
                 $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
             }else{
