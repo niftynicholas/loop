@@ -381,6 +381,45 @@ angular.module('app.main.controllers')
                 bicycleRentalBtn.addTo(map);
 
                 $scope.dataLoaded = true;
+            }else{
+                //Need to call API to get all geotaggedComments
+                //geotaggedComments = API CALL;
+                map.removeLayer(geotaggedCommentsBtn);
+                var geotaggedLayer = L.geoJson(geotaggedComments, {
+                    pointToLayer: function(feature, latlng) {
+                        var smallIcon = L.AwesomeMarkers.icon({
+                            icon: 'commenting',
+                            markerColor: 'cadetblue',
+                            prefix: 'fa'
+                        });
+                        return L.marker(latlng, {icon: smallIcon});
+                    },
+                    onEachFeature: onEachFeature
+                });
+
+                var geotaggedCommentsBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'topright',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'add-geotagged-comments',
+                        icon: 'fa-commenting',
+                        title: 'Add Geotagged Comments',
+                        onClick: function(control) {
+                            map.addLayer(geotaggedLayer);
+                            control.state('remove-geotagged-comments');
+                        }
+                    }, {
+                        stateName: 'remove-geotagged-comments',
+                        title: 'Remove Geotagged Comments',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeLayer(geotaggedLayer);
+                            control.state('add-geotagged-comments');
+                        }
+                    }]
+                });
+                geotaggedCommentsBtn.addTo(map);
             }
             setInterval(function() {
                 map.invalidateSize();

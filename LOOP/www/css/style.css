@@ -71,7 +71,9 @@
     border-bottom: 3px solid #1abc9c;
 }
 
-.leaflet-bar.leaflet-control-rotate {}
+.leaflet-bar.leaflet-control-rotate {
+
+}
 
 .leaflet-control-rotate .leaflet-control-rotate-glyphs {
     position: absolute;
@@ -106,23 +108,23 @@
 
 .state-remove-markers,
 .state-add-markers{
-  transition-duration: .5s;
-  transform: scaleY(0);
-  position: absolute;
-  display: block;
-  top: 0;
-  width: 100%;}
+transition-duration: .5s;
+transform: scaleY(0);
+position: absolute;
+display: block;
+top: 0;
+width: 100%;}
 
 .state-remove-markers{
-  transform-origin: 50% 0; }
+transform-origin: 50% 0; }
 .state-add-markers{
-  transform-origin: 50% 100%; }
+transform-origin: 50% 100%; }
 
 .state-remove-markers.remove-markers-active{
-  transform: scaleY(1); }
+transform: scaleY(1); }
 
 .state-add-markers.add-markers-active{
-  transform: scaleY(1); }*/
+transform: scaleY(1); }*/
 
 .login-container {
     display: -webkit-flex;

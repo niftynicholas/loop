@@ -5344,7 +5344,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
  * --------------------------------------------------
  * Popovers are independent views which float over content
  */
-.popover-backdrop {
+/*.popover-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -5367,7 +5367,8 @@ ion-tabs.tabs-color-active-dark .tab-item {
   width: 220px;
   background-color: #F7F9F9;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  opacity: 0; }
+  opacity: 0;
+}
   .popover .item:first-child {
     border-top: 0; }
   .popover .item:last-child {
@@ -5463,7 +5464,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
 @media (min-width: 680px) {
   .popover {
     width: 360px;
-    margin-left: -180px; } }
+    margin-left: -180px; } }*/
 
 /**
  * Popups

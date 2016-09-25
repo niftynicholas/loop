@@ -13,11 +13,12 @@ angular.module('app.main.controllers')
     $scope.weight = 60.0; //To be retrieve from database
     $scope.coordsinfo = []; //stores coordinates information e.g. {lat: xxx, lng: xxx, time: xxx}
     $scope.currentLoc = null;
+    var currentPath = [];
     var latlngs = [];
     var polyline = null;
     var data;
-    var geotags = L.layerGroup();
     var geotagsInfo = [];
+    var plannedMarkerLayer = null;
 
     $scope.options = {
         loop: false,
@@ -41,68 +42,222 @@ angular.module('app.main.controllers')
         $scope.previousIndex = data.previousIndex;
     });
 
-    var osmUrl = 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
-        osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
-        osm = L.tileLayer(osmUrl, {
-            maxZoom: 17,
-            attribution: osmAttrib,
-            rotate: true,
-            edgeBufferTiles: 2
-        }).setZIndex(-100);
+    var view = new ol.View({
+        projection: 'EPSG:4326',
+        center: [103.8198, 1.3521],
+        // center: ol.proj.transform([103.8198, 1.3521], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 11
+    });
 
-    var map = new L.Map('inprogress', {
-        zoom: 15,
-        layers: [osm],
-    }).setView([1.3521, 103.8198], 11);
-
-    //Adding the GeoTags Layer into Map
-    geotags.addTo(map);
-
-    var currentLoc = L.circleMarker([0, 0], {
-        fillColor: '#4183D7', //DarkSlateGray
-        opacity: 80,
-        fillOpacity: 0.9,
-        stroke: false,
-        clickable: false,
-    }).addTo(map).bringToFront();
+    var map = new ol.Map({
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM({
+                    attributions: [
+                        new ol.Attribution({
+                            html: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                        }),
+                    ],
+                    "url": "http://tile2.opencyclemap.org/cycle/{z}/{x}/{y}.png"
+                })
+            })
+        ],
+        target: 'inprogress',
+        controls: ol.control.defaults({
+            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+                collapsible: false
+            })
+        }),
+        interactions:  ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:true, dragPan:true}),
+        view: view
+    });
 
     //***************************** ON MAP CREATION ****************************************
-    var plannedRoute = null;
-    if (sharedRoute.hasPlanned) {
-        var sourceMarker1 = L.marker(sharedRoute.sourceMarker.startLatLng, {}).bindPopup(sharedRoute.sourceMarker.startPointName, {
-            closeOnClick: false,
-            autoPan: false
-        }); //.openPopup()
+    if(sharedRoute.hasPlanned){
 
-        var targetMarker1 = L.marker(sharedRoute.targetMarker.endLatLng, {
-            icon: sharedRoute.targetMarker.redIcon
-        }).bindPopup(sharedRoute.targetMarker.endPointName, {
-            closeOnClick: false,
-            autoPan: false
-        }); //.openPopup()
-
-        L.layerGroup([sourceMarker1, targetMarker1]).addTo(map);
-        sourceMarker1.openPopup();
-        targetMarker1.openPopup();
-        //var polyline = new L.Polyline(sharedRoute.routepoints, { color: 'green', weight: 8,  dashArray: '10,10' });
-        plannedRoute = new L.Polyline(sharedRoute.routepoints, {
-            color: '#09493E',
-            weight: 5
+        var iconFeature = new ol.Feature({
+            geometry: new ol.geom.Point([sharedRoute.sourceMarker.startLatLng[1], sharedRoute.sourceMarker.startLatLng[0]]),
+            name: sharedRoute.sourceMarker.startPointName,
+            type: 'Start'
         });
-        map.addLayer(plannedRoute);
+
+        var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+                anchor: [0.5, 46],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'pixels',
+                opacity: 1,
+                src: 'lib/leaflet/images/marker-icon.png',
+                rotateWithView: "true"
+            }))
+        });
+        iconFeature.setStyle(iconStyle);
+
+        var iconFeature2 = new ol.Feature({
+            geometry: new ol.geom.Point([sharedRoute.targetMarker.endLatLng[1], sharedRoute.targetMarker.endLatLng[0]]),
+            name: sharedRoute.targetMarker.endPointName,
+            type: 'End'
+        });
+
+        var iconStyle2 = new ol.style.Style({
+            image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+                anchor: [0.5, 46],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'pixels',
+                opacity: 1,
+                src: 'lib/leaflet-route360/marker-icon-red.png',
+                rotateWithView: "true"
+            }))
+        });
+        iconFeature2.setStyle(iconStyle2);
+
+        var plannedCoords = [];
+        for(var i=0;i<sharedRoute.routepoints.length;i++){
+            var temp = [sharedRoute.routepoints[i].lng, sharedRoute.routepoints[i].lat];
+            plannedCoords.push(temp);
+        }
+        var plannedRoute = new ol.Feature({
+            geometry: new ol.geom.LineString(plannedCoords),
+            name: 'Path'
+        });
+        plannedRoute.setStyle(new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                width: 5,
+                color: '#09493E',
+                rotateWithView: "true"
+            })
+        }));
+
+        var Features = [];
+        var plannedMarker = [];
+        plannedMarker.push(iconFeature);
+        plannedMarker.push(iconFeature2);
+        Features.push(plannedRoute);
+
+        var vectorSource = new ol.source.Vector({
+            features: Features
+        });
+
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
+        map.addLayer(vectorLayer);
+
+        var plannedMarkerSource = new ol.source.Vector({
+            features: plannedMarker
+        });
+
+        plannedMarkerLayer = new ol.layer.Vector({
+            source: plannedMarkerSource
+        });
+        map.addLayer(plannedMarkerLayer);
+
+        var element = document.getElementById("popup");
+
+        var popup = new ol.Overlay({
+            element: element,
+            positioning: 'bottom-center',
+            stopEvent: false
+        });
+        map.addOverlay(popup);
+
+        var element1 = document.getElementById('popup1');
+
+        var popup1 = new ol.Overlay({
+            element: element1,
+            positioning: 'bottom-center',
+            stopEvent: false
+        });
+        map.addOverlay(popup1);
+
+        sharedRoute.clearData();
     }
 
-    if (viewSharedRoute.hasPlanned) {
-        plannedRoute = L.geoJson(viewSharedRoute.routeLayer, {
-            style: {
-                "color": "#09493E",
-                "weight": 5,
-                "opacity": 1
-            }
+    if(viewSharedRoute.hasPlanned){
+
+        var sharedRoute = new ol.Feature({
+            geometry: new ol.geom.LineString(viewSharedRoute.routeLayer.coordinates),
+            name: 'Path'
         });
-        map.addLayer(plannedRoute);
-        viewSharedRoute.routeLayer = null;
+        sharedRoute.setStyle(new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                width: 5,
+                color: '#09493E',
+                rotateWithView: "true"
+            })
+        }));
+        var vectorSource = new ol.source.Vector({
+            features: [sharedRoute]  // add an array of features
+        });
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource  // add source for vectorLayer
+        });
+        map.addLayer(vectorLayer)  // add vectorLayer to map
+        viewSharedRoute.clearData();
     }
+
+    //Current Location & Path Layer
+    var currentLoc = new ol.Feature({
+        geometry: new ol.geom.Point([0, 0]),
+        name: 'Point Two'
+    });
+    currentLoc.setStyle(new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 10,
+            fill: new ol.style.Fill({
+                color: '#4183D7'
+            }),
+            // stroke: new ol.style.Stroke({
+            //     color: '#fff',
+            //     width: 2
+            // }),
+            rotateWithView: "true"
+        })
+    }));
+
+    var path = new ol.Feature({
+        geometry: new ol.geom.LineString([[0, 0],[0, 0]]),
+        name: 'Path'
+    });
+    path.setStyle(new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            width: 8,
+            color: '#1ABC9C',
+            rotateWithView: "true"
+        })
+    }));
+    var Features = [];
+
+    Features.push(path);
+    Features.push(currentLoc);
+
+    var vectorSource = new ol.source.Vector({
+        features: Features  // add an array of features
+    });
+    var vectorLayer = new ol.layer.Vector({
+        source: vectorSource  // add source for vectorLayer
+    });
+
+    map.addLayer(vectorLayer)  // add vectorLayer to map
+
+    //Adding the GeoTags Layer into Map
+    var geotagSource = new ol.source.Vector({
+        features: Features
+    });
+
+    var geotagLayer = new ol.layer.Vector({
+        source: geotagSource
+    });
+    map.addLayer(geotagLayer);
+
+    var geotag = document.getElementById('geotag');
+
+    var geotagPopupLayer = new ol.Overlay({
+        element: geotag,
+        positioning: 'bottom-center',
+        stopEvent: false
+    });
+    map.addOverlay(geotagPopupLayer);
 
     $scope.$broadcast('timer-start');
     $scope.timerRunning = true;
@@ -112,10 +267,12 @@ angular.module('app.main.controllers')
     if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
         //Pass currentLocation from cycle.html
         var data = dataShare.getData();
-        $scope.currentLoc = new L.LatLng(data.currentLocation.lat, data.currentLocation.lng);
-        map.setView($scope.currentLoc, 18);
-        currentLoc.setLatLng($scope.currentLoc);
-        latlngs.push($scope.currentLoc);
+        $scope.currentLoc = [data.currentLocation.lng, data.currentLocation.lat]; //GeoJson Format, EPSG:4326
+        view.setCenter($scope.currentLoc);
+        view.setZoom(18);
+        currentLoc.setGeometry(new ol.geom.Point($scope.currentLoc));
+        currentPath.push($scope.currentLoc);
+        latlngs.push([data.currentLocation.lat, data.currentLocation.lng]);
         $scope.coordsinfo.push({ //storing each coordinate information
             lat: data.currentLocation.lat,
             lng: data.currentLocation.lng,
@@ -127,19 +284,18 @@ angular.module('app.main.controllers')
     dataShare.clearData();
     //***************************** ON WATCH ****************************************
     var setWatch = true;
-    setInterval(function() {
+    var watch = setInterval(function() {
 
-        $cordovaGeolocation.getCurrentPosition({
-            timeout: 3000,
-            enableHighAccuracy: true
-        }).then(function(position) {
+        $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
             //console.log("lat: " + position.coords.latitude + "lng: " + position.coords.longitude);
-            $scope.currentLoc = new L.LatLng(position.coords.latitude, position.coords.longitude);
+            $scope.currentLoc = [position.coords.longitude, position.coords.latitude]; //GeoJson Format, EPSG:4326
+            currentLoc.setGeometry(new ol.geom.Point($scope.currentLoc));
             if (setWatch) {
-                map.setView($scope.currentLoc, 18);
+                view.setCenter($scope.currentLoc);
+                view.setZoom(18);
             }
-            currentLoc.setLatLng($scope.currentLoc);
-            latlngs.push($scope.currentLoc);
+            currentPath.push($scope.currentLoc);
+            latlngs.push([position.coords.latitude, position.coords.longitude]);
             $scope.coordsinfo.push({ //storing each coordinate information
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
@@ -151,24 +307,21 @@ angular.module('app.main.controllers')
                 var latestCoord = $scope.coordsinfo[$scope.coordsinfo.length - 1];
                 var secondLatestCoord = $scope.coordsinfo[$scope.coordsinfo.length - 2];
                 var curSpd = geolib.getSpeed(secondLatestCoord, latestCoord);
-                if (!isNaN(curSpd)) {
+                if(!isNaN(curSpd)){
                     $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
                 }
 
-                if (polyline != null) {
-                    map.removeLayer(polyline);
-                }
-                polyline = new L.Polyline(latlngs, {
-                    color: '#1ABC9C',
-                    weight: 8
-                }).bringToFront();
-                map.addLayer(polyline);
-                currentLoc.bringToFront();
+                path.setGeometry(new ol.geom.LineString(currentPath));
 
+                //To ensure Planned Marker Layer is always on top
+                if(plannedMarkerLayer != null){
+                    map.removeLayer(plannedMarkerLayer);
+                    map.addLayer(plannedMarkerLayer);
+                }
                 //*********************************
                 //Calculate Distance
                 //*********************************
-                $scope.distance = geolib.getPathLength(polyline.getLatLngs()) / 1000.0;
+                $scope.distance = geolib.getPathLength(path.getGeometry().getCoordinates()) / 1000.0;
             }
         }, function(err) {
             console.log("Location not found");
@@ -179,7 +332,7 @@ angular.module('app.main.controllers')
 
     $scope.$on('timer-tick', function(event, data) {
         $scope.duration = data.millis / 1000.0;
-        if ($scope.distance != 0) {
+        if($scope.distance != 0){
             var avgSpd = $scope.distance / ($scope.duration / 3600.0);
             $scope.averageSpeed = (Math.round(avgSpd * 100) / 100);
         }
@@ -201,29 +354,87 @@ angular.module('app.main.controllers')
         */
     });
 
-    $scope.$on('timer-stopped', function(event, data) {
+    $scope.$on('timer-stopped', function (event, data){
         $scope.duration = data.millis / 1000.0;
-        $scope.durationInSeconds = data.millis / 1000.0;
+        $scope.durationInSeconds = data.millis/1000.0;
     });
 
-    map.on("dragend", function() {
+    map.on("pointerdrag", function () {
+        $("#popup").popover('destroy');
+        $("#popup1").popover('destroy');
         if (setWatch) {
             setWatch = false;
         }
     });
 
+    // display popup on click
+    map.on('click', function(evt) {
+        var feature = map.forEachFeatureAtPixel(evt.pixel,function(feature) {return feature;});
+        console.log(evt.pixel);
+        if(typeof feature === "undefined"){
+            feature = map.forEachFeatureAtPixel([evt.pixel[0],evt.pixel[1]+10],function(feature) {return feature;});
+        }
+        if(typeof feature === "undefined"){
+            feature = map.forEachFeatureAtPixel([evt.pixel[0],evt.pixel[1]+20],function(feature) {return feature;});
+        }
+        console.log(feature);
+        if (feature) {
+            var coordinates = feature.getGeometry().getCoordinates();
+            if(feature.get('type') == 'Start'){
+                popup.setPosition(coordinates);
+                $("#popup").popover({
+                    'placement': 'top',
+                    'html': true,
+                    'content': feature.get('name')
+                });
+                $("#popup").popover('show');
+            }
+            else if(feature.get('type') == 'End'){
+                popup1.setPosition(coordinates);
+                $("#popup1").popover({
+                    'placement': 'top',
+                    'html': true,
+                    'content': feature.get('name')
+                });
+                $("#popup1").popover('show');
+            }
+            else if(feature.get('type') == 'geotag'){
+                geotagPopupLayer.setPosition(coordinates);
+                $("#geotag").popover({
+                    'placement': 'top',
+                    'html': true,
+                    'content': feature.get('name')
+                });
+                $("#geotag").popover('show');
+            }
+            else{
+                $("#popup").popover('destroy');
+                $("#popup1").popover('destroy');
+                $("#geotag").popover('destroy');
+            }
+        } else {
+            $("#popup").popover('destroy');
+            $("#popup1").popover('destroy');
+            $("#geotag").popover('destroy');
+        }
+    });
+
     $scope.locateMe = function() {
         if ($scope.currentLoc != null) {
-            map.setView($scope.currentLoc, 18);
+            var pan = ol.animation.pan({
+                duration: 500,
+                source: /** @type {ol.Coordinate} */ (view.getCenter())
+            });
+            map.beforeRender(pan);
+            view.setCenter($scope.currentLoc);
+            view.setZoom(18);
         } else {
             $cordovaGeolocation.getCurrentPosition({
                 timeout: 3000,
                 enableHighAccuracy: true
             }).then(function(position) {
-                map.setView({
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                });
+                view.setCenter([position.coords.longitude, position.coords.latitude]);
+                view.setZoom(18);
             }, function(err) {
                 console.log("Location not found");
             });
@@ -255,6 +466,7 @@ angular.module('app.main.controllers')
                 };
                 dataShare.sendData(data); //pass as JS object
                 viewSharedRoute.clearData();
+                clearInterval(watch);
                 $state.go('completed');
 
             } else {
@@ -298,7 +510,25 @@ angular.module('app.main.controllers')
 
             } else {
                 if ($scope.currentLoc != null) {
-                    L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
+                    // L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
+                    var geotagFeature = new ol.Feature({
+                        geometry: new ol.geom.Point($scope.currentLoc),
+                        name: res,
+                        type: "geotag"
+                    });
+                    var commentStyle = new ol.style.Style({
+                        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+                            anchor: [0.5, 46],
+                            anchorXUnits: 'fraction',
+                            anchorYUnits: 'pixels',
+                            opacity: 1,
+                            src: 'lib/openlayers/chat_purple.png',
+                            rotateWithView: "true"
+                        }))
+                    });
+                    geotagFeature.setStyle(commentStyle);
+                    geotagSource.addFeatures([geotagFeature]);
+
                     geotagsInfo.push({
                         dateTimeStamp: new Date().getTime(),
                         coordinates: $scope.currentLoc,
