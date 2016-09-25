@@ -170,7 +170,6 @@ angular.module('app.main.controllers')
         });
         map.addOverlay(popup1);
 
-        sharedRoute.clearData();
     }
 
     if(viewSharedRoute.hasPlanned){
@@ -370,14 +369,12 @@ angular.module('app.main.controllers')
     // display popup on click
     map.on('click', function(evt) {
         var feature = map.forEachFeatureAtPixel(evt.pixel,function(feature) {return feature;});
-        console.log(evt.pixel);
         if(typeof feature === "undefined"){
             feature = map.forEachFeatureAtPixel([evt.pixel[0],evt.pixel[1]+10],function(feature) {return feature;});
         }
         if(typeof feature === "undefined"){
             feature = map.forEachFeatureAtPixel([evt.pixel[0],evt.pixel[1]+20],function(feature) {return feature;});
         }
-        console.log(feature);
         if (feature) {
             var coordinates = feature.getGeometry().getCoordinates();
             if(feature.get('type') == 'Start'){
@@ -528,6 +525,14 @@ angular.module('app.main.controllers')
                     });
                     geotagFeature.setStyle(commentStyle);
                     geotagSource.addFeatures([geotagFeature]);
+
+                    geotagPopupLayer.setPosition($scope.currentLoc);
+                    $("#geotag").popover({
+                        'placement': 'top',
+                        'html': true,
+                        'content': res
+                    });
+                    $("#geotag").popover('show');
 
                     geotagsInfo.push({
                         dateTimeStamp: new Date().getTime(),

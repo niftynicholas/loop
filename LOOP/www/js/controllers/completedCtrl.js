@@ -38,6 +38,7 @@ angular.module('app.main.controllers')
         if (sharedRoute.hasPlanned) {
             map.removeLayer(sharedRoute.markerLayer);
             map.removeLayer(sharedRoute.routeLayer);
+            sharedRoute.clearData();
         }
     });
 
