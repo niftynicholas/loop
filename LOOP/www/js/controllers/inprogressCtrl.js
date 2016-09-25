@@ -206,7 +206,7 @@ angular.module('app.main.controllers')
             source: vectorSource  // add source for vectorLayer
         });
         map.addLayer(vectorLayer)  // add vectorLayer to map
-        viewSharedRoute.clearData();
+        viewSharedRoute.routeLayer = null;
     }
 
     //Current Location & Path Layer
@@ -285,7 +285,7 @@ angular.module('app.main.controllers')
         view.setZoom(18);
         currentLoc.setGeometry(new ol.geom.Point($scope.currentLoc));
         currentPath.push($scope.currentLoc);
-        latlngs.push([data.currentLocation.lat, data.currentLocation.lng]);
+        latlngs.push({lat: data.currentLocation.lat, lng: data.currentLocation.lng});
         $scope.coordsinfo.push({ //storing each coordinate information
             lat: data.currentLocation.lat,
             lng: data.currentLocation.lng,
@@ -308,7 +308,7 @@ angular.module('app.main.controllers')
                 view.setZoom(18);
             }
             currentPath.push($scope.currentLoc);
-            latlngs.push([position.coords.latitude, position.coords.longitude]);
+            latlngs.push({lat: position.coords.latitude, lng: position.coords.longitude});
             $scope.coordsinfo.push({ //storing each coordinate information
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
