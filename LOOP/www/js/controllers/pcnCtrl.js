@@ -146,7 +146,7 @@ angular.module('app.main.controllers')
                     type: 'replace',
                     states: [{
                         stateName: 'add-intra-town-cycling',
-                        icon: 'fa-bicycle',
+                        icon: 'fa-connectdevelop',
                         title: 'Add IntraTown Cycling Path Layer',
                         onClick: function(control) {
                             map.addLayer(intraTownCyclingPathLayer);

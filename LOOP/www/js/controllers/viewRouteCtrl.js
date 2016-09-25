@@ -88,6 +88,8 @@ angular.module('app.main.controllers')
                 }).then(function successCallback(response) {
                         console.log(response);
                         console.log($scope.route.comments);
+
+                        //
                         for (var i = 0; i < $scope.route.comments.length; i++) {
                             var comment = $scope.route.comments[i];
                             var tempUID = comment.uid;
@@ -102,6 +104,77 @@ angular.module('app.main.controllers')
                                 $scope.route.comments.splice(i, 1);
                             }
                         }
+
+                        // Delete from Local Arrays
+                        popularRoutes = JSON.parse(localStorage.getItem("popularRoutes"));
+                        console.log(popularRoutes);
+                        for (var i = 0; i < popularRoutes.length; i++) {
+                            route = popularRoutes[i];
+                            console.log(route);
+                            if (route.cid == routeCID) {
+                                console.log(route.comments[0].uid);
+                                for (var ii = 0; ii < route.comments.length; ii++) {
+                                    console.log(ii);
+                                    var comment = route.comments[ii];
+                                    console.log(comment);
+                                    var tempUID = comment.uid;
+                                    var tempDTS = comment.datetimestamp;
+                                    var tempText = comment.comment;
+
+                                    var thisUID = localStorage.getItem("uid");
+                                    var thisDTS = dateTime;
+                                    var thisText = commentText;
+                                    if (thisUID == tempUID && thisDTS == tempDTS && thisText == tempText) {
+                                        route.comments.splice(ii, 1);
+                                    }
+                                }
+                            }
+                        }
+                        localStorage.setItem("popularRoutes", JSON.stringify(popularRoutes));
+
+                        bookmarkedRoutes = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
+                        for (var j = 0; j < bookmarkedRoutes.length; j++) {
+                            route = bookmarkedRoutes[j];
+                            if (route.cid == routeCID) {
+                                for (var jj = 0; jj < route.comments.length; jj++) {
+                                    var comment = route.comments[jj];
+                                    var tempUID = comment.uid;
+                                    var tempDTS = comment.datetimestamp;
+                                    var tempText = comment.comment;
+
+                                    var thisUID = localStorage.getItem("uid");
+                                    var thisDTS = dateTime;
+                                    var thisText = commentText;
+                                    if (thisUID == tempUID && thisDTS == tempDTS && thisText == tempText) {
+                                        route.comments.splice(jj, 1);
+                                    }
+                                }
+                            }
+                        }
+                        localStorage.setItem("bookmarkedRoutes", JSON.stringify(bookmarkedRoutes));
+
+                        myRoutes = JSON.parse(localStorage.getItem("userRoutes"));
+                        for (var k = 0; k < myRoutes.length; k++) {
+                            route = myRoutes[k];
+                            if (route.cid == routeCID) {
+                                for (var kk = 0; kk < route.comments.length; kk++) {
+                                    var comment = route.comments[kk];
+                                    var tempUID = comment.uid;
+                                    var tempDTS = comment.datetimestamp;
+                                    var tempText = comment.comment;
+
+                                    var thisUID = localStorage.getItem("uid");
+                                    var thisDTS = dateTime;
+                                    var thisText = commentText;
+                                    if (thisUID == tempUID && thisDTS == tempDTS && thisText == tempText) {
+                                        route.comments.splice(kk, 1);
+                                    }
+                                }
+                            }
+
+                        }
+                        localStorage.setItem("userRoutes", JSON.stringify(myRoutes));
+
                         $ionicLoading.hide();
                     },
                     function errorCallback(response) {

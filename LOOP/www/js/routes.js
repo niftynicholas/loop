@@ -55,6 +55,7 @@ angular.module('app.routes', [])
     })
 
     .state('tabsController.home', {
+        cache: false,
         url: '/home',
         views: {
             'tab1': {
@@ -65,6 +66,7 @@ angular.module('app.routes', [])
     })
 
     .state('tabsController.pcn', {
+        cache: false,
         url: '/pcn',
         views: {
             'tab5': {
@@ -119,6 +121,7 @@ angular.module('app.routes', [])
     })
 
     .state('tabsController.routes.nearby', {
+        cache: false,
         url: "/routesNearby",
         views: {
             'routes-tab': {

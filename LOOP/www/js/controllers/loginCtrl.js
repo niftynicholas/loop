@@ -55,6 +55,9 @@ angular.module('app.main.controllers')
                     bookmarkedRoutes:result[2],
                     userRoutes:result[3]
                     */
+                    console.log(response.data.popularRoutes);
+                    console.log(response.data.bookmarkedRoutes);
+                    console.log(response.data.userRoutes);
                 },
                 function errorCallback(response) {
                     $scope.hide();
