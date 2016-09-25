@@ -47,42 +47,55 @@ angular.module('app.main.controllers')
     * Populate Search Results for Start Point
     */
     $('#startPoint').keyup(function() {
-        var input = $('#startPoint').val(),
-        type = 'WGS84';
-        var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
-        $.getJSON(requestURL, {
-            'token': token,
-            'searchVal': input,
-            'projSys': type,
-        }, function(data) {
-            $('#startResult').html("");
-            //If data is length > 2 means there are multiple results
-            if (data.SearchResults.length > 2) {
-                var toLoopTill = searchLimit;
-                if (data.SearchResults.length < 11) {
-                    //if results were lesser than current searchLimit set
-                    toLoopTill = data.SearchResults.length - 1;
-                }
-                for (var i = 1; i <= toLoopTill; i++) {
-                    var searchVal = data.SearchResults[i].SEARCHVAL;
-                    var lat = data.SearchResults[i].Y;
-                    var lng = data.SearchResults[i].X;
-                    if (searchVal != null) {
-                        //Populate the results in the startResult div
-                        $('#startResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'start\')">' + searchVal + '</div>');
-                    }
-
-                }
-            } else if (data.SearchResults.length == 2) {
-                //If data length == 2 means there is only 1 result
-                $('#startPoint').attr('data-val', data.SearchResults[1].SEARCHVAL);
-                $('#startPoint').attr('data-latlng', [data.SearchResults[1].Y, data.SearchResults[1].X]);
-            } else {
-                //No results were found
-                $('#startResult').html("");
-                $('#startPoint').removeAttr("data-latlng");
+        var input = $('#startPoint').val();
+        //To add Home / Office for Advanced Navigation Module
+        if(input.length == 0){
+            if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
+                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
+            }else{
+                $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + "Current Location" + '</div>');
+                }, function(err) {
+                    console.log("Location not found");
+                });
             }
-        });
+        }else{
+            var type = 'WGS84';
+            var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
+            $.getJSON(requestURL, {
+                'token': token,
+                'searchVal': input,
+                'projSys': type,
+            }, function(data) {
+                $('#startResult').html("");
+                //If data is length > 2 means there are multiple results
+                if (data.SearchResults.length > 2) {
+                    var toLoopTill = searchLimit;
+                    if (data.SearchResults.length < 11) {
+                        //if results were lesser than current searchLimit set
+                        toLoopTill = data.SearchResults.length - 1;
+                    }
+                    for (var i = 1; i <= toLoopTill; i++) {
+                        var searchVal = data.SearchResults[i].SEARCHVAL;
+                        var lat = data.SearchResults[i].Y;
+                        var lng = data.SearchResults[i].X;
+                        if (searchVal != null) {
+                            //Populate the results in the startResult div
+                            $('#startResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'start\')">' + searchVal + '</div>');
+                        }
+
+                    }
+                } else if (data.SearchResults.length == 2) {
+                    //If data length == 2 means there is only 1 result
+                    $('#startPoint').attr('data-val', data.SearchResults[1].SEARCHVAL);
+                    $('#startPoint').attr('data-latlng', [data.SearchResults[1].Y, data.SearchResults[1].X]);
+                } else {
+                    //No results were found
+                    $('#startResult').html("");
+                    $('#startPoint').removeAttr("data-latlng");
+                }
+            });
+        }
     });
 
     /**
@@ -163,6 +176,9 @@ angular.module('app.main.controllers')
                 });
 
                 var startPointName = startInput.getAttribute("data-val");
+                if(startPointName == "Current Location"){
+                    startPointName = "Starting Location";
+                }
                 var endPointName = endInput.getAttribute("data-val");
 
                 var sourceMarker1 = L.marker(startLatLng, {

@@ -170,6 +170,20 @@ angular.module('app.main.controllers')
         });
         map.addOverlay(popup1);
 
+        popup.setPosition([sharedRoute.sourceMarker.startLatLng[1], sharedRoute.sourceMarker.startLatLng[0]]);
+        $("#popup").popover({
+            'placement': 'top',
+            'html': true,
+            'content': sharedRoute.sourceMarker.startPointName
+        });
+
+        popup1.setPosition([sharedRoute.targetMarker.endLatLng[1], sharedRoute.targetMarker.endLatLng[0]]);
+        $("#popup1").popover({
+            'placement': 'top',
+            'html': true,
+            'content': sharedRoute.targetMarker.endPointName
+        });
+
     }
 
     if(viewSharedRoute.hasPlanned){
@@ -359,8 +373,10 @@ angular.module('app.main.controllers')
     });
 
     map.on("pointerdrag", function () {
-        $("#popup").popover('destroy');
-        $("#popup1").popover('destroy');
+        // $("#popup").popover('hide');
+        // $("#popup1").popover('hide');
+        // $("#geotag").popover('hide');
+        $("#geotag").popover('destroy');
         if (setWatch) {
             setWatch = false;
         }
@@ -368,6 +384,7 @@ angular.module('app.main.controllers')
 
     // display popup on click
     map.on('click', function(evt) {
+        $("#geotag").popover('destroy');
         var feature = map.forEachFeatureAtPixel(evt.pixel,function(feature) {return feature;});
         if(typeof feature === "undefined"){
             feature = map.forEachFeatureAtPixel([evt.pixel[0],evt.pixel[1]+10],function(feature) {return feature;});
@@ -378,22 +395,10 @@ angular.module('app.main.controllers')
         if (feature) {
             var coordinates = feature.getGeometry().getCoordinates();
             if(feature.get('type') == 'Start'){
-                popup.setPosition(coordinates);
-                $("#popup").popover({
-                    'placement': 'top',
-                    'html': true,
-                    'content': feature.get('name')
-                });
-                $("#popup").popover('show');
+                $("#popup").popover('toggle');
             }
             else if(feature.get('type') == 'End'){
-                popup1.setPosition(coordinates);
-                $("#popup1").popover({
-                    'placement': 'top',
-                    'html': true,
-                    'content': feature.get('name')
-                });
-                $("#popup1").popover('show');
+                $("#popup1").popover('toggle');
             }
             else if(feature.get('type') == 'geotag'){
                 geotagPopupLayer.setPosition(coordinates);
@@ -404,17 +409,27 @@ angular.module('app.main.controllers')
                 });
                 $("#geotag").popover('show');
             }
-            else{
-                $("#popup").popover('destroy');
-                $("#popup1").popover('destroy');
-                $("#geotag").popover('destroy');
-            }
-        } else {
-            $("#popup").popover('destroy');
-            $("#popup1").popover('destroy');
-            $("#geotag").popover('destroy');
         }
     });
+
+    $scope.showLastGeotag = function(){
+        var lastGeotagInfo = geotagsInfo[geotagsInfo.length-1];
+        if(typeof lastGeotagInfo != "undefined"){
+            $("#geotag").popover('destroy');
+            geotagPopupLayer.setPosition(lastGeotagInfo.coordinates);
+            $("#geotag").popover({
+                'placement': 'top',
+                'html': true,
+                'content': lastGeotagInfo.comment
+            });
+            $("#geotag").popover('show');
+        }
+    }
+
+    $scope.toggleStartEndLoc = function(){
+        $("#popup").popover('toggle');
+        $("#popup1").popover('toggle');
+    }
 
     $scope.locateMe = function() {
         if ($scope.currentLoc != null) {
@@ -527,6 +542,7 @@ angular.module('app.main.controllers')
                     geotagSource.addFeatures([geotagFeature]);
 
                     geotagPopupLayer.setPosition($scope.currentLoc);
+                    $("#geotag").popover('destroy');
                     $("#geotag").popover({
                         'placement': 'top',
                         'html': true,
