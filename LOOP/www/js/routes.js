@@ -48,6 +48,13 @@ angular.module('app.routes', [])
         controller: 'forgotCtrl'
     })
 
+    .state('forgotUsername', {
+        cache: false,
+        url: '/forgotUsername',
+        templateUrl: 'templates/forgotUsername.html',
+        controller: 'forgotUsernameCtrl'
+    })
+
     .state('tabsController', {
         url: '/tabs',
         templateUrl: 'templates/tabsController.html',

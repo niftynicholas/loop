@@ -74,12 +74,16 @@ angular.module('app.main.controllers')
                 collapsible: false
             })
         }),
-        interactions:  ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:true, dragPan:true}),
+        interactions: ol.interaction.defaults({
+            altShiftDragRotate: false,
+            pinchRotate: true,
+            dragPan: true
+        }),
         view: view
     });
 
     //***************************** ON MAP CREATION ****************************************
-    if(sharedRoute.hasPlanned){
+    if (sharedRoute.hasPlanned) {
 
         var iconFeature = new ol.Feature({
             geometry: new ol.geom.Point([sharedRoute.sourceMarker.startLatLng[1], sharedRoute.sourceMarker.startLatLng[0]]),
@@ -88,7 +92,7 @@ angular.module('app.main.controllers')
         });
 
         var iconStyle = new ol.style.Style({
-            image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+            image: new ol.style.Icon( /** @type {olx.style.IconOptions} */ ({
                 anchor: [0.5, 46],
                 anchorXUnits: 'fraction',
                 anchorYUnits: 'pixels',
@@ -106,7 +110,7 @@ angular.module('app.main.controllers')
         });
 
         var iconStyle2 = new ol.style.Style({
-            image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+            image: new ol.style.Icon( /** @type {olx.style.IconOptions} */ ({
                 anchor: [0.5, 46],
                 anchorXUnits: 'fraction',
                 anchorYUnits: 'pixels',
@@ -118,7 +122,7 @@ angular.module('app.main.controllers')
         iconFeature2.setStyle(iconStyle2);
 
         var plannedCoords = [];
-        for(var i=0;i<sharedRoute.routepoints.length;i++){
+        for (var i = 0; i < sharedRoute.routepoints.length; i++) {
             var temp = [sharedRoute.routepoints[i].lng, sharedRoute.routepoints[i].lat];
             plannedCoords.push(temp);
         }
@@ -192,7 +196,7 @@ angular.module('app.main.controllers')
 
     }
 
-    if(viewSharedRoute.hasPlanned){
+    if (viewSharedRoute.hasPlanned) {
 
         var sharedRoute = new ol.Feature({
             geometry: new ol.geom.LineString(viewSharedRoute.routeLayer.coordinates),
@@ -206,12 +210,12 @@ angular.module('app.main.controllers')
             })
         }));
         var vectorSource = new ol.source.Vector({
-            features: [sharedRoute]  // add an array of features
+            features: [sharedRoute] // add an array of features
         });
         var vectorLayer = new ol.layer.Vector({
-            source: vectorSource  // add source for vectorLayer
+            source: vectorSource // add source for vectorLayer
         });
-        map.addLayer(vectorLayer)  // add vectorLayer to map
+        map.addLayer(vectorLayer) // add vectorLayer to map
         viewSharedRoute.routeLayer = null;
     }
 
@@ -235,7 +239,10 @@ angular.module('app.main.controllers')
     }));
 
     var path = new ol.Feature({
-        geometry: new ol.geom.LineString([[0, 0],[0, 0]]),
+        geometry: new ol.geom.LineString([
+            [0, 0],
+            [0, 0]
+        ]),
         name: 'Path'
     });
     path.setStyle(new ol.style.Style({
@@ -251,13 +258,13 @@ angular.module('app.main.controllers')
     Features.push(currentLoc);
 
     var vectorSource = new ol.source.Vector({
-        features: Features  // add an array of features
+        features: Features // add an array of features
     });
     var vectorLayer = new ol.layer.Vector({
-        source: vectorSource  // add source for vectorLayer
+        source: vectorSource // add source for vectorLayer
     });
 
-    map.addLayer(vectorLayer)  // add vectorLayer to map
+    map.addLayer(vectorLayer) // add vectorLayer to map
 
     //Adding the GeoTags Layer into Map
     var geotagSource = new ol.source.Vector({
@@ -291,7 +298,10 @@ angular.module('app.main.controllers')
         view.setZoom(18);
         currentLoc.setGeometry(new ol.geom.Point($scope.currentLoc));
         currentPath.push($scope.currentLoc);
-        latlngs.push({lat: data.currentLocation.lat, lng: data.currentLocation.lng});
+        latlngs.push({
+            lat: data.currentLocation.lat,
+            lng: data.currentLocation.lng
+        });
         $scope.coordsinfo.push({ //storing each coordinate information
             lat: data.currentLocation.lat,
             lng: data.currentLocation.lng,
@@ -305,7 +315,10 @@ angular.module('app.main.controllers')
     var setWatch = true;
     var watch = setInterval(function() {
 
-        $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+        $cordovaGeolocation.getCurrentPosition({
+            timeout: 3000,
+            enableHighAccuracy: true
+        }).then(function(position) {
             //console.log("lat: " + position.coords.latitude + "lng: " + position.coords.longitude);
             $scope.currentLoc = [position.coords.longitude, position.coords.latitude]; //GeoJson Format, EPSG:4326
             currentLoc.setGeometry(new ol.geom.Point($scope.currentLoc));
@@ -314,7 +327,10 @@ angular.module('app.main.controllers')
                 view.setZoom(18);
             }
             currentPath.push($scope.currentLoc);
-            latlngs.push({lat: position.coords.latitude, lng: position.coords.longitude});
+            latlngs.push({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            });
             $scope.coordsinfo.push({ //storing each coordinate information
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
@@ -326,14 +342,14 @@ angular.module('app.main.controllers')
                 var latestCoord = $scope.coordsinfo[$scope.coordsinfo.length - 1];
                 var secondLatestCoord = $scope.coordsinfo[$scope.coordsinfo.length - 2];
                 var curSpd = geolib.getSpeed(secondLatestCoord, latestCoord);
-                if(!isNaN(curSpd)){
+                if (!isNaN(curSpd)) {
                     $scope.currentSpeed = (Math.round(curSpd * 100) / 100);
                 }
 
                 path.setGeometry(new ol.geom.LineString(currentPath));
 
                 //To ensure Planned Marker Layer is always on top
-                if(plannedMarkerLayer != null){
+                if (plannedMarkerLayer != null) {
                     map.removeLayer(plannedMarkerLayer);
                     map.addLayer(plannedMarkerLayer);
                 }
@@ -351,7 +367,7 @@ angular.module('app.main.controllers')
 
     $scope.$on('timer-tick', function(event, data) {
         $scope.duration = data.millis / 1000.0;
-        if($scope.distance != 0){
+        if ($scope.distance != 0) {
             var avgSpd = $scope.distance / ($scope.duration / 3600.0);
             $scope.averageSpeed = (Math.round(avgSpd * 100) / 100);
         }
@@ -373,12 +389,12 @@ angular.module('app.main.controllers')
         */
     });
 
-    $scope.$on('timer-stopped', function (event, data){
+    $scope.$on('timer-stopped', function(event, data) {
         $scope.duration = data.millis / 1000.0;
-        $scope.durationInSeconds = data.millis/1000.0;
+        $scope.durationInSeconds = data.millis / 1000.0;
     });
 
-    map.on("pointerdrag", function () {
+    map.on("pointerdrag", function() {
         // $("#popup").popover('hide');
         // $("#popup1").popover('hide');
         // $("#geotag").popover('hide');
@@ -391,22 +407,26 @@ angular.module('app.main.controllers')
     // display popup on click
     map.on('click', function(evt) {
         $("#geotag").popover('destroy');
-        var feature = map.forEachFeatureAtPixel(evt.pixel,function(feature) {return feature;});
-        if(typeof feature === "undefined"){
-            feature = map.forEachFeatureAtPixel([evt.pixel[0],evt.pixel[1]+10],function(feature) {return feature;});
+        var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+            return feature;
+        });
+        if (typeof feature === "undefined") {
+            feature = map.forEachFeatureAtPixel([evt.pixel[0], evt.pixel[1] + 10], function(feature) {
+                return feature;
+            });
         }
-        if(typeof feature === "undefined"){
-            feature = map.forEachFeatureAtPixel([evt.pixel[0],evt.pixel[1]+20],function(feature) {return feature;});
+        if (typeof feature === "undefined") {
+            feature = map.forEachFeatureAtPixel([evt.pixel[0], evt.pixel[1] + 20], function(feature) {
+                return feature;
+            });
         }
         if (feature) {
             var coordinates = feature.getGeometry().getCoordinates();
-            if(feature.get('type') == 'Start'){
+            if (feature.get('type') == 'Start') {
                 $("#popup").popover('toggle');
-            }
-            else if(feature.get('type') == 'End'){
+            } else if (feature.get('type') == 'End') {
                 $("#popup1").popover('toggle');
-            }
-            else if(feature.get('type') == 'geotag'){
+            } else if (feature.get('type') == 'geotag') {
                 geotagPopupLayer.setPosition(coordinates);
                 $("#geotag").popover({
                     'placement': 'top',
@@ -418,9 +438,9 @@ angular.module('app.main.controllers')
         }
     });
 
-    $scope.showLastGeotag = function(){
-        var lastGeotagInfo = geotagsInfo[geotagsInfo.length-1];
-        if(typeof lastGeotagInfo != "undefined"){
+    $scope.showLastGeotag = function() {
+        var lastGeotagInfo = geotagsInfo[geotagsInfo.length - 1];
+        if (typeof lastGeotagInfo != "undefined") {
             $("#geotag").popover('destroy');
             geotagPopupLayer.setPosition(lastGeotagInfo.coordinates);
             $("#geotag").popover({
@@ -432,7 +452,7 @@ angular.module('app.main.controllers')
         }
     }
 
-    $scope.toggleStartEndLoc = function(){
+    $scope.toggleStartEndLoc = function() {
         $("#popup").popover('toggle');
         $("#popup1").popover('toggle');
     }
@@ -494,7 +514,9 @@ angular.module('app.main.controllers')
     };
 
     $scope.geotag = function() {
-        $scope.data = { cat: "Others" };
+        $scope.data = {
+            cat: "Others"
+        };
         // An elaborate, custom popup
         var myPopup = $ionicPopup.show({
             template: '<div class="list"><label class="item item-input item-select"><div class="input-label">Category</div><select ng-model="data.cat"><option value="Construction">Construction</option><option value="Overgrown Tree Roots">Overgrown Tree Roots</option><option value="Path Obstruction">Path Obstruction</option><option value="Potholes">Potholes</option><option value="Suggestion">Suggestion</option><option value="Others">Others</option></select></label></div><input type="text" placeholder="Comments" ng-model="data.comment">',
@@ -508,25 +530,25 @@ angular.module('app.main.controllers')
                 type: 'button-positive',
                 onTap: function(e) {
                     $scope.data.geotag = 'Category: ' + $scope.data.cat + ', Comment: ' + $scope.data.comment;
-                    if ($scope.data.comment) return $scope.data.geotag;
-                    else $scope.data.comment = "";
+                    if (!$scope.data.comment) {
+                        e.preventDefault();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Opps!',
+                            template: 'We do not accept blank submissions.'
+                        });
+
+                        alertPopup.then(function(res) {
+
+                        });
+                    } else {
+                        return $scope.data.geotag;
+                    }
                 }
             }]
         });
 
         myPopup.then(function(res) {
-            if ($scope.data.comment == "") {
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Opps!',
-                    template: 'We do not accept blank submissions.'
-                });
-
-                alertPopup.then(function(res) {
-
-                });
-            } else if (typeof res === "undefined") {
-
-            } else {
+            if (!(typeof res === "undefined")) {
                 if ($scope.currentLoc != null) {
                     // L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
                     var geotagFeature = new ol.Feature({
@@ -535,7 +557,7 @@ angular.module('app.main.controllers')
                         type: "geotag"
                     });
                     var commentStyle = new ol.style.Style({
-                        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+                        image: new ol.style.Icon( /** @type {olx.style.IconOptions} */ ({
                             anchor: [0.5, 46],
                             anchorXUnits: 'fraction',
                             anchorYUnits: 'pixels',
@@ -562,12 +584,11 @@ angular.module('app.main.controllers')
                         comment: res
                     });
                     window.plugins.toast.showWithOptions({
-                            message: "Comment Added Successfully",
-                            duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
-                            position: "bottom",
-                            addPixelsY: -40 // added a negative value to move it up a bit (default 0)
-                        }
-                    );
+                        message: "Comment Added Successfully",
+                        duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+                        position: "bottom",
+                        addPixelsY: -40 // added a negative value to move it up a bit (default 0)
+                    });
                 } else {
                     alert("Current Location cannot be Found");
                 }

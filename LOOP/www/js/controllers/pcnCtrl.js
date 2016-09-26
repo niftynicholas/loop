@@ -15,14 +15,48 @@ angular.module('app.main.controllers')
     var intraTownCyclingPath = response.intraTownCyclingPath;
     var food = response.food;
     var geotags = L.layerGroup();
+
     function showCoordinates(e) {
         alert(e.latlng);
     }
 
+    $scope.showPopup = function() {
+        $scope.data = {};
+
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.show({
+            template: '<input type="password" ng-model="data.wifi">',
+            title: 'Enter Wi-Fi Password',
+            subTitle: 'Please use normal things',
+            scope: $scope,
+            buttons: [{
+                text: 'Cancel'
+            }, {
+                text: '<b>Save</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                    if (!$scope.data.wifi) {
+                        //don't allow the user to close unless he enters wifi password
+                        e.preventDefault();
+                    } else {
+                        return $scope.data.wifi;
+                    }
+                }
+            }]
+        });
+
+        myPopup.then(function(res) {
+            console.log('Tapped!', res);
+        });
+    };
+
+
     function submitSuggestion(e) {
         // alert("We will add a marker here! " + e.latlng);
         // GLOBAL GEOTAG HERE
-        $scope.data = { cat: "Others" };
+        $scope.data = {
+            cat: "Others"
+        };
         // An elaborate, custom popup
         var myPopup = $ionicPopup.show({
             template: '<div class="list"><label class="item item-input item-select"><div class="input-label">Category</div><select ng-model="data.cat"><option value="Construction">Construction</option><option value="Overgrown Tree Roots">Overgrown Tree Roots</option><option value="Path Obstruction">Path Obstruction</option><option value="Potholes">Potholes</option><option value="Suggestion">Suggestion</option><option value="Others">Others</option></select></label></div><input type="text" placeholder="Comments" ng-model="data.comment">',
@@ -36,26 +70,27 @@ angular.module('app.main.controllers')
                 type: 'button-positive',
                 onTap: function(e) {
                     $scope.data.geotag = 'Category: ' + $scope.data.cat + ', Comment: ' + $scope.data.comment;
-                    if ($scope.data.comment) return $scope.data.geotag;
-                    else $scope.data.comment = "";
+                    if (!$scope.data.comment) {
+                        e.preventDefault();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Opps!',
+                            template: 'We do not accept blank submissions.'
+                        });
+
+                        alertPopup.then(function(res) {
+
+                        });
+                    } else {
+                        return $scope.data.geotag;
+                    }
                 }
             }]
         });
 
         myPopup.then(function(res) {
-            if ($scope.data.comment == "") {
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Opps!',
-                    template: 'We do not accept blank submissions.'
-                });
-
-                alertPopup.then(function(res) {
-
-                });
-            } else if (typeof res === "undefined") {
-
-            } else {
+            if (!(typeof res === "undefined")) {
                 L.marker(e.latlng).addTo(geotags).bindPopup(res).openPopup();
+
                 $http({
                     url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/addGeotag",
                     method: 'POST',
@@ -70,19 +105,17 @@ angular.module('app.main.controllers')
                     }
                 }).then(function successCallback(response) {
                     window.plugins.toast.showWithOptions({
-                            message: "Comment Added Successfully",
-                            duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
-                            position: "bottom",
-                            addPixelsY: -40 // added a negative value to move it up a bit (default 0)
-                        }
-                    );
+                        message: "Comment Added Successfully",
+                        duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+                        position: "bottom",
+                        addPixelsY: -40 // added a negative value to move it up a bit (default 0)
+                    });
                 }, function errorCallback(response) {
                     alert("Error Saving to database");
                     alert(JSON.stringify(response, null, 4));
                 });
-                console.log('Succesfully added');
             }
-        });
+        })
     }
 
     angular.extend($scope, {
@@ -110,14 +143,15 @@ angular.module('app.main.controllers')
                 contextmenu: true,
                 contextmenuWidth: 140,
                 contextmenuItems: [
-                //     {
-                //     text: 'Show coordinates',
-                //     callback: showCoordinates
-                // },
-                {
-                    text: 'Submit Suggestion',
-                    callback: submitSuggestion
-                }]
+                    //     {
+                    //     text: 'Show coordinates',
+                    //     callback: showCoordinates
+                    // },
+                    {
+                        text: 'Submit Suggestion',
+                        callback: submitSuggestion
+                    }
+                ]
             }
         }
     });
@@ -138,6 +172,7 @@ angular.module('app.main.controllers')
         leafletData.getMap("pcn").then(function(map) {
             if (!$scope.dataLoaded) {
                 map.addLayer(geotags);
+
                 function onEachFeature(feature, layer) {
                     if (feature.properties && feature.properties.comment) {
                         layer.bindPopup(feature.properties.comment);

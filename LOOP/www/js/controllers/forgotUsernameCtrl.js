@@ -1,16 +1,16 @@
 angular.module('app.main.controllers')
 
-.controller('forgotCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading) {
+.controller('forgotUsernameCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading) {
     $scope.input = {};
     // Need to prevent empty string and improper email address format
     // No way to verify resetting of password
-    $scope.sendResetEmail = function(form) {
+    $scope.sendUsername = function(form) {
         if (form.$valid) {
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
             });
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/sendResetPasswordEmail",
+                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/forgotUsername",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -21,8 +21,8 @@ angular.module('app.main.controllers')
             }).then(function successCallback(response) {
                 $ionicLoading.hide();
                 var alertPopup = $ionicPopup.alert({
-                    title: 'Reset Success',
-                    template: 'We have sent your new password to your email. Be sure to check your junk or spam folder.'
+                    title: 'Retrieval Success',
+                    template: 'We have sent your username to your email. Be sure to check your junk or spam folder.'
                 });
 
                 alertPopup.then(function(res) {
@@ -31,7 +31,7 @@ angular.module('app.main.controllers')
             }, function errorCallback(response) {
                 $ionicLoading.hide();
                 var alertPopup = $ionicPopup.alert({
-                    title: 'Reset Failed',
+                    title: 'Retrieval Failed',
                     template: 'The email you entered has not been registered.'
                 });
 
