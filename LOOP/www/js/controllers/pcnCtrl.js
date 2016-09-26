@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData, $cordovaGeolocation) {
+.controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData, $cordovaGeolocation, $ionicPopup, $http) {
     $scope.currentLocation = {};
     $scope.firstLoad = true;
     $scope.dataLoaded = false;
@@ -14,15 +14,75 @@ angular.module('app.main.controllers')
     var pcn = response.pcn;
     var intraTownCyclingPath = response.intraTownCyclingPath;
     var food = response.food;
-
+    var geotags = L.layerGroup();
     function showCoordinates(e) {
         alert(e.latlng);
     }
 
     function submitSuggestion(e) {
-        alert("We will add a marker here! " + e.latlng);
+        // alert("We will add a marker here! " + e.latlng);
         // GLOBAL GEOTAG HERE
-        // FOR USER TO SUBMIT SUGGESTIONS
+        $scope.data = { cat: "Others" };
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.show({
+            template: '<div class="list"><label class="item item-input item-select"><div class="input-label">Category</div><select ng-model="data.cat"><option value="Construction">Construction</option><option value="Overgrown Tree Roots">Overgrown Tree Roots</option><option value="Path Obstruction">Path Obstruction</option><option value="Potholes">Potholes</option><option value="Suggestion">Suggestion</option><option value="Others">Others</option></select></label></div><input type="text" placeholder="Comments" ng-model="data.comment">',
+            title: "Any Comment or Suggestion?",
+            subTitle: 'Share it with other cyclists.',
+            scope: $scope,
+            buttons: [{
+                text: 'Cancel'
+            }, {
+                text: '<b>Save</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                    $scope.data.geotag = 'Category: ' + $scope.data.cat + ', Comment: ' + $scope.data.comment;
+                    if ($scope.data.comment) return $scope.data.geotag;
+                    else $scope.data.comment = "";
+                }
+            }]
+        });
+
+        myPopup.then(function(res) {
+            if ($scope.data.comment == "") {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Opps!',
+                    template: 'We do not accept blank submissions.'
+                });
+
+                alertPopup.then(function(res) {
+
+                });
+            } else if (typeof res === "undefined") {
+
+            } else {
+                L.marker(e.latlng).addTo(geotags).bindPopup(res).openPopup();
+                $http({
+                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/addGeotag",
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        token: localStorage.getItem("token"),
+                        dateTimeStamp: new Date().getTime(),
+                        coordinates: e.latlng,
+                        comment: res
+                    }
+                }).then(function successCallback(response) {
+                    window.plugins.toast.showWithOptions({
+                            message: "Comment Added Successfully",
+                            duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+                            position: "bottom",
+                            addPixelsY: -40 // added a negative value to move it up a bit (default 0)
+                        }
+                    );
+                }, function errorCallback(response) {
+                    alert("Error Saving to database");
+                    alert(JSON.stringify(response, null, 4));
+                });
+                console.log('Succesfully added');
+            }
+        });
     }
 
     angular.extend($scope, {
@@ -75,6 +135,7 @@ angular.module('app.main.controllers')
 
         leafletData.getMap("pcn").then(function(map) {
             if (!$scope.dataLoaded) {
+                map.addLayer(geotags);
                 function onEachFeature(feature, layer) {
                     if (feature.properties && feature.properties.comment) {
                         layer.bindPopup(feature.properties.comment);

@@ -1,6 +1,7 @@
 angular.module('app.main.controllers')
 
 .controller('inprogressCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicModal, dataShare, $ionicPlatform, sharedRoute, $cordovaGeolocation, viewSharedRoute) {
+
     $scope.distance = 0;
     $scope.currentSpeed = 0;
     $scope.averageSpeed = 0;
@@ -19,6 +20,10 @@ angular.module('app.main.controllers')
     var data;
     var geotagsInfo = [];
     var plannedMarkerLayer = null;
+
+    $scope.hasPlannedRoute = function() {
+        return sharedRoute.hasPlannedRoute;
+    }
 
     $scope.options = {
         loop: false,
@@ -555,7 +560,13 @@ angular.module('app.main.controllers')
                         coordinates: $scope.currentLoc,
                         comment: res
                     });
-                    console.log('Succesfully added');
+                    window.plugins.toast.showWithOptions({
+                            message: "Comment Added Successfully",
+                            duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+                            position: "bottom",
+                            addPixelsY: -40 // added a negative value to move it up a bit (default 0)
+                        }
+                    );
                 } else {
                     alert("Current Location cannot be Found");
                 }
