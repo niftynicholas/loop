@@ -5344,7 +5344,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
  * --------------------------------------------------
  * Popovers are independent views which float over content
  */
-.popover-backdrop {
+/*.popover-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -5463,7 +5463,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
 @media (min-width: 680px) {
   .popover {
     width: 360px;
-    margin-left: -180px; } }
+    margin-left: -180px; } }*/
 
 /**
  * Popups
