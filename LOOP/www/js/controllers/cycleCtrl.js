@@ -100,7 +100,7 @@ angular.module('app.main.controllers')
     $scope.locateMe = function() {
         if (typeof $scope.currentLocation.lat !== "undefined") {
             leafletData.getMap("cycle").then(function(map) {
-                map.setView($scope.currentLocation);
+                map.setView($scope.currentLocation, 16);
             });
         } else {
             $cordovaGeolocation.getCurrentPosition({
@@ -110,7 +110,7 @@ angular.module('app.main.controllers')
                 map.setView({
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
-                });
+                }, 16);
             }, function(err) {
                 console.log("Location not found");
             });

@@ -336,9 +336,6 @@ angular.module('app.main.controllers')
     $scope.buttons = [{
         icon: '',
         text: 'Shortest'
-    }, {
-        icon: '',
-        text: 'Safest'
     }];
     $scope.activeButton = 0;
     $scope.setActiveButton = function(index) {

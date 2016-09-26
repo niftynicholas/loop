@@ -87,7 +87,9 @@ angular.module('app.main.controllers')
                             markerColor: 'cadetblue',
                             prefix: 'fa'
                         });
-                        return L.marker(latlng, {icon: smallIcon});
+                        return L.marker(latlng, {
+                            icon: smallIcon
+                        });
                     },
                     onEachFeature: onEachFeature
                 });
@@ -170,7 +172,9 @@ angular.module('app.main.controllers')
                             markerColor: 'black',
                             prefix: 'fa'
                         });
-                        return L.marker(latlng, {icon: smallIcon});
+                        return L.marker(latlng, {
+                            icon: smallIcon
+                        });
                     },
                     onEachFeature: onEachFeature
                 });
@@ -204,7 +208,9 @@ angular.module('app.main.controllers')
                             markerColor: 'red',
                             prefix: 'fa'
                         });
-                        return L.marker(latlng, {icon: smallIcon});
+                        return L.marker(latlng, {
+                            icon: smallIcon
+                        });
                     },
                     onEachFeature: onEachFeature
                 });
@@ -238,7 +244,9 @@ angular.module('app.main.controllers')
                             markerColor: 'orange',
                             prefix: 'fa'
                         });
-                        return L.marker(latlng, {icon: smallIcon});
+                        return L.marker(latlng, {
+                            icon: smallIcon
+                        });
                     },
                     onEachFeature: onEachFeature
                 });
@@ -272,7 +280,9 @@ angular.module('app.main.controllers')
                             markerColor: 'blue',
                             prefix: 'fa'
                         });
-                        return L.marker(latlng, {icon: smallIcon});
+                        return L.marker(latlng, {
+                            icon: smallIcon
+                        });
                     },
                     onEachFeature: onEachFeature
                 });
@@ -306,7 +316,9 @@ angular.module('app.main.controllers')
                             markerColor: 'gray',
                             prefix: 'fa'
                         });
-                        return L.marker(latlng, {icon: smallIcon});
+                        return L.marker(latlng, {
+                            icon: smallIcon
+                        });
                     },
                     onEachFeature: onEachFeature
                 });
@@ -340,7 +352,9 @@ angular.module('app.main.controllers')
                             markerColor: 'green',
                             prefix: 'fa'
                         });
-                        return L.marker(latlng, {icon: smallIcon});
+                        return L.marker(latlng, {
+                            icon: smallIcon
+                        });
                     },
                     onEachFeature: onEachFeature
                 });
@@ -381,7 +395,7 @@ angular.module('app.main.controllers')
                 bicycleRentalBtn.addTo(map);
 
                 $scope.dataLoaded = true;
-            }else{
+            } else {
                 //Need to call API to get all geotaggedComments
                 //geotaggedComments = API CALL;
                 map.removeLayer(geotaggedCommentsBtn);
@@ -392,7 +406,9 @@ angular.module('app.main.controllers')
                             markerColor: 'cadetblue',
                             prefix: 'fa'
                         });
-                        return L.marker(latlng, {icon: smallIcon});
+                        return L.marker(latlng, {
+                            icon: smallIcon
+                        });
                     },
                     onEachFeature: onEachFeature
                 });
@@ -431,10 +447,10 @@ angular.module('app.main.controllers')
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
                     };
-                    if ($scope.firstLoad) {
-                        map.setView($scope.currentLocation, 16);
-                        $scope.firstLoad = false;
-                    }
+                    // if ($scope.firstLoad) {
+                    //     map.setView($scope.currentLocation, 16);
+                    //     $scope.firstLoad = false;
+                    // }
                     $scope.paths.currentLoc.latlngs = [];
                     $scope.paths.currentLoc.latlngs.push(position.coords.latitude);
                     $scope.paths.currentLoc.latlngs.push(position.coords.longitude);
@@ -450,7 +466,7 @@ angular.module('app.main.controllers')
     $scope.locateMe = function() {
         if (typeof $scope.currentLocation.lat !== "undefined") {
             leafletData.getMap("pcn").then(function(map) {
-                map.setView($scope.currentLocation);
+                map.setView($scope.currentLocation, 16);
             });
         } else {
             $cordovaGeolocation.getCurrentPosition({
@@ -460,7 +476,7 @@ angular.module('app.main.controllers')
                 map.setView({
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
-                });
+                }, 16);
             }, function(err) {
                 console.log("Location not found");
             });
