@@ -27,7 +27,7 @@
                 <!-- Username -->
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.username.$invalid && signupForm.$submitted, 'no-errors' : signupForm.username.$valid  && signupForm.$submitted}">
                     <span class="input-label">Username</span>
-                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" ng-maxlength="20" required record-availability-validator="https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/checkUsernameAvailability">
+                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" ng-maxlength="15" required record-availability-validator="https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/checkUsernameAvailability">
                 </label>
                 <div class="error-container" ng-show="signupForm.username.$error && signupForm.$submitted" ng-messages="signupForm.username.$error">
                     <div ng-messages-include="error-list.html"></div>
@@ -68,10 +68,10 @@
         <i class="ion-information-circled"></i> Required Field
     </div>
     <div class="error" ng-message="minlength">
-        <i class="ion-information-circled"></i> Minimum length is 8 characters
+        <i class="ion-information-circled"></i> Usernames must be between 8 and 15 characters
     </div>
     <div class="error" ng-message="maxlength">
-        <i class="ion-information-circled"></i> Maximum length is 20 characters
+        <i class="ion-information-circled"></i> Usernames must be between 8 and 15 characters
     </div>
     <div class="error" ng-message="recordLoading">
         <i class="ion-information-circled"></i> Checking...
