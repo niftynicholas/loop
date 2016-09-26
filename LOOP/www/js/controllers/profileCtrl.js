@@ -16,10 +16,10 @@ angular.module('app.main.controllers')
     $scope.name = localStorage.getItem("name");
     $scope.uid = localStorage.getItem("uid");
     $scope.profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
+    $scope.profilePicture = $scope.profilePictures[$scope.uid];
+
     if ($scope.profilePicture == "null") {
         $scope.profilePicture = 'img/profile-placeholder.gif';
-    } else {
-        $scope.profilePicture = "data:" + $scope.profilePicture;
     }
 
     $scope.logOut = function() {
@@ -243,6 +243,9 @@ angular.module('app.main.controllers')
             }
             document.querySelector('.cropped-photo').appendChild(profilePhoto);
 
+            $scope.profilePictures[$scope.uid] = $scope.profilePicture;
+            localStorage.setItem("profilePictures", $scope.profilePictures);
+
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/uploadProfilePicture",
                 method: 'POST',
@@ -253,7 +256,9 @@ angular.module('app.main.controllers')
                     image: dataURL,
                     token: localStorage.getItem("token")
                 }
-            }).then(function successCallback(response) {}, function errorCallback(response) {});
+            }).then(function successCallback(response) {
+
+            }, function errorCallback(response) {});
         }, function() {
             // User canceled or couldn't load image.
         });

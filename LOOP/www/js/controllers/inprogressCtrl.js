@@ -57,6 +57,7 @@ angular.module('app.main.controllers')
     var map = new ol.Map({
         layers: [
             new ol.layer.Tile({
+                preload: 2,
                 source: new ol.source.OSM({
                     attributions: [
                         new ol.Attribution({

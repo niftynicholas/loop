@@ -109,10 +109,12 @@ angular.module('app.main.controllers')
             map: {
                 contextmenu: true,
                 contextmenuWidth: 140,
-                contextmenuItems: [{
-                    text: 'Show coordinates',
-                    callback: showCoordinates
-                }, {
+                contextmenuItems: [
+                //     {
+                //     text: 'Show coordinates',
+                //     callback: showCoordinates
+                // },
+                {
                     text: 'Submit Suggestion',
                     callback: submitSuggestion
                 }]

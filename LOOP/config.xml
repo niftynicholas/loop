@@ -15,6 +15,7 @@
   <preference name="InAppBrowserStorageEnabled" value="True"/>
   <preference name="SuppressesIncrementalRendering" value="True"/>
   <preference name="windows-target-version" value="10.0"/>
+  <preference name="orientation" value="portrait" />
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>
