@@ -244,7 +244,7 @@ angular.module('app.main.controllers')
             document.querySelector('.cropped-photo').appendChild(profilePhoto);
 
             $scope.profilePictures[$scope.uid] = $scope.profilePicture;
-            localStorage.setItem("profilePictures", $scope.profilePictures);
+            localStorage.setItem("profilePictures", JSON.stringify($scope.profilePictures));
 
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/uploadProfilePicture",
