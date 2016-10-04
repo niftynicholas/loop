@@ -13,7 +13,7 @@
         </div>
         <div class="list">
             <div class="item item-divider">
-                Average Rating ({{route.ratings}})
+                Average Rating ({{route.ratings | toFixed2}})
             </div>
             <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
             <div class="item item-divider">
@@ -29,7 +29,7 @@
                 <i class="icon ion-speedometer"></i> Average Speed: {{route.distance / 1000 / (route.duration / 3600) | toFixed2}} km/h
             </a>
             <a ng-if="route.calories != null" class="item item-icon-left" href="#">
-                <i class="icon ion-ios-flame"></i> Calories: {{route.calories}}
+                <i class="icon ion-ios-flame"></i> Calories: {{route.calories | toFixed2}}
             </a>
             <div class="item item-divider">
                 Comments
