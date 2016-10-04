@@ -109,12 +109,11 @@ angular.module('app.main.controllers')
 
     $scope.ratingsCallback = function(rating) {
         window.plugins.toast.showWithOptions({
-                message: "Rating Updated",
-                duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
-                position: "bottom",
-                addPixelsY: -40 // added a negative value to move it up a bit (default 0)
-            }
-        );
+            message: "Rating Updated",
+            duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+            position: "bottom",
+            addPixelsY: -40 // added a negative value to move it up a bit (default 0)
+        });
         $scope.rating = rating;
     };
     $scope.input = {
@@ -137,7 +136,10 @@ angular.module('app.main.controllers')
         var route = $scope.paths.p1.latlngs;
         var data = dataShare.getData();
         if (route.length === 0) {
-            alert("No GPS Data was received");
+            var alertPopup = $ionicPopup.alert({
+                title: 'Opps!',
+                template: 'We are unable to save this activity as there is no GPS data recorded.'
+            });
         } else {
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/upload2",
@@ -163,8 +165,10 @@ angular.module('app.main.controllers')
                 dataShare.clearData();
                 $state.go('tabsController.cycle');
             }, function errorCallback(response) {
-                alert("Error Saving to database");
-                alert(JSON.stringify(response, null, 4));
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Opps!',
+                    template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                });
             });
         }
     };
