@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('completedCtrl', function($scope, $state, $ionicPopup, $timeout, leafletData, dataShare, $http, sharedRoute) {
+.controller('completedCtrl', function($scope, $state, $ionicPopup, $ionicLoading, $timeout, leafletData, dataShare, $http, sharedRoute) {
     $scope.username = localStorage.getItem("username");
     sharedRoute.hasPlannedRoute = false;
 
@@ -133,9 +133,13 @@ angular.module('app.main.controllers')
          * Save Button
          */
     $scope.save = function() {
+        $ionicLoading.show({
+            template: '<p>Saving...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        });
         var route = $scope.paths.p1.latlngs;
         var data = dataShare.getData();
         if (route.length === 0) {
+            $ionicLoading.hide();
             var alertPopup = $ionicPopup.alert({
                 title: 'Opps!',
                 template: 'We are unable to save this activity as there is no GPS data recorded.'
@@ -162,9 +166,11 @@ angular.module('app.main.controllers')
                     referencedCID: data.referencedCID || null
                 }
             }).then(function successCallback(response) {
+                $ionicLoading.hide();
                 dataShare.clearData();
-                $state.go('tabsController.cycle');
+                $state.go('tabsController.routes.myRoutes');
             }, function errorCallback(response) {
+                $ionicLoading.hide();
                 var alertPopup = $ionicPopup.alert({
                     title: 'Opps!',
                     template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'

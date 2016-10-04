@@ -6,8 +6,7 @@ angular.module('app.main.controllers')
     var uid = localStorage.getItem("uid");
     var index = routeName.getData().index;
     var routesType = routeName.getData().routesType;
-    var routes = JSON.parse(localStorage.getItem(routesType));
-    console.log(routes);
+    var routes = JSON.parse(localStorage.getItem(routesType));    
     $scope.route = routes[index];
     $scope.stars = Math.round($scope.route.ratings);
     $scope.ratings = $scope.route.ratings + "";
@@ -410,7 +409,14 @@ angular.module('app.main.controllers')
     }
 
     $scope.goBack = function() {
-        $ionicHistory.goBack();
+        //userRoutes, nearbyRoutes, bookmarkedRoutes
+        if (routesType === 'nearbyRoutes') {
+            $state.go('tabsController.routes.nearby');
+        } else if (routesType === 'bookmarkedRoutes') {
+            $state.go('tabsController.routes.bookmarks');
+        } else {
+            $state.go('tabsController.routes.myRoutes');
+        }
     };
 
     $scope.bookmark = function() {
