@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('loadingCtrl', function($scope, /*homeData,*/ mapData, $http, $state, $ionicLoading, $timeout) {
+.controller('loadingCtrl', function($scope, mapData, $http, $state, $ionicLoading, $timeout) {
     $scope.show = function() {
         $ionicLoading.show({
             template: '<p>Loading Resources...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
@@ -11,7 +11,6 @@ angular.module('app.main.controllers')
         $ionicLoading.hide();
     };
 
-    //Removal of token
     $scope.getMapData = function() {
         $http({
             url: 'https://sgcycling-sgloop.rhcloud.com/api/cyclist/map/getMapData',
@@ -19,10 +18,7 @@ angular.module('app.main.controllers')
             async: false,
             headers: {
                 'Content-Type': 'application/json'
-            }//,
-            //data: {
-            //    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIsInBlcm1pc3Npb25zIjpbInVzZXIiXSwiaWF0IjoxNDczMDk1NzcxfQ.uSS4fWPI8ssAbekZh5foyPAx-oR-oCnGhstOAAIcWVU'
-            //},
+            }
         }).then(function successCallback(response) {
                 mapData.sendData(response.data);
                 console.log("Data for Map Tab has been loaded.");
@@ -35,8 +31,12 @@ angular.module('app.main.controllers')
     $scope.show();
     $timeout(function() {
         $scope.hide();
-        $state.go('landing');
+        var login_state = localStorage.getItem('login_state');
+        if (login_state === 'true') {
+            $state.go('tabsController.home');
+        } else {
+            $state.go('landing');
+        }
     }, 4000);
-    //$scope.getHomeData();
     $scope.getMapData();
 })

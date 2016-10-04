@@ -28,7 +28,7 @@ angular.module('app.main.controllers')
         });
 
         $timeout(function() {
-            localStorage.setItem('loggin_state', 'false');
+            localStorage.setItem('login_state', 'false');
             localStorage.clear();
             $window.localStorage.clear();
             $ionicLoading.hide();
