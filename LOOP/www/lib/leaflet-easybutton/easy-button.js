@@ -111,7 +111,8 @@ L.Control.EasyButton = L.Control.extend({
                                 //   icon: 'fa-circle',    // wrapped with <a>
                                 // }
 
-    leafletClasses:   true      // use leaflet styles for the button
+    leafletClasses:   true,     // use leaflet styles for the button
+    tagName:          'button',
   },
 
 
@@ -166,8 +167,14 @@ L.Control.EasyButton = L.Control.extend({
 
   _buildButton: function(){
 
-    this.button = L.DomUtil.create('div', '');
-    
+    this.button = L.DomUtil.create(this.options.tagName, '');
+
+    // the next three if statements should be collapsed into the options
+    // when it's time for breaking changes.
+    if (this.tagName === 'button') {
+        this.button.type = 'button';
+    }
+
     if (this.options.id ){
       this.button.id = this.options.id;
     }
@@ -353,7 +360,7 @@ function buildIcon(ambiguousIconString) {
   } else {
       ambiguousIconString = ambiguousIconString.replace(/(^\s*|\s*$)/g,'');
       tmpIcon = L.DomUtil.create('span', '');
-
+      
       if( ambiguousIconString.indexOf('fa-') === 0 ){
         L.DomUtil.addClass(tmpIcon, 'fa '  + ambiguousIconString)
       } else if ( ambiguousIconString.indexOf('glyphicon-') === 0 ) {

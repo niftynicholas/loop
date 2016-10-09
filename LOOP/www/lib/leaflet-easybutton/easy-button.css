@@ -1,5 +1,5 @@
-.leaflet-bar div,
-.leaflet-bar div:hover {
+.leaflet-bar button,
+.leaflet-bar button:hover {
   background-color: #fff;
   border: none;
   border-bottom: 1px solid #ccc;
@@ -12,30 +12,30 @@
   color: black;
 }
 
-.leaflet-bar div {
+.leaflet-bar button {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   overflow: hidden;
   display: block;
 }
 
-.leaflet-bar div:hover {
+.leaflet-bar button:hover {
   background-color: #f4f4f4;
 }
 
-.leaflet-bar div:first-of-type {
+.leaflet-bar button:first-of-type {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
 
-.leaflet-bar div:last-of-type {
+.leaflet-bar button:last-of-type {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   border-bottom: none;
 }
 
 .leaflet-bar.disabled,
-.leaflet-bar div.disabled {
+.leaflet-bar button.disabled {
   cursor: default;
   pointer-events: none;
   opacity: .4;
@@ -49,7 +49,7 @@
 }
 
 
-.leaflet-touch .leaflet-bar div {
+.leaflet-touch .leaflet-bar button {
   width: 30px;
   height: 30px;
   line-height: 30px;
