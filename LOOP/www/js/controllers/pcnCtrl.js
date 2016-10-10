@@ -184,9 +184,9 @@ angular.module('app.main.controllers')
                 $scope.geotaggedLayer = L.geoJson(geotaggedComments, {
                     pointToLayer: function(feature, latlng) {
                         var smallIcon = L.AwesomeMarkers.icon({
-                            icon: 'commenting',
+                            icon: 'chatbubble-working',
                             markerColor: 'cadetblue',
-                            prefix: 'fa'
+                            prefix: 'ion'
                         });
                         return L.marker(latlng, {
                             icon: smallIcon
@@ -231,7 +231,7 @@ angular.module('app.main.controllers')
                         var smallIcon = L.AwesomeMarkers.icon({
                             icon: 'umbrella',
                             markerColor: 'orange',
-                            prefix: 'fa'
+                            prefix: 'ion'
                         });
                         return L.marker(latlng, {
                             icon: smallIcon
@@ -243,9 +243,9 @@ angular.module('app.main.controllers')
                 var drinkingWaterLayer = L.geoJson(drinkingWater, {
                     pointToLayer: function(feature, latlng) {
                         var smallIcon = L.AwesomeMarkers.icon({
-                            icon: 'tint',
+                            icon: 'waterdrop',
                             markerColor: 'blue',
-                            prefix: 'fa'
+                            prefix: 'ion'
                         });
                         return L.marker(latlng, {
                             icon: smallIcon
@@ -257,7 +257,7 @@ angular.module('app.main.controllers')
                 var bicycleParkingLayer = L.geoJson(bicycleParking, {
                     pointToLayer: function(feature, latlng) {
                         var smallIcon = L.AwesomeMarkers.icon({
-                            icon: 'lock',
+                            icon: 'product-hunt',
                             markerColor: 'gray',
                             prefix: 'fa'
                         });
