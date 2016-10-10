@@ -10,6 +10,7 @@
                 <h2>{{route.name}}</h2>
                 <p>Distance: {{route.distance | km}} km</br>Duration: {{route.duration | duration}}</br>Comments: {{routeComments[$index].comments.length||0}}</p>
                 <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteRoute(route.cid)"></ion-option-button>
+                <!-- <ion-option-button class="button-energized icon ion-edit" ng-click="editRoute(route.cid)"></ion-option-button> -->
             </ion-item>
             <ion-item class="item" style="text-align: center;" ng-if="!(routes.length !== 0)">You do not have any route recorded.</ion-item>
         </ion-list>

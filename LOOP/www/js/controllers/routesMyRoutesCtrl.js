@@ -156,6 +156,10 @@ angular.module('app.main.controllers')
             $state.go("viewRoute");
         }
 
+        // $scope.editRoute = function(cid){
+        //     alert("EDIT");
+        // }
+
         $scope.deleteRoute = function(cid){
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/deleteRoute",

@@ -67,13 +67,15 @@ angular.module('app.main.controllers')
 
     $scope.today = today;
 
+    moment.locale();
+    $scope.timeNow = moment().format('LTS');
+
     $scope.paths.p1.latlngs = data.path;
 
     leafletData.getMap("completed").then(function(map) {
         map.invalidateSize();
         map.fitBounds($scope.paths.p1.latlngs);
     });
-
 
     /**
      * Confirm Dialog
@@ -121,62 +123,93 @@ angular.module('app.main.controllers')
     };
     $scope.comments = [];
     $scope.postComment = function() {
-            if ($scope.input.comment.length > 0) {
-                $scope.comments.push({
-                    dateTimeStamp: new Date().getTime(),
-                    comment: $scope.input.comment
-                });
-                $scope.input.comment = "";
-            }
-        }
-        /**
-         * Save Button
-         */
-    $scope.save = function() {
-        $ionicLoading.show({
-            template: '<p>Saving...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
-        });
-        var route = $scope.paths.p1.latlngs;
-        var data = dataShare.getData();
-        if (route.length === 0) {
-            $ionicLoading.hide();
-            var alertPopup = $ionicPopup.alert({
-                title: 'Opps!',
-                template: 'We are unable to save this activity as there is no GPS data recorded.'
+        if ($scope.input.comment.length > 0) {
+            $scope.comments.push({
+                dateTimeStamp: new Date().getTime(),
+                comment: $scope.input.comment
             });
-        } else {
-            $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/upload2",
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: {
-                    token: localStorage.getItem("token"),
-                    startDateTimeStamp: data.startDateTimeStamp,
-                    distance: data.distance,
-                    duration: data.durationInSeconds,
-                    averageSpeed: data.averageSpeed,
-                    calories: data.calories,
-                    ratings: $scope.rating || 2,
-                    route: $scope.paths.p1.latlngs,
-                    generalComments: $scope.comments,
-                    geotagComments: data.geotagsInfo,
-                    isShared: $scope.input.isShared || false,
-                    referencedCID: data.referencedCID || null
+            $scope.input.comment = "";
+        }
+    }
+
+    $scope.data = {};
+    $scope.data.routeName = "Activity on " + $scope.today + " at " + $scope.timeNow;
+
+    /**
+     * Save Button
+     */
+    $scope.save = function() {
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.show({
+            template: '<input type="text" ng-model="data.routeName">',
+            title: 'Save Route As',
+            scope: $scope,
+            buttons: [{
+                text: 'Cancel'
+            }, {
+                text: '<b>Save</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                    if (!$scope.data.routeName) {
+                        //don't allow the user to close unless he enters wifi password
+                        e.preventDefault();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Opps!',
+                            template: 'We do not accept blank route names.'
+                        });
+                    } else {
+                        return $scope.data.routeName;
+                    }
                 }
-            }).then(function successCallback(response) {
-                $ionicLoading.hide();
-                dataShare.clearData();
-                $state.go('tabsController.routes.myRoutes');
-            }, function errorCallback(response) {
+            }]
+        });
+
+        myPopup.then(function(res) {
+            $ionicLoading.show({
+                template: '<p>Saving...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+            });
+            var route = $scope.paths.p1.latlngs;
+            var data = dataShare.getData();
+            if (route.length === 0) {
                 $ionicLoading.hide();
                 var alertPopup = $ionicPopup.alert({
                     title: 'Opps!',
-                    template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                    template: 'We are unable to save this activity as there is no GPS data recorded.'
                 });
-            });
-        }
+            } else {
+                $http({
+                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/upload2",
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        token: localStorage.getItem("token"),
+                        startDateTimeStamp: data.startDateTimeStamp,
+                        distance: data.distance,
+                        duration: data.durationInSeconds,
+                        averageSpeed: data.averageSpeed,
+                        calories: data.calories,
+                        ratings: $scope.rating || 2,
+                        route: $scope.paths.p1.latlngs,
+                        generalComments: $scope.comments,
+                        geotagComments: data.geotagsInfo,
+                        isShared: $scope.input.isShared || false,
+                        referencedCID: data.referencedCID || null,
+                        name: $scope.data.routeName
+                    }
+                }).then(function successCallback(response) {
+                    $ionicLoading.hide();
+                    dataShare.clearData();
+                    $state.go('tabsController.routes.myRoutes');
+                }, function errorCallback(response) {
+                    $ionicLoading.hide();
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Opps!',
+                        template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                    });
+                });
+            }
+        });
     };
-
 })
