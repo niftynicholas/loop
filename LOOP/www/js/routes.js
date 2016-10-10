@@ -73,7 +73,6 @@ angular.module('app.routes', [])
     })
 
     .state('tabsController.pcn', {
-        cache: false,
         url: '/pcn',
         views: {
             'tab5': {

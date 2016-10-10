@@ -3,7 +3,46 @@
     <ion-nav-buttons side="right">
         <button class="button button-icon icon ion-android-locate" ng-click="locateMe()"></button>
     </ion-nav-buttons>
+    <ion-floating-button click="showOverlay()" has-footer="false" button-color="#ffffff" icon="ion-social-buffer" icon-color="#000" style="top:60px;"></ion-floating-button>
     <ion-content data-tap-disabled="true" scroll="false">
         <leaflet id="pcn" lf-center="center" defaults="defaults" paths="paths" height="100%" width="100%"></leaflet>
     </ion-content>
 </ion-view>
+
+<script id="amenities.html" type="text/ng-template">
+  <ion-modal-view>
+    <ion-header-bar class="bar-balanced">
+      <h1 class="title">Amenities</h1>
+      <button class="button button-clear button-primary" ng-click="closeModal()">Close</button>
+    </ion-header-bar>
+    <ion-content>
+      <ion-toggle ng-model="geotags.checked" ng-change="onChangeGeotag(geotags.checked)" toggle-class="toggle-balanced">
+          <i class="icon ion-chatbubble-working"></i> Comments
+      </ion-toggle>
+      <ion-toggle ng-model="pcn.checked" ng-change="onChangePCN(pcn.checked)" toggle-class="toggle-balanced">
+          <i class="fa fa-road"></i> Cycling Paths
+      </ion-toggle>
+      <ion-toggle ng-model="itpcn.checked" ng-change="onChangeITPCN(itpcn.checked)" toggle-class="toggle-balanced">
+            <i class="fa fa-connectdevelop"></i> Intra-Town Cycling Paths
+      </ion-toggle>
+      <ion-toggle ng-model="toilets.checked" ng-change="onChangeToilets(toilets.checked)" toggle-class="toggle-balanced">
+          <i class="icon ion-man"></i><i class="icon ion-woman"></i> Toilets
+      </ion-toggle>
+      <ion-toggle ng-model="fnb.checked" ng-change="onChangeFNB(fnb.checked)" toggle-class="toggle-balanced">
+           <i class="fa fa-cutlery"></i> Food & Beverages
+      </ion-toggle>
+      <ion-toggle ng-model="shelters.checked" ng-change="onChangeShelters(shelters.checked)" toggle-class="toggle-balanced">
+           <i class="icon ion-umbrella"></i> Shelters
+      </ion-toggle>
+      <ion-toggle ng-model="drinkingwater.checked" ng-change="onChangeDrinkingWater(drinkingwater.checked)" toggle-class="toggle-balanced">
+           <i class="icon ion-waterdrop"></i> Drinking Water Points
+      </ion-toggle>
+      <ion-toggle ng-model="bikelots.checked" ng-change="onChangeBikeLots(bikelots.checked)" toggle-class="toggle-balanced">
+           <i class="fa fa-product-hunt"></i> Bicycle Parking Lots
+      </ion-toggle>
+      <ion-toggle ng-model="bikerentals.checked" ng-change="onChangeBikeRentals(bikerentals.checked)" toggle-class="toggle-balanced">
+           <i class="fa fa-key"></i> Bicycle Rentals
+      </ion-toggle>
+    </ion-content>
+  </ion-modal-view>
+</script>
