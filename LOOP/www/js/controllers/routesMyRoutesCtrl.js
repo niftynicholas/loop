@@ -6,14 +6,17 @@ angular.module('app.main.controllers')
     if (uids.length === 0) {
       uids = 0;
     }
-    //Retrieves and parses the popularRoutes that was retrieved when the user logged in
-    $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
-    //Pre-existing scope variable
-    $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+    // //Retrieves and parses the popularRoutes that was retrieved when the user logged in
+    // $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
+    //
+    // //Pre-existing scope variable
+    // $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+    // $scope.$on('$ionicView.enter', function(){
+    //     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+    // });
+
     $scope.hasMoreRoutes = true;
-    $scope.$on('$ionicView.enter', function(){
-        $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
-    });
+
     $scope.checkHasMoreRoutes = function() {
         return $scope.hasMoreRoutes;
     }
@@ -104,9 +107,9 @@ angular.module('app.main.controllers')
         };
         //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
         //Test whether the timeout is still required, not tested by Wee Kian
-        $timeout(init, 0);
 
         $scope.loadMore = function() {
+
             $http({
                 url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes2",
                 method: 'POST',
@@ -123,8 +126,13 @@ angular.module('app.main.controllers')
                 if (additionalUserRoutes.length < 10) {
                     $scope.hasMoreRoutes = false;
                 }
-                $scope.routes = $scope.routes.concat(response.data.userRoutes);
-                $scope.routeComments = $scope.routeComments.concat(response.data.userRoutes);
+                if(typeof $scope.routes === "undefined"){
+                    $scope.routes = response.data.userRoutes;
+                    $scope.routeComments = response.data.userRoutes;
+                }else{
+                    $scope.routes = $scope.routes.concat(response.data.userRoutes);
+                    $scope.routeComments = $scope.routeComments.concat(response.data.userRoutes);
+                }
                 localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
                 updateProfilePicture(response.data.profilePictures);
                 $scope.$broadcast('scroll.infiniteScrollComplete');

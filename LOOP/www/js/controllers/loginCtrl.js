@@ -45,7 +45,8 @@ angular.module('app.main.controllers')
                     //Stores the top 5 bookmarked Routes
                     localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
                     //Stores the top 5 User's routes
-                    localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                    //TO REMOVE JSON ATTRIBUTE FOR USERROUTES
+                    // localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
                     //Stores the top profilePictures
                     localStorage.setItem("profilePictures", JSON.stringify(response.data.profilePictures));
                     $scope.hide();
