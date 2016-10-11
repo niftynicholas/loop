@@ -6,7 +6,7 @@ angular.module('app.main.controllers')
     var uid = localStorage.getItem("uid");
     var index = routeName.getData().index;
     var routesType = routeName.getData().routesType;
-    var routes = JSON.parse(localStorage.getItem(routesType));    
+    var routes = JSON.parse(localStorage.getItem(routesType));
     $scope.route = routes[index];
     $scope.stars = Math.round($scope.route.ratings);
     $scope.ratings = $scope.route.ratings + "";
@@ -414,8 +414,10 @@ angular.module('app.main.controllers')
             $state.go('tabsController.routes.nearby');
         } else if (routesType === 'bookmarkedRoutes') {
             $state.go('tabsController.routes.bookmarks');
-        } else {
+        } else if (routesType === 'userRoutes'){
             $state.go('tabsController.routes.myRoutes');
+        } else {
+            $state.go('tabsController.home');
         }
     };
 
