@@ -1,6 +1,16 @@
 angular.module('app.main.controllers')
 
 .controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData, $cordovaGeolocation, $ionicPopup, $http, $ionicModal) {
+    $scope.caption = 'To submit a Comment or Suggestion, simply TAP & HOLD on the map. Then, TAP on "Submit Comment".';
+
+    $scope.help = function() {
+        $scope.walkthrough = true;
+    };
+
+    $scope.destroy = function() {
+        $scope.walkthrough = false;
+    };
+
     $scope.currentLocation = {};
     $scope.firstLoad = true;
     $scope.dataLoaded = false;
@@ -16,15 +26,33 @@ angular.module('app.main.controllers')
     var food = response.food;
     var geotags = L.layerGroup();
 
-    $scope.geotags = { checked: false };
-    $scope.pcn = { checked: false };
-    $scope.itpcn = { checked: false };
-    $scope.toilets = { checked: false };
-    $scope.fnb = { checked: false };
-    $scope.shelters = { checked: false };
-    $scope.drinkingwater = { checked: false };
-    $scope.bikelots = { checked: false };
-    $scope.bikerentals = { checked: false };
+    $scope.geotags = {
+        checked: false
+    };
+    $scope.pcn = {
+        checked: false
+    };
+    $scope.itpcn = {
+        checked: false
+    };
+    $scope.toilets = {
+        checked: false
+    };
+    $scope.fnb = {
+        checked: false
+    };
+    $scope.shelters = {
+        checked: false
+    };
+    $scope.drinkingwater = {
+        checked: false
+    };
+    $scope.bikelots = {
+        checked: false
+    };
+    $scope.bikerentals = {
+        checked: false
+    };
 
     $scope.showPopup = function() {
         $scope.data = {};
@@ -82,8 +110,7 @@ angular.module('app.main.controllers')
                             title: 'Opps!',
                             template: 'We do not accept blank submissions.'
                         });
-                        alertPopup.then(function(res) {
-                        });
+                        alertPopup.then(function(res) {});
                     } else {
                         return $scope.data.geotag;
                     }
@@ -98,7 +125,9 @@ angular.module('app.main.controllers')
                     markerColor: 'cadetblue',
                     prefix: 'fa'
                 });
-                L.marker(e.latlng, {icon: commentMarker}).addTo(geotags).bindPopup(res).openPopup();
+                L.marker(e.latlng, {
+                    icon: commentMarker
+                }).addTo(geotags).bindPopup(res).openPopup();
                 $http({
                     url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/addGeotag",
                     method: 'POST',
@@ -159,7 +188,7 @@ angular.module('app.main.controllers')
                     //     callback: showCoordinates
                     // },
                     {
-                        text: 'Submit Suggestion',
+                        text: 'Submit Comment',
                         callback: submitSuggestion
                     }
                 ]
@@ -177,7 +206,9 @@ angular.module('app.main.controllers')
             edgeBufferTiles: 2
         }).addTo(map);
 
-        var attribution = L.control.attribution({position: 'bottomright'});
+        var attribution = L.control.attribution({
+            position: 'bottomright'
+        });
 
         var attributionBtn = L.easyButton({
             id: 'animated-marker-toggle',
@@ -315,48 +346,48 @@ angular.module('app.main.controllers')
                     onEachFeature: onEachFeature
                 });
 
-                $scope.onChangeGeotag = function(isChecked){
-                    if(isChecked) map.addLayer($scope.geotaggedLayer);
+                $scope.onChangeGeotag = function(isChecked) {
+                    if (isChecked) map.addLayer($scope.geotaggedLayer);
                     else map.removeLayer($scope.geotaggedLayer);
                 }
 
-                $scope.onChangePCN = function(isChecked){
-                    if(isChecked) map.addLayer(pcnLayer);
+                $scope.onChangePCN = function(isChecked) {
+                    if (isChecked) map.addLayer(pcnLayer);
                     else map.removeLayer(pcnLayer);
                 }
 
-                $scope.onChangeITPCN = function(isChecked){
-                    if(isChecked) map.addLayer(intraTownCyclingPathLayer);
+                $scope.onChangeITPCN = function(isChecked) {
+                    if (isChecked) map.addLayer(intraTownCyclingPathLayer);
                     else map.removeLayer(intraTownCyclingPathLayer);
                 }
 
-                $scope.onChangeToilets = function(isChecked){
-                    if(isChecked) map.addLayer(toiletsLayer);
+                $scope.onChangeToilets = function(isChecked) {
+                    if (isChecked) map.addLayer(toiletsLayer);
                     else map.removeLayer(toiletsLayer);
                 }
 
-                $scope.onChangeFNB = function(isChecked){
-                    if(isChecked) map.addLayer(foodLayer);
+                $scope.onChangeFNB = function(isChecked) {
+                    if (isChecked) map.addLayer(foodLayer);
                     else map.removeLayer(foodLayer);
                 }
 
-                $scope.onChangeShelters = function(isChecked){
-                    if(isChecked) map.addLayer(sheltersLayer);
+                $scope.onChangeShelters = function(isChecked) {
+                    if (isChecked) map.addLayer(sheltersLayer);
                     else map.removeLayer(sheltersLayer);
                 }
 
-                $scope.onChangeDrinkingWater = function(isChecked){
-                    if(isChecked) map.addLayer(drinkingWaterLayer);
+                $scope.onChangeDrinkingWater = function(isChecked) {
+                    if (isChecked) map.addLayer(drinkingWaterLayer);
                     else map.removeLayer(drinkingWaterLayer);
                 }
 
-                $scope.onChangeBikeLots = function(isChecked){
-                    if(isChecked) map.addLayer(bicycleParkingLayer);
+                $scope.onChangeBikeLots = function(isChecked) {
+                    if (isChecked) map.addLayer(bicycleParkingLayer);
                     else map.removeLayer(bicycleParkingLayer);
                 }
 
-                $scope.onChangeBikeRentals = function(isChecked){
-                    if(isChecked) map.addLayer(bicycleRentalLayer);
+                $scope.onChangeBikeRentals = function(isChecked) {
+                    if (isChecked) map.addLayer(bicycleRentalLayer);
                     else map.removeLayer(bicycleRentalLayer);
                 }
 
@@ -367,7 +398,9 @@ angular.module('app.main.controllers')
                     toolTips: false,
                     color: 'primary'
                 }
-                var materialZoomControl = new L.Control.MaterialZoom({position: 'topleft' }).addTo(map);
+                var materialZoomControl = new L.Control.MaterialZoom({
+                    position: 'topleft'
+                }).addTo(map);
 
                 $scope.dataLoaded = true;
             } else {
@@ -381,11 +414,11 @@ angular.module('app.main.controllers')
                         token: localStorage.getItem("token"),
                     }
                 }).then(function successCallback(response) {
-                    if($scope.geotags.checked){
+                    if ($scope.geotags.checked) {
                         map.removeLayer($scope.geotaggedLayer);
                     }
                     geotaggedComments = response.data.geotaggedComments;
-                    if($scope.geotags.checked){
+                    if ($scope.geotags.checked) {
                         $scope.geotaggedLayer = L.geoJson(geotaggedComments, {
                             pointToLayer: function(feature, latlng) {
                                 var smallIcon = L.AwesomeMarkers.icon({
