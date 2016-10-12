@@ -47,6 +47,14 @@ angular.module('app.main.controllers')
 
     $scope.cycle = function() {
         sharedRoute.routepoints = $scope.results[$scope.no - 1].geojson.coordinates;
+
+        var data = {
+            currentLocation: $scope.currentLocation,
+            time: $scope.timestamp,
+            startDateTimeStamp: new Date().getTime()
+        };
+        dataShare.clearData();
+        dataShare.sendData(data);
         $state.go("inprogress");
     }
 
@@ -109,6 +117,7 @@ angular.module('app.main.controllers')
                 $scope.paths.currentLoc.latlngs.push(position.coords.latitude);
                 $scope.paths.currentLoc.latlngs.push(position.coords.longitude);
                 $scope.timestamp = position.timestamp;
+
             }, function(err) {
                 console.log("Location not found");
             });
@@ -297,7 +306,6 @@ angular.module('app.main.controllers')
                     });
                 }
                 $scope.results = response.data.result;
-                console.log($scope.results);
                 for (var i = 0; i < response.data.result.length; i++) {
                     var route = response.data.result[i].geojson;
                     var routeLayer = L.geoJson(route, {

@@ -85,10 +85,6 @@ angular.module('app.main.controllers')
                         token: localStorage.getItem("token")
                     }
                 }).then(function successCallback(response) {
-                        console.log(response);
-                        console.log($scope.route.comments);
-
-                        //
                         for (var i = 0; i < $scope.route.comments.length; i++) {
                             var comment = $scope.route.comments[i];
                             var tempUID = comment.uid;
@@ -106,20 +102,14 @@ angular.module('app.main.controllers')
 
                         // Delete from Local Arrays
                         popularRoutes = JSON.parse(localStorage.getItem("popularRoutes"));
-                        console.log(popularRoutes);
                         for (var i = 0; i < popularRoutes.length; i++) {
                             route = popularRoutes[i];
-                            console.log(route);
                             if (route.cid == routeCID) {
-                                console.log(route.comments[0].uid);
                                 for (var ii = 0; ii < route.comments.length; ii++) {
-                                    console.log(ii);
                                     var comment = route.comments[ii];
-                                    console.log(comment);
                                     var tempUID = comment.uid;
                                     var tempDTS = comment.datetimestamp;
                                     var tempText = comment.comment;
-
                                     var thisUID = localStorage.getItem("uid");
                                     var thisDTS = dateTime;
                                     var thisText = commentText;
@@ -177,7 +167,6 @@ angular.module('app.main.controllers')
                         $ionicLoading.hide();
                     },
                     function errorCallback(response) {
-                        console.log(response);
                         $ionicLoading.hide();
                         var alertPopup = $ionicPopup.alert({
                             title: 'Server Error',

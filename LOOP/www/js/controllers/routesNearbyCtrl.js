@@ -44,7 +44,6 @@ angular.module('app.main.controllers')
             $scope.$broadcast('scroll.refreshComplete');
             $scope.count = 0;
             $timeout(init, 0);
-            console.log($scope.count);
         },
         function errorCallback(response) {
             console.log("response not found");
@@ -108,7 +107,6 @@ angular.module('app.main.controllers')
                     }
                 }).then(function successCallback(response) {
                     var additionalNearbyRoutes = response.data.nearbyRoutes;
-                    //console.log(additionalBookmarkedRoutes.length);
                     if (additionalNearbyRoutes.length < 10) {
                         $scope.hasMoreRoutes = false;
                     }

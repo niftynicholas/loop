@@ -120,7 +120,6 @@ angular.module('app.main.controllers')
                 }
             }).then(function successCallback(response) {
                 var additionalBookmarkedRoutes = response.data.bookmarkedRoutes;
-                //console.log(additionalBookmarkedRoutes.length);
                 if (additionalBookmarkedRoutes.length < 10) {
                     $scope.hasMoreRoutes = false;
                 }

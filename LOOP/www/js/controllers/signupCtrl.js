@@ -43,7 +43,6 @@ angular.module('app.main.controllers')
                 $scope.hide();
                 $state.go('verify');
             }, function errorCallback(response) {
-                console.log(JSON.stringify(response, null, 4));
                 $scope.hide();
                 $scope.showAlert();
             });

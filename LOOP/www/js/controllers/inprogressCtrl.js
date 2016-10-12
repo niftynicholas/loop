@@ -580,7 +580,7 @@ angular.module('app.main.controllers')
 
                     geotagsInfo.push({
                         dateTimeStamp: new Date().getTime(),
-                        coordinates: $scope.currentLoc,
+                        coordinates: {lat: $scope.currentLoc[1], lng: $scope.currentLoc[0]},
                         comment: res
                     });
                     window.plugins.toast.showWithOptions({

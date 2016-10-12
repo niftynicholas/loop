@@ -39,26 +39,14 @@ angular.module('app.main.controllers')
                     localStorage.setItem("numActivities", response.data.user.numActivities);
                     localStorage.setItem("totalCalories", response.data.user.totalCalories);
                     localStorage.setItem("avgCalories", response.data.user.avgCalories);
-                    //localStorage.setItem("profilePicture", response.data.user.profilePicture);
                     //Stores the top 5 popular routes
                     localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
                     //Stores the top 5 bookmarked Routes
                     localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
-                    //Stores the top 5 User's routes
-                    //TO REMOVE JSON ATTRIBUTE FOR USERROUTES
-                    // localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
                     //Stores the top profilePictures
                     localStorage.setItem("profilePictures", JSON.stringify(response.data.profilePictures));
                     $scope.hide();
                     $state.go('tabsController.home');
-                    /*
-                    popularRoutes:result[1],
-                    bookmarkedRoutes:result[2],
-                    userRoutes:result[3]
-                    */
-                    console.log(response.data.popularRoutes);
-                    console.log(response.data.bookmarkedRoutes);
-                    console.log(response.data.userRoutes);
                 },
                 function errorCallback(response) {
                     $scope.hide();

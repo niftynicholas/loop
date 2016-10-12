@@ -21,7 +21,6 @@ angular.module('app.main.controllers')
             }
         }).then(function successCallback(response) {
                 mapData.sendData(response.data);
-                console.log("Data for Map Tab has been loaded.");
             },
             function errorCallback(response) {
 
