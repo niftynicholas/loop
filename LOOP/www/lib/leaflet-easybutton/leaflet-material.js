@@ -6,7 +6,7 @@ L.Control.include({
     miniFab: true,
     rippleEffect: true,
     toolTips: false,
-    color: 'lime-A200'
+    color: 'lime-A200'  
   },
   _setDefaultOptions: function () {
     var materialOptions = {};
@@ -33,7 +33,7 @@ L.Control.include({
     var materialClass = 'mdl-button mdl-js-button mdl-button--icon',
         materialOptions = this._setDefaultOptions(),
         button = L.DomUtil.create('button', materialClass, container);
-
+    
     this._materialIcon = L.DomUtil.create('i', 'material-icons', button);
     this._materialIcon.innerHTML = iconText;
     button.title = title;
@@ -43,7 +43,7 @@ L.Control.include({
       L.DomUtil.removeClass(button, 'mdl-button--icon');
       L.DomUtil.addClass(button, 'mdl-button--fab');
       if (materialOptions.miniFab) {
-        L.DomUtil.addClass(button, 'mdl-button--mini-fab');
+        L.DomUtil.addClass(button, 'mdl-button--mini-fab'); 
       }
     }
     if (materialOptions.rippleEffect) {
@@ -89,8 +89,8 @@ L.Control.MaterialZoom = L.Control.Zoom.extend({
     var container = L.DomUtil.create('div','leaflet-control-zoom-mdl leaflet-bar-mdl'),
         options = this.options;
 
-    options.zoomInText = options.zoomInText === "+" ? '+' : options.zoomInText;
-    options.zoomOutText = options.zoomOutText === "-" ?'-' : options.zoomInText;
+    options.zoomInText = options.zoomInText === "+" ? 'add' : options.zoomInText;
+    options.zoomOutText = options.zoomOutText === "-" ?'remove' : options.zoomInText;
 
     this._zoomInButton = this._createMaterialButton('leaflet-zoom-in-mdl', options.zoomInText, options.zoomInTitle, container);
     this._zoomOutButton = this._createMaterialButton('leaflet-zoom-out-mdl', options.zoomOutText, options.zoomOutTitle, container);
