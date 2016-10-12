@@ -5,8 +5,8 @@ angular.module('app.main.controllers')
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
 
     /**
-    * Ajax call to get token from OneMap
-    */
+     * Ajax call to get token from OneMap
+     */
     $.ajax({
         dataType: 'json',
         url: 'http://www.onemap.sg/API/services.svc/getToken',
@@ -26,8 +26,11 @@ angular.module('app.main.controllers')
     $('#startPoint').focus(function() {
         if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
             $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
-        }else{
-            $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+        } else {
+            $cordovaGeolocation.getCurrentPosition({
+                timeout: 3000,
+                enableHighAccuracy: true
+            }).then(function(position) {
                 $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + "Current Location" + '</div>');
             }, function(err) {
                 console.log("Location not found");
@@ -44,23 +47,26 @@ angular.module('app.main.controllers')
     });
 
     /**
-    * Populate Search Results for Start Point
-    */
+     * Populate Search Results for Start Point
+     */
     $('#startPoint').keyup(function() {
         var input = $('#startPoint').val();
         //To add Home / Office for Advanced Navigation Module
-        if(input.length == 0){
+        if (input.length == 0) {
             $('#startResult').html("");
             if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
                 $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
-            }else{
-                $cordovaGeolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }).then(function (position) {
+            } else {
+                $cordovaGeolocation.getCurrentPosition({
+                    timeout: 3000,
+                    enableHighAccuracy: true
+                }).then(function(position) {
                     $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + "Current Location" + '</div>');
                 }, function(err) {
                     console.log("Location not found");
                 });
             }
-        }else{
+        } else {
             var type = 'WGS84';
             var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
             $.getJSON(requestURL, {
@@ -100,11 +106,11 @@ angular.module('app.main.controllers')
     });
 
     /**
-    * Populate Search Results for End Point
-    */
+     * Populate Search Results for End Point
+     */
     $('#endPoint').keyup(function() {
         var input = $('#endPoint').val(),
-        type = 'WGS84';
+            type = 'WGS84';
         var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
         $.getJSON(requestURL, {
             'token': token,
@@ -141,10 +147,14 @@ angular.module('app.main.controllers')
         });
     });
 
-    /**
-    * Calculate Route based on Start & End Points
-    */
     $scope.planRoute = function() {
+        $state.go('planResult');
+    }
+
+    /**
+     * Calculate Route based on Start & End Points
+     */
+    $scope.planRouteLOGIC = function() {
 
         var startInput = document.getElementById("startPoint");
         var endInput = document.getElementById("endPoint");
@@ -161,7 +171,7 @@ angular.module('app.main.controllers')
                 endLatLng = endLatLng.split(",");
 
 
-                if(sharedRoute.hasPlanned){
+                if (sharedRoute.hasPlanned) {
                     map.removeLayer(sharedRoute.markerLayer);
                     map.removeLayer(sharedRoute.routeLayer);
                 }
@@ -177,19 +187,25 @@ angular.module('app.main.controllers')
                 });
 
                 var startPointName = startInput.getAttribute("data-val");
-                if(startPointName == "Current Location"){
+                if (startPointName == "Current Location") {
                     startPointName = "Starting Location";
                 }
                 var endPointName = endInput.getAttribute("data-val");
 
                 var sourceMarker1 = L.marker(startLatLng, {
                     draggable: true
-                }).bindPopup(startPointName, {closeOnClick: false,autoPan: false}); //
+                }).bindPopup(startPointName, {
+                    closeOnClick: false,
+                    autoPan: false
+                }); //
 
                 var targetMarker1 = L.marker(endLatLng, {
                     draggable: true,
                     icon: redIcon
-                }).bindPopup(endPointName, {closeOnClick: false,autoPan: false}); //
+                }).bindPopup(endPointName, {
+                    closeOnClick: false,
+                    autoPan: false
+                }); //
 
                 sharedRoute.sourceMarker = {
                     startLatLng: startLatLng,
@@ -211,7 +227,7 @@ angular.module('app.main.controllers')
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
-                    if(sharedRoute.hasPlanned){
+                    if (sharedRoute.hasPlanned) {
                         map.removeLayer(sharedRoute.markerLayer);
                         map.removeLayer(sharedRoute.routeLayer);
                     }
@@ -237,8 +253,14 @@ angular.module('app.main.controllers')
                             sharedRoute.targetMarker.endLatLng = target.getLatLng();
                             sharedRoute.targetMarker.endPointName = endPointName;
 
-                            source.bindPopup(startPointName, { closeOnClick: false,autoPan: false});
-                            target.bindPopup(endPointName, {closeOnClick: false,autoPan: false});
+                            source.bindPopup(startPointName, {
+                                closeOnClick: false,
+                                autoPan: false
+                            });
+                            target.bindPopup(endPointName, {
+                                closeOnClick: false,
+                                autoPan: false
+                            });
                             //source.addTo(sharedRoute.data); //.bindPopup(startPointName, { closeOnClick: false,autoPan: false}).openPopup()
                             //target.addTo(sharedRoute.data); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
                             findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
@@ -253,7 +275,7 @@ angular.module('app.main.controllers')
                     var source = sourceMarker1;
                     var target = targetMarker1;
 
-                    if(sharedRoute.hasPlanned){
+                    if (sharedRoute.hasPlanned) {
                         map.removeLayer(sharedRoute.markerLayer);
                         map.removeLayer(sharedRoute.routeLayer);
                     }
@@ -279,8 +301,14 @@ angular.module('app.main.controllers')
                             sharedRoute.targetMarker.endLatLng = target.getLatLng();
                             sharedRoute.targetMarker.endPointName = endPointName;
 
-                            source.bindPopup(startPointName, { closeOnClick: false,autoPan: false});
-                            target.bindPopup(endPointName, {closeOnClick: false,autoPan: false});
+                            source.bindPopup(startPointName, {
+                                closeOnClick: false,
+                                autoPan: false
+                            });
+                            target.bindPopup(endPointName, {
+                                closeOnClick: false,
+                                autoPan: false
+                            });
                             //source.addTo(sharedRoute.data); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
                             //target.addTo(sharedRoute.data); //.bindPopup(endPointName, { closeOnClick: false, autoPan: false}).openPopup()
                             findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
@@ -308,8 +336,7 @@ angular.module('app.main.controllers')
             title: 'Invalid Start & End Points',
             template: 'Please select a valid start and end point.'
         });
-        alertPopup.then(function(res) {
-        });
+        alertPopup.then(function(res) {});
     };
 
 
@@ -319,8 +346,7 @@ angular.module('app.main.controllers')
             title: 'Invalid Start Point',
             template: 'Please select a valid start point and try again.'
         });
-        alertPopup.then(function(res) {
-        });
+        alertPopup.then(function(res) {});
     };
 
     // Invalid End Point
@@ -329,14 +355,10 @@ angular.module('app.main.controllers')
             title: 'Invalid End Point',
             template: 'Please select a valid end point and try again.'
         });
-        alertPopup.then(function(res) {
-        });
+        alertPopup.then(function(res) {});
     };
 
-    $scope.buttons = [{
-        icon: '',
-        text: 'Shortest'
-    }];
+    $scope.buttons = [{icon: '', text: 'Shortest'}, {icon: '', text: 'Safest'}];
     $scope.activeButton = 0;
     $scope.setActiveButton = function(index) {
         $scope.activeButton = index;

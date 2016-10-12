@@ -161,6 +161,13 @@ angular.module('app.routes', [])
         controller: 'planRouteCtrl'
     })
 
+    .state('planResult', {
+        cache: false,
+        url: '/planResult',
+        templateUrl: 'templates/planResult.html',
+        controller: 'planResultCtrl'
+    })
+
     .state('tabsController.profile', {
         cache: false,
         url: '/profile',
