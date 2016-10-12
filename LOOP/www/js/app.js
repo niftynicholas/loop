@@ -103,7 +103,7 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     service.markerLayer = null;
     service.sourceMarker = {};
     service.targetMarker = {};
-    service.routepoints = [];
+    service.routepoints = null;
     service.hasPlanned = false;
 
     service.clearData = function() {
@@ -111,7 +111,7 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
         this.markerLayer = null;
         this.sourceMarker = {};
         this.targetMarker = {};
-        this.routepoints = [];
+        this.routepoints = null;
         this.hasPlanned = false;
     };
     return service;

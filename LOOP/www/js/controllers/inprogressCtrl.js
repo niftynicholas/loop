@@ -51,7 +51,9 @@ angular.module('app.main.controllers')
         projection: 'EPSG:4326',
         center: [103.8198, 1.3521],
         // center: ol.proj.transform([103.8198, 1.3521], 'EPSG:4326', 'EPSG:3857'),
-        zoom: 11
+        zoom: 11,
+        minZoom: 11,
+        maxZoom: 18
     });
 
     var map = new ol.Map({
@@ -121,27 +123,19 @@ angular.module('app.main.controllers')
         });
         iconFeature2.setStyle(iconStyle2);
 
-        var plannedCoords = [];
-        for (var i = 0; i < sharedRoute.routepoints.length; i++) {
-            var temp = [sharedRoute.routepoints[i].lng, sharedRoute.routepoints[i].lat];
-            plannedCoords.push(temp);
-        }
         var plannedRoute = new ol.Feature({
-            geometry: new ol.geom.LineString(plannedCoords),
+            geometry: new ol.geom.MultiLineString(sharedRoute.routepoints),
             name: 'Path'
         });
         plannedRoute.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
-                width: 5,
+                width: 8,
                 color: '#09493E',
                 rotateWithView: "true"
             })
         }));
 
         var Features = [];
-        var plannedMarker = [];
-        plannedMarker.push(iconFeature);
-        plannedMarker.push(iconFeature2);
         Features.push(plannedRoute);
 
         var vectorSource = new ol.source.Vector({
@@ -152,6 +146,11 @@ angular.module('app.main.controllers')
             source: vectorSource
         });
         map.addLayer(vectorLayer);
+
+
+        var plannedMarker = [];
+        plannedMarker.push(iconFeature);
+        plannedMarker.push(iconFeature2);
 
         var plannedMarkerSource = new ol.source.Vector({
             features: plannedMarker
@@ -562,7 +561,7 @@ angular.module('app.main.controllers')
                             anchorXUnits: 'fraction',
                             anchorYUnits: 'pixels',
                             opacity: 1,
-                            src: 'lib/openlayers/chat_purple.png',
+                            src: 'lib/openlayers/geotag-marker.png',
                             rotateWithView: "true"
                         }))
                     });

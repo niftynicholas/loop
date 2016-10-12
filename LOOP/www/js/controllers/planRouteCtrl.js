@@ -5,8 +5,8 @@ angular.module('app.main.controllers')
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
 
     /**
-     * Ajax call to get token from OneMap
-     */
+    * Ajax call to get token from OneMap
+    */
     $.ajax({
         dataType: 'json',
         url: 'http://www.onemap.sg/API/services.svc/getToken',
@@ -47,8 +47,8 @@ angular.module('app.main.controllers')
     });
 
     /**
-     * Populate Search Results for Start Point
-     */
+    * Populate Search Results for Start Point
+    */
     $('#startPoint').keyup(function() {
         var input = $('#startPoint').val();
         //To add Home / Office for Advanced Navigation Module
@@ -106,11 +106,11 @@ angular.module('app.main.controllers')
     });
 
     /**
-     * Populate Search Results for End Point
-     */
+    * Populate Search Results for End Point
+    */
     $('#endPoint').keyup(function() {
         var input = $('#endPoint').val(),
-            type = 'WGS84';
+        type = 'WGS84';
         var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
         $.getJSON(requestURL, {
             'token': token,
@@ -148,13 +148,6 @@ angular.module('app.main.controllers')
     });
 
     $scope.planRoute = function() {
-        $state.go('planResult');
-    }
-
-    /**
-     * Calculate Route based on Start & End Points
-     */
-    $scope.planRouteLOGIC = function() {
 
         var startInput = document.getElementById("startPoint");
         var endInput = document.getElementById("endPoint");
@@ -162,164 +155,26 @@ angular.module('app.main.controllers')
         var endLatLng = endInput.getAttribute("data-latlng");
 
         if (startLatLng != null && endLatLng != null) {
+            startLatLng = startLatLng.split(",");
+            endLatLng = endLatLng.split(",");
 
+            var startPointName = startInput.getAttribute("data-val");
+            if (startPointName == "Current Location") {
+                startPointName = "Starting Location";
+            }
+            var endPointName = endInput.getAttribute("data-val");
 
-            leafletData.getMap("cycle").then(function(map) {
+            dataShare.data = {
+                startLatLng: startLatLng,
+                endLatLng: endLatLng,
+                startPointName: startPointName,
+                endPointName: endPointName,
+                type: $scope.buttons[$scope.activeButton].text,
+                oneMapToken: token
+            }
 
-                //LatLng is "lat, lng" after utilising getAttribute so spliting it gives us our array [lat, lng]
-                startLatLng = startLatLng.split(",");
-                endLatLng = endLatLng.split(",");
+            $state.go("planResult");
 
-
-                if (sharedRoute.hasPlanned) {
-                    map.removeLayer(sharedRoute.markerLayer);
-                    map.removeLayer(sharedRoute.routeLayer);
-                }
-
-                r360.config.serviceKey = '00AGI2VAF2HNS37EMMLV'; //My Key: 00AGI2VAF2HNS37EMMLV         Website Key: YWtKiQB7MiZETbCoVsG6
-                r360.config.serviceUrl = 'https://service.route360.net/malaysia_singapore/';
-
-                var redIcon = L.icon({
-                    iconUrl: 'lib/leaflet-route360/marker-icon-red.png',
-                    shadowUrl: 'lib/leaflet-route360/marker-shadow.png',
-                    iconAnchor: [12, 45],
-                    popupAnchor: [0, -35]
-                });
-
-                var startPointName = startInput.getAttribute("data-val");
-                if (startPointName == "Current Location") {
-                    startPointName = "Starting Location";
-                }
-                var endPointName = endInput.getAttribute("data-val");
-
-                var sourceMarker1 = L.marker(startLatLng, {
-                    draggable: true
-                }).bindPopup(startPointName, {
-                    closeOnClick: false,
-                    autoPan: false
-                }); //
-
-                var targetMarker1 = L.marker(endLatLng, {
-                    draggable: true,
-                    icon: redIcon
-                }).bindPopup(endPointName, {
-                    closeOnClick: false,
-                    autoPan: false
-                }); //
-
-                sharedRoute.sourceMarker = {
-                    startLatLng: startLatLng,
-                    startPointName: startPointName
-                };
-
-                sharedRoute.targetMarker = {
-                    endLatLng: endLatLng,
-                    redIcon: redIcon,
-                    endPointName: endPointName
-                };
-
-                findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
-
-                //targetMarker1.openPopup();
-                //sourceMarker1.openPopup();
-
-                sourceMarker1.on('dragend', function() {
-                    var source = sourceMarker1;
-                    var target = targetMarker1;
-
-                    if (sharedRoute.hasPlanned) {
-                        map.removeLayer(sharedRoute.markerLayer);
-                        map.removeLayer(sharedRoute.routeLayer);
-                    }
-
-                    $.ajax({
-                        dataType: 'json',
-                        url: 'http://www.onemap.sg/API/services.svc/revgeocode?callback=?',
-                        data: {
-                            'token': token,
-                            'location': source.getLatLng().lng + "," + source.getLatLng().lat,
-                            'buffer': 0,
-                        },
-                        success: function(data) {
-                            if (data.GeocodeInfo[0].ErrorMessage == "Invalid location" || data.GeocodeInfo[0].ErrorMessage == "No building found") {
-                                startPointName = "Invalid Location";
-                            } else {
-                                startPointName = data.GeocodeInfo[0].ROAD;
-                            }
-                        },
-                        complete: function() {
-                            sharedRoute.sourceMarker.startLatLng = source.getLatLng();
-                            sharedRoute.sourceMarker.startPointName = startPointName;
-                            sharedRoute.targetMarker.endLatLng = target.getLatLng();
-                            sharedRoute.targetMarker.endPointName = endPointName;
-
-                            source.bindPopup(startPointName, {
-                                closeOnClick: false,
-                                autoPan: false
-                            });
-                            target.bindPopup(endPointName, {
-                                closeOnClick: false,
-                                autoPan: false
-                            });
-                            //source.addTo(sharedRoute.data); //.bindPopup(startPointName, { closeOnClick: false,autoPan: false}).openPopup()
-                            //target.addTo(sharedRoute.data); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
-                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
-                            //source.openPopup();
-                            //target.openPopup();
-                        }
-                    });
-
-                }); //End sourceMarker dragend
-
-                targetMarker1.on('dragend', function() {
-                    var source = sourceMarker1;
-                    var target = targetMarker1;
-
-                    if (sharedRoute.hasPlanned) {
-                        map.removeLayer(sharedRoute.markerLayer);
-                        map.removeLayer(sharedRoute.routeLayer);
-                    }
-
-                    $.ajax({
-                        dataType: 'json',
-                        url: 'http://www.onemap.sg/API/services.svc/revgeocode?callback=?',
-                        data: {
-                            'token': token,
-                            'location': target.getLatLng().lng + "," + target.getLatLng().lat,
-                            'buffer': 0,
-                        },
-                        success: function(data) {
-                            if (data.GeocodeInfo[0].ErrorMessage == "Invalid location" || data.GeocodeInfo[0].ErrorMessage == "No building found") {
-                                endPointName = "Invalid Location";
-                            } else {
-                                endPointName = data.GeocodeInfo[0].ROAD;
-                            }
-                        },
-                        complete: function() {
-                            sharedRoute.sourceMarker.startLatLng = source.getLatLng();
-                            sharedRoute.sourceMarker.startPointName = startPointName;
-                            sharedRoute.targetMarker.endLatLng = target.getLatLng();
-                            sharedRoute.targetMarker.endPointName = endPointName;
-
-                            source.bindPopup(startPointName, {
-                                closeOnClick: false,
-                                autoPan: false
-                            });
-                            target.bindPopup(endPointName, {
-                                closeOnClick: false,
-                                autoPan: false
-                            });
-                            //source.addTo(sharedRoute.data); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
-                            //target.addTo(sharedRoute.data); //.bindPopup(endPointName, { closeOnClick: false, autoPan: false}).openPopup()
-                            findRoute(map, source, target, source.getLatLng(), target.getLatLng(), $scope, $state, $ionicPopup, sharedRoute);
-                            //source.openPopup();
-                            //target.openPopup();
-                        }
-                    });
-                }); //End targetMarker dragend
-
-                $state.go('tabsController.cycle');
-            });
         } else {
             if (startLatLng == null && endLatLng == null) {
                 $scope.showAlert();
@@ -329,7 +184,13 @@ angular.module('app.main.controllers')
                 $scope.showInvalidEndAlert();
             }
         }
-    };
+
+    }
+
+    /**
+    * Calculate Route based on Start & End Points
+    */
+
     // Invalid Start Point
     $scope.showAlert = function() {
         var alertPopup = $ionicPopup.alert({
@@ -370,68 +231,4 @@ function displayInfo(searchVal, lat, lng, type) {
     $('#' + type + 'Point').attr('data-val', searchVal);
     $('#' + type + 'Point').attr('data-latlng', [lat, lng]);
     $('#' + type + 'Result').html("");
-}
-
-function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, $scope, $state, $ionicPopup, sharedRoute) {
-    sharedRoute.routeLayer = new L.FeatureGroup().addTo(map);
-    var travelOptions = r360.travelOptions();
-    travelOptions.addSource(sourceMarker1);
-    travelOptions.addTarget(targetMarker1);
-    travelOptions.setTravelType('bike');
-
-    // define what happens if everything goes smoothly
-    var successCallBack = function(routes) {
-        sharedRoute.hasPlanned = true;
-        sharedRoute.hasPlannedRoute = true;
-        //var polylineCoords = [];
-        for (var i = 0; i < routes.length; i++) {
-            var route = routes[i];
-            //sharedRoute.routeLayer = new L.Polyline(route.points, { color: 'green', weight: 8,  dashArray: '10,10' });
-            r360.LeafletUtil.fadeIn(sharedRoute.routeLayer, route, 1000, "travelDistance");
-            sharedRoute.markerLayer = new L.layerGroup([sourceMarker1, targetMarker1]);
-            sharedRoute.routepoints = route.points;
-            //map.addLayer(sharedRoute.routeLayer);
-            map.addLayer(sharedRoute.markerLayer);
-            targetMarker1.openPopup();
-            sourceMarker1.openPopup();
-        }
-    };
-
-    var errorCallBack = function(status, message) {
-        console.log("MY STATUS: ");
-        console.log(status);
-        console.log("MY ERROR MESSAGE: ");
-        console.log(message);
-        var confirmPopup = $ionicPopup.confirm({
-            title: 'Invalid Location(s)',
-            template: 'You have selected invalid start/end point(s). Do you want to replan your route?'
-        });
-
-        confirmPopup.then(function(res) {
-            if (res) {
-                console.log('Yes');
-                $state.go('planRoute');
-            } else {
-                console.log('No');
-            }
-        });
-    };
-
-    r360.RouteService.getRoutes(travelOptions, successCallBack, errorCallBack);
-
-    if ($scope.currentLocation == "undefined") {
-        map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
-            animate: false,
-            reset: true,
-            maxZoom: 16
-        });
-    } else {
-        map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
-            animate: false,
-            reset: true,
-            maxZoom: 16
-        });
-    }
-
-
 }

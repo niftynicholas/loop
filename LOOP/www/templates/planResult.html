@@ -5,7 +5,16 @@
             <i class="icon ion-ios-arrow-back" style="color:white;"> Back</i>
         </a>
     </ion-nav-buttons>
-    <ion-content padding="true" class="has-header">
-
+    <ion-floating-button click="cycle()" button-color="#1abc9c" icon="ion-android-bicycle" icon-color="#fff"></ion-floating-button>
+    <ion-content padding="false" class="has-header" scroll="false">
+        <div data-tap-disabled="true" style="height:100%">
+            <leaflet id="planResult" lf-center="center" paths="paths" defaults="defaults" height="100%" width="100%"></leaflet>
+        </div>
     </ion-content>
+    <ion-footer-bar style='background-color: {{routeColours[no-1]}};' on-swipe-left="nextRoute()" on-swipe-right="prevRoute()">
+        <button ng-if='no > 1' class="button button-light icon ion-ios-arrow-back" ng-click="prevRoute()"></button>
+        <h1 class="title" ng-if="no!=-1" style="color: white;">Route {{no}}</h1>
+        <h1 class="title" ng-if="no==-1" style="color: black;">Loading...</h1>
+        <button ng-if='no!=-1 && no < results.length' class="button button-light icon ion-ios-arrow-forward" ng-click="nextRoute()"></button>
+    </ion-footer-bar>
 </ion-view>

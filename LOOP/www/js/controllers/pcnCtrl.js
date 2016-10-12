@@ -147,6 +147,8 @@ angular.module('app.main.controllers')
         defaults: {
             scrollWheelZoom: true,
             zoomControl: false,
+            minZoom: 11,
+            maxZoom: 18,
             map: {
                 contextmenu: true,
                 contextmenuWidth: 140,
@@ -195,8 +197,12 @@ angular.module('app.main.controllers')
                     onEachFeature: onEachFeature
                 });
 
-                var pcnLayer = L.geoJson(pcn);
-                var intraTownCyclingPathLayer = L.geoJson(intraTownCyclingPath);
+                var pcnLayer = L.geoJson(pcn, {
+                    onEachFeature: onEachFeature
+                });
+                var intraTownCyclingPathLayer = L.geoJson(intraTownCyclingPath, {
+                    onEachFeature: onEachFeature
+                });
 
                 var toiletsLayer = L.geoJson(toilets, {
                     pointToLayer: function(feature, latlng) {
@@ -383,10 +389,6 @@ angular.module('app.main.controllers')
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
                     };
-                    // if ($scope.firstLoad) {
-                    //     map.setView($scope.currentLocation, 16);
-                    //     $scope.firstLoad = false;
-                    // }
                     $scope.paths.currentLoc.latlngs = [];
                     $scope.paths.currentLoc.latlngs.push(position.coords.latitude);
                     $scope.paths.currentLoc.latlngs.push(position.coords.longitude);
@@ -402,7 +404,7 @@ angular.module('app.main.controllers')
     $scope.locateMe = function() {
         if (typeof $scope.currentLocation.lat !== "undefined") {
             leafletData.getMap("pcn").then(function(map) {
-                map.setView($scope.currentLocation, 16);
+                map.setView($scope.currentLocation, 18);
             });
         } else {
             $cordovaGeolocation.getCurrentPosition({
@@ -412,7 +414,7 @@ angular.module('app.main.controllers')
                 map.setView({
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
-                }, 16);
+                }, 18);
             }, function(err) {
                 console.log("Location not found");
             });
