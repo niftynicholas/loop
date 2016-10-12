@@ -6,7 +6,7 @@
         <ion-item ng-repeat="route in routes" ng-click="viewRoute($index)">
             <b>{{route.name}}</b></br>
         </br>
-        <div data-tap-disabled="true" style="height:30vh;">
+        <div style="height:30vh;">
             <leaflet ng-attr-id="{{route.cid}}" defaults="defaults" center="center" tiles="tiles" geojson="geojson" height="100%" width="100%"></leaflet>
         </div>
         <br>
