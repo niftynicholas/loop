@@ -330,7 +330,7 @@ angular.module('app.main.controllers')
 
     leafletData.getMap("viewRoute").then(function(map) {
         var osmUrl = 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
-            osmAttrib = 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+            osmAttrib = '<a href="http://www.opencyclemap.org">© OpenCycleMap</a>',
             osm = L.tileLayer(osmUrl, {
                 maxZoom: 17,
                 attribution: osmAttrib,
@@ -338,6 +338,32 @@ angular.module('app.main.controllers')
                 edgeBufferTiles: 2
             });
         map.addLayer(osm);
+
+        var attribution = L.control.attribution({position: 'bottomright'});
+
+        var attributionBtn = L.easyButton({
+            id: 'animated-marker-toggle',
+            position: 'bottomleft',
+            type: 'replace',
+            states: [{
+                stateName: 'show-attribution',
+                icon: 'fa-info',
+                title: 'Show Attribution',
+                onClick: function(control) {
+                    map.addControl(attribution);
+                    control.state('hide-attribution');
+                }
+            }, {
+                stateName: 'hide-attribution',
+                title: 'Hide Attribution',
+                icon: 'fa-times-circle',
+                onClick: function(control) {
+                    map.removeControl(attribution);
+                    control.state('show-attribution');
+                }
+            }]
+        });
+        attributionBtn.addTo(map);
 
         if ($scope.route.envelope.length == 2) {
             map.setView($scope.route.envelope, 16);
@@ -465,7 +491,8 @@ angular.module('app.main.controllers')
         },
         defaults: {
             scrollWheelZoom: true,
-            zoomControl: true
+            zoomControl: true,
+            attributionControl: false
         }
     });
 })

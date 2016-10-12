@@ -201,3 +201,11 @@ transform: scaleY(1); }*/
     color: #fff !important;
     background-color: #2E294E !important;
 }
+
+.ol-attribution {
+  right: auto !important;
+  left: .5em !important;
+}
+.ol-attribution button {
+  float: left !important;
+}

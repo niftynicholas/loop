@@ -42,15 +42,42 @@ angular.module('app.main.controllers')
             scrollWheelZoom: true,
             zoomControl: true,
             minZoom: 11,
-            maxZoom: 18
+            maxZoom: 18,
+            attributionControl: false
         }
     });
     //To Parameterise edgeBufferTiles / setInterval to Seconds
     leafletData.getMap("cycle").then(function(map) {
         var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
-            attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+            attribution: '<a href="http://www.opencyclemap.org">© OpenCycleMap</a>',
             edgeBufferTiles: 2
         }).addTo(map);
+
+        var attribution = L.control.attribution({position: 'bottomright'});
+
+        var attributionBtn = L.easyButton({
+            id: 'animated-marker-toggle',
+            position: 'bottomleft',
+            type: 'replace',
+            states: [{
+                stateName: 'show-attribution',
+                icon: 'fa-info',
+                title: 'Show Attribution',
+                onClick: function(control) {
+                    map.addControl(attribution);
+                    control.state('hide-attribution');
+                }
+            }, {
+                stateName: 'hide-attribution',
+                title: 'Hide Attribution',
+                icon: 'fa-times-circle',
+                onClick: function(control) {
+                    map.removeControl(attribution);
+                    control.state('show-attribution');
+                }
+            }]
+        });
+        attributionBtn.addTo(map);
 
         setInterval(function() {
             map.invalidateSize();

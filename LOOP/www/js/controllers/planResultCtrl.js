@@ -40,12 +40,13 @@ angular.module('app.main.controllers')
             scrollWheelZoom: true,
             zoomControl: true,
             minZoom: 11,
-            maxZoom: 18
+            maxZoom: 18,
+            attributionControl: false
         }
     });
 
-    $scope.cycle = function(){
-        sharedRoute.routepoints = $scope.results[$scope.no-1].geojson.coordinates;
+    $scope.cycle = function() {
+        sharedRoute.routepoints = $scope.results[$scope.no - 1].geojson.coordinates;
         $state.go("inprogress");
     }
 
@@ -62,9 +63,37 @@ angular.module('app.main.controllers')
         dataShare.clearData();
 
         var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
-            attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+            attribution: '<a href="http://www.opencyclemap.org">© OpenCycleMap</a>',
             edgeBufferTiles: 2
         }).addTo(map);
+
+        var attribution = L.control.attribution({
+            position: 'bottomright'
+        });
+
+        var attributionBtn = L.easyButton({
+            id: 'animated-marker-toggle',
+            position: 'bottomleft',
+            type: 'replace',
+            states: [{
+                stateName: 'show-attribution',
+                icon: 'fa-info',
+                title: 'Show Attribution',
+                onClick: function(control) {
+                    map.addControl(attribution);
+                    control.state('hide-attribution');
+                }
+            }, {
+                stateName: 'hide-attribution',
+                title: 'Hide Attribution',
+                icon: 'fa-times-circle',
+                onClick: function(control) {
+                    map.removeControl(attribution);
+                    control.state('show-attribution');
+                }
+            }]
+        });
+        attributionBtn.addTo(map);
 
         setInterval(function() {
             map.invalidateSize();
@@ -243,76 +272,76 @@ angular.module('app.main.controllers')
                 token: localStorage.getItem("token"),
                 start: startCoords,
                 end: endCoords,
-                k: 3,
+                k: 1, // No. of routes to be returned.
                 tolerance: 500,
                 type: type
             }
         }).then(function successCallback(response) {
-            sharedRoute.hasPlanned = true;
-            sharedRoute.hasPlannedRoute = true;
-            var firstLoad = true;
-            $ionicLoading.hide();
-            plannedResultLayers.addLayer(sourceMarker1);
-            plannedResultLayers.addLayer(targetMarker1);
-            sourceMarker1.openPopup();
-            targetMarker1.openPopup();
+                sharedRoute.hasPlanned = true;
+                sharedRoute.hasPlannedRoute = true;
+                var firstLoad = true;
+                $ionicLoading.hide();
+                plannedResultLayers.addLayer(sourceMarker1);
+                plannedResultLayers.addLayer(targetMarker1);
+                sourceMarker1.openPopup();
+                targetMarker1.openPopup();
 
-            function onEachFeature(feature, layer) {
-                var routeNo = $scope.routesNo++;
-                if(firstLoad){
-                    $scope.no = routeNo + 1;
-                    firstLoad = false;
+                function onEachFeature(feature, layer) {
+                    var routeNo = $scope.routesNo++;
+                    if (firstLoad) {
+                        $scope.no = routeNo + 1;
+                        firstLoad = false;
+                    }
+                    layer.on('mousedown', function(e) {
+                        $scope.no = routeNo + 1;
+                    });
                 }
-                layer.on('mousedown', function (e) {
-                    $scope.no = routeNo + 1;
-                });
-            }
-            $scope.results = response.data.result;
-            console.log($scope.results);
-            for(var i=0;i<response.data.result.length;i++){
-                var route = response.data.result[i].geojson;
-                var routeLayer = L.geoJson(route, {
-                    style: {
-                        "color": $scope.routeColours[i],
-                        "weight": 8,
-                        "opacity": 1
-                    },
-                    onEachFeature: onEachFeature
-                });
-                plannedResultLayers.addLayer(routeLayer);
-            }
+                $scope.results = response.data.result;
+                console.log($scope.results);
+                for (var i = 0; i < response.data.result.length; i++) {
+                    var route = response.data.result[i].geojson;
+                    var routeLayer = L.geoJson(route, {
+                        style: {
+                            "color": $scope.routeColours[i],
+                            "weight": 8,
+                            "opacity": 1
+                        },
+                        onEachFeature: onEachFeature
+                    });
+                    plannedResultLayers.addLayer(routeLayer);
+                }
 
-            if ($scope.currentLocation == "undefined") {
-                map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
-                    animate: false,
-                    reset: true,
-                    maxZoom: 16,
-                    padding: [80, 80]
-                });
-            } else {
-                map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
-                    animate: false,
-                    reset: true,
-                    maxZoom: 16,
-                    padding: [80, 80]
-                });
-            }
-        },
-        function errorCallback(response) {
-            var confirmPopup = $ionicPopup.confirm({
-                title: 'Invalid Location(s)',
-                template: 'You have selected invalid start/end point(s). Do you want to replan your route?'
-            });
-
-            confirmPopup.then(function(res) {
-                if (res) {
-                    console.log('Yes');
-                    $state.go('planRoute');
+                if ($scope.currentLocation == "undefined") {
+                    map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
+                        animate: false,
+                        reset: true,
+                        maxZoom: 16,
+                        padding: [80, 80]
+                    });
                 } else {
-                    console.log('No');
+                    map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
+                        animate: false,
+                        reset: true,
+                        maxZoom: 16,
+                        padding: [80, 80]
+                    });
                 }
+            },
+            function errorCallback(response) {
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Invalid Location(s)',
+                    template: 'You have selected invalid start/end point(s). Do you want to replan your route?'
+                });
+
+                confirmPopup.then(function(res) {
+                    if (res) {
+                        console.log('Yes');
+                        $state.go('planRoute');
+                    } else {
+                        console.log('No');
+                    }
+                });
             });
-        });
 
         // sharedRoute.routeLayer = new L.FeatureGroup().addTo(map);
         // var travelOptions = r360.travelOptions();

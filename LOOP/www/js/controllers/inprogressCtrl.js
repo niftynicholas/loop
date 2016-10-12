@@ -73,7 +73,8 @@ angular.module('app.main.controllers')
         target: 'inprogress',
         controls: ol.control.defaults({
             attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-                collapsible: false
+                collapsible: true,
+                position: "left"
             })
         }),
         interactions: ol.interaction.defaults({

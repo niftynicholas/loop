@@ -145,6 +145,7 @@ angular.module('app.main.controllers')
             },
         },
         defaults: {
+            attributionControl: false,
             scrollWheelZoom: true,
             zoomControl: false,
             minZoom: 11,
@@ -172,9 +173,35 @@ angular.module('app.main.controllers')
 
     leafletData.getMap("pcn").then(function(map) {
         L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            attribution: '<a href="https://www.mapbox.com/map-feedback/">© Mapbox</a> <a href="http://www.openstreetmap.org/copyright">© OpenStreetMap</a>',
             edgeBufferTiles: 2
         }).addTo(map);
+
+        var attribution = L.control.attribution({position: 'bottomright'});
+
+        var attributionBtn = L.easyButton({
+            id: 'animated-marker-toggle',
+            position: 'bottomleft',
+            type: 'replace',
+            states: [{
+                stateName: 'show-attribution',
+                icon: 'fa-info',
+                title: 'Show Attribution',
+                onClick: function(control) {
+                    map.addControl(attribution);
+                    control.state('hide-attribution');
+                }
+            }, {
+                stateName: 'hide-attribution',
+                title: 'Hide Attribution',
+                icon: 'fa-times-circle',
+                onClick: function(control) {
+                    map.removeControl(attribution);
+                    control.state('show-attribution');
+                }
+            }]
+        });
+        attributionBtn.addTo(map);
     });
 
     $scope.$on("$ionicView.afterEnter", function() {

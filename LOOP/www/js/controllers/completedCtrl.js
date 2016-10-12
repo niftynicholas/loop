@@ -8,13 +8,8 @@ angular.module('app.main.controllers')
         isShared: false,
         comment: ""
     };
+
     angular.extend($scope, {
-        tiles: {
-            url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-            options: {
-                attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
-            }
-        },
         center: {
             lat: 1.3521,
             lng: 103.8198,
@@ -23,7 +18,8 @@ angular.module('app.main.controllers')
         bounds: {},
         defaults: {
             scrollWheelZoom: true,
-            zoomControl: true
+            zoomControl: true,
+            attributionControl: false
         },
         paths: {
             p1: {
@@ -36,8 +32,8 @@ angular.module('app.main.controllers')
 
     leafletData.getMap("cycle").then(function(map) {
         if (sharedRoute.hasPlanned) {
-            map.removeLayer(sharedRoute.markerLayer);
-            map.removeLayer(sharedRoute.routeLayer);
+            // map.removeLayer(sharedRoute.markerLayer);
+            // map.removeLayer(sharedRoute.routeLayer);
             sharedRoute.clearData();
         }
     });
@@ -73,6 +69,37 @@ angular.module('app.main.controllers')
     $scope.paths.p1.latlngs = data.path;
 
     leafletData.getMap("completed").then(function(map) {
+        var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
+            attribution: '<a href="http://www.opencyclemap.org">© OpenCycleMap</a>',
+            edgeBufferTiles: 2
+        }).addTo(map);
+
+        var attribution = L.control.attribution({position: 'bottomright'});
+
+                var attributionBtn = L.easyButton({
+                    id: 'animated-marker-toggle',
+                    position: 'bottomleft',
+                    type: 'replace',
+                    states: [{
+                        stateName: 'show-attribution',
+                        icon: 'fa-info',
+                        title: 'Show Attribution',
+                        onClick: function(control) {
+                            map.addControl(attribution);
+                            control.state('hide-attribution');
+                        }
+                    }, {
+                        stateName: 'hide-attribution',
+                        title: 'Hide Attribution',
+                        icon: 'fa-times-circle',
+                        onClick: function(control) {
+                            map.removeControl(attribution);
+                            control.state('show-attribution');
+                        }
+                    }]
+                });
+                attributionBtn.addTo(map);
+
         map.invalidateSize();
         map.fitBounds($scope.paths.p1.latlngs);
     });
