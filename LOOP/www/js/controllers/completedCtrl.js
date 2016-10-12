@@ -74,31 +74,33 @@ angular.module('app.main.controllers')
             edgeBufferTiles: 2
         }).addTo(map);
 
-        var attribution = L.control.attribution({position: 'bottomright'});
+        var attribution = L.control.attribution({
+            position: 'bottomright'
+        });
 
-                var attributionBtn = L.easyButton({
-                    id: 'animated-marker-toggle',
-                    position: 'bottomleft',
-                    type: 'replace',
-                    states: [{
-                        stateName: 'show-attribution',
-                        icon: 'fa-info',
-                        title: 'Show Attribution',
-                        onClick: function(control) {
-                            map.addControl(attribution);
-                            control.state('hide-attribution');
-                        }
-                    }, {
-                        stateName: 'hide-attribution',
-                        title: 'Hide Attribution',
-                        icon: 'fa-times-circle',
-                        onClick: function(control) {
-                            map.removeControl(attribution);
-                            control.state('show-attribution');
-                        }
-                    }]
-                });
-                attributionBtn.addTo(map);
+        var attributionBtn = L.easyButton({
+            id: 'animated-marker-toggle',
+            position: 'bottomleft',
+            type: 'replace',
+            states: [{
+                stateName: 'show-attribution',
+                icon: 'fa-info',
+                title: 'Show Attribution',
+                onClick: function(control) {
+                    map.addControl(attribution);
+                    control.state('hide-attribution');
+                }
+            }, {
+                stateName: 'hide-attribution',
+                title: 'Hide Attribution',
+                icon: 'fa-times-circle',
+                onClick: function(control) {
+                    map.removeControl(attribution);
+                    control.state('show-attribution');
+                }
+            }]
+        });
+        attributionBtn.addTo(map);
 
         map.invalidateSize();
         map.fitBounds($scope.paths.p1.latlngs);
@@ -192,50 +194,52 @@ angular.module('app.main.controllers')
         });
 
         myPopup.then(function(res) {
-            $ionicLoading.show({
-                template: '<p>Saving...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
-            });
-            var route = $scope.paths.p1.latlngs;
-            var data = dataShare.getData();
-            if (route.length === 0) {
-                $ionicLoading.hide();
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Opps!',
-                    template: 'We are unable to save this activity as there is no GPS data recorded.'
+            if (!(typeof res === "undefined")) {
+                $ionicLoading.show({
+                    template: '<p>Saving...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
                 });
-            } else {
-                $http({
-                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/upload2",
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: {
-                        token: localStorage.getItem("token"),
-                        startDateTimeStamp: data.startDateTimeStamp,
-                        distance: data.distance,
-                        duration: data.durationInSeconds,
-                        averageSpeed: data.averageSpeed,
-                        calories: data.calories,
-                        ratings: $scope.rating || 2,
-                        route: $scope.paths.p1.latlngs,
-                        generalComments: $scope.comments,
-                        geotagComments: data.geotagsInfo,
-                        isShared: $scope.input.isShared || false,
-                        referencedCID: data.referencedCID || null,
-                        name: $scope.data.routeName
-                    }
-                }).then(function successCallback(response) {
-                    $ionicLoading.hide();
-                    dataShare.clearData();
-                    $state.go('tabsController.routes.myRoutes');
-                }, function errorCallback(response) {
+                var route = $scope.paths.p1.latlngs;
+                var data = dataShare.getData();
+                if (route.length === 0) {
                     $ionicLoading.hide();
                     var alertPopup = $ionicPopup.alert({
                         title: 'Opps!',
-                        template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                        template: 'We are unable to save this activity as there is no GPS data recorded.'
                     });
-                });
+                } else {
+                    $http({
+                        url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/upload2",
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: {
+                            token: localStorage.getItem("token"),
+                            startDateTimeStamp: data.startDateTimeStamp,
+                            distance: data.distance,
+                            duration: data.durationInSeconds,
+                            averageSpeed: data.averageSpeed,
+                            calories: data.calories,
+                            ratings: $scope.rating || 2,
+                            route: $scope.paths.p1.latlngs,
+                            generalComments: $scope.comments,
+                            geotagComments: data.geotagsInfo,
+                            isShared: $scope.input.isShared || false,
+                            referencedCID: data.referencedCID || null,
+                            name: $scope.data.routeName
+                        }
+                    }).then(function successCallback(response) {
+                        $ionicLoading.hide();
+                        dataShare.clearData();
+                        $state.go('tabsController.routes.myRoutes');
+                    }, function errorCallback(response) {
+                        $ionicLoading.hide();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Opps!',
+                            template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                        });
+                    });
+                }
             }
         });
     };
