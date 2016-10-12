@@ -63,7 +63,7 @@ angular.module('app.main.controllers')
                 source: new ol.source.OSM({
                     attributions: [
                         new ol.Attribution({
-                            html: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                            html: '<a href="http://openlayers.org/">&copy; OpenLayers 3 | <a href="http://www.opencyclemap.org">&copy; OpenCycleMap</a>'
                         }),
                     ],
                     "url": "http://tile2.opencyclemap.org/cycle/{z}/{x}/{y}.png"
