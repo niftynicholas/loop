@@ -3,18 +3,14 @@ angular.module('app.main.controllers')
 .controller('planResultCtrl', function($scope, $state, $http, leafletData, $cordovaGeolocation, dataShare, sharedRoute, $ionicPopup, $ionicLoading) {
     $scope.routeColours = ["#1ABC9C", "#53599A", "#086375", "#F0A202", "#EF476F"];
     $scope.results = [];
+    var plannedResultLayers = null;
 
-    $scope.nextRoute = function() {
-        if ($scope.no < $scope.results.length) {
-            $scope.no++;
-        }
-    }
-
-    $scope.prevRoute = function() {
-        if ($scope.no > 1) {
-            $scope.no--;
-        }
-    }
+    var inActiveStyle = {
+        "color": "#000000",
+        "weight": 8,
+        "opacity": 0.6,
+        "dashArray": "10,10"
+    };
 
     angular.extend($scope, {
         center: {
@@ -47,7 +43,6 @@ angular.module('app.main.controllers')
 
     $scope.cycle = function() {
         sharedRoute.routepoints = $scope.results[$scope.no - 1].geojson.coordinates;
-
         var data = {
             currentLocation: $scope.currentLocation,
             time: $scope.timestamp,
@@ -60,7 +55,7 @@ angular.module('app.main.controllers')
 
     //To Parameterise edgeBufferTiles / setInterval to Seconds
     leafletData.getMap("planResult").then(function(map) {
-        var plannedResultLayers = L.layerGroup().addTo(map);
+        plannedResultLayers = L.layerGroup().addTo(map);
         var data = dataShare.getData();
         var startLatLng = data.startLatLng;
         var endLatLng = data.endLatLng;
@@ -251,6 +246,40 @@ angular.module('app.main.controllers')
 
     });
 
+    $scope.nextRoute = function() {
+        if ($scope.no < $scope.results.length) {
+            $scope.no++;
+            setActiveLayer();
+        }
+    }
+
+    $scope.prevRoute = function() {
+        if ($scope.no > 1) {
+            $scope.no--;
+            setActiveLayer();
+        }
+    }
+
+    function setActiveLayer(){
+        var layerNum = 1;
+        plannedResultLayers.eachLayer(function (anotherLayer) {
+            if(anotherLayer instanceof L.GeoJSON){
+                if(layerNum == $scope.no){
+                    anotherLayer.setStyle({
+                        "color": $scope.routeColours[$scope.no-1],
+                        "weight": 8,
+                        "opacity": 1,
+                        "dashArray": ""
+                    });
+                    anotherLayer.bringToFront();
+                }else{
+                    anotherLayer.setStyle(inActiveStyle);
+                }
+                layerNum++;
+            }
+        });
+    }
+
     function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, type, plannedResultLayers) {
         $scope.routesNo = 0;
         $scope.no = -1;
@@ -281,75 +310,91 @@ angular.module('app.main.controllers')
                 token: localStorage.getItem("token"),
                 start: startCoords,
                 end: endCoords,
-                k: 1, // No. of routes to be returned.
+                k: 3, // No. of routes to be returned.
                 tolerance: 500,
                 type: type
             }
         }).then(function successCallback(response) {
-                sharedRoute.hasPlanned = true;
-                sharedRoute.hasPlannedRoute = true;
-                var firstLoad = true;
-                $ionicLoading.hide();
-                plannedResultLayers.addLayer(sourceMarker1);
-                plannedResultLayers.addLayer(targetMarker1);
-                sourceMarker1.openPopup();
-                targetMarker1.openPopup();
+            sharedRoute.hasPlanned = true;
+            sharedRoute.hasPlannedRoute = true;
+            var firstLoad = true;
+            $ionicLoading.hide();
+            plannedResultLayers.addLayer(sourceMarker1);
+            plannedResultLayers.addLayer(targetMarker1);
+            sourceMarker1.openPopup();
+            targetMarker1.openPopup();
 
-                function onEachFeature(feature, layer) {
-                    var routeNo = $scope.routesNo++;
-                    if (firstLoad) {
-                        $scope.no = routeNo + 1;
-                        firstLoad = false;
-                    }
-                    layer.on('mousedown', function(e) {
-                        $scope.no = routeNo + 1;
+            function onEachFeature(feature, layer) {
+                var routeNo = $scope.routesNo++;
+                if (firstLoad) {
+                    $scope.no = routeNo + 1;
+                    firstLoad = false;
+                    layer.setStyle({
+                        "color": $scope.routeColours[$scope.no-1],
+                        "weight": 8,
+                        "opacity": 1,
+                        "dashArray": ""
                     });
                 }
-                $scope.results = response.data.result;
-                for (var i = 0; i < response.data.result.length; i++) {
-                    var route = response.data.result[i].geojson;
-                    var routeLayer = L.geoJson(route, {
-                        style: {
-                            "color": $scope.routeColours[i],
-                            "weight": 8,
-                            "opacity": 1
-                        },
-                        onEachFeature: onEachFeature
+                layer.on('mousedown', function(e) {
+                    plannedResultLayers.eachLayer(function (anotherLayer) {
+                        if(anotherLayer instanceof L.GeoJSON){
+                            anotherLayer.setStyle(inActiveStyle);
+                        }
                     });
-                    plannedResultLayers.addLayer(routeLayer);
-                }
-
-                if ($scope.currentLocation == "undefined") {
-                    map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
-                        animate: false,
-                        reset: true,
-                        maxZoom: 16,
-                        padding: [80, 80]
+                    $scope.no = routeNo + 1;
+                    layer.bringToFront();
+                    layer.setStyle({
+                        "color": $scope.routeColours[$scope.no-1],
+                        "weight": 8,
+                        "opacity": 1,
+                        "dashArray": ""
                     });
-                } else {
-                    map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
-                        animate: false,
-                        reset: true,
-                        maxZoom: 16,
-                        padding: [80, 80]
-                    });
-                }
-            },
-            function errorCallback(response) {
-                var confirmPopup = $ionicPopup.confirm({
-                    title: 'Invalid Location(s)',
-                    template: 'You have selected invalid start/end point(s). Do you want to replan your route?'
                 });
-
-                confirmPopup.then(function(res) {
-                    if (res) {
-                        console.log('Yes');
-                        $state.go('planRoute');
-                    } else {
-                        console.log('No');
-                    }
+            }
+            $scope.results = response.data.result;
+            for (var i = 0; i < response.data.result.length; i++) {
+                var route = response.data.result[i].geojson;
+                var routeLayer = L.geoJson(route, {
+                    style: inActiveStyle,
+                    onEachFeature: onEachFeature
                 });
+                plannedResultLayers.addLayer(routeLayer);
+                routeLayer.bringToBack();
+            }
+
+            if ($scope.currentLocation == "undefined") {
+                map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
+                    animate: false,
+                    reset: true,
+                    maxZoom: 16,
+                    padding: [80, 80]
+                });
+            } else {
+                map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
+                    animate: false,
+                    reset: true,
+                    maxZoom: 16,
+                    padding: [80, 80]
+                });
+            }
+        },
+        function errorCallback(response) {
+            $ionicLoading.hide();
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Invalid Location(s)',
+                template: 'You have selected invalid start/end point(s). Do you want to replan your route?'
             });
+
+            confirmPopup.then(function(res) {
+                if (res) {
+                    console.log('Yes');
+                    $state.go('planRoute');
+                } else {
+                    console.log('No');
+                }
+            });
+        });
 
         // sharedRoute.routeLayer = new L.FeatureGroup().addTo(map);
         // var travelOptions = r360.travelOptions();
