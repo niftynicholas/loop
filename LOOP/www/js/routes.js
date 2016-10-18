@@ -48,6 +48,20 @@ angular.module('app.routes', [])
         controller: 'forgotCtrl'
     })
 
+    .state('answer', {
+        cache: false,
+        url: '/answer',
+        templateUrl: 'templates/answer.html',
+        controller: 'answerCtrl'
+    })
+
+    .state('resetPassword', {
+        cache: false,
+        url: '/resetPassword',
+        templateUrl: 'templates/resetPassword.html',
+        controller: 'resetPasswordCtrl'
+    })
+
     .state('forgotUsername', {
         cache: false,
         url: '/forgotUsername',

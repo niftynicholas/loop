@@ -6,28 +6,23 @@
         </a>
     </ion-nav-buttons>
     <ion-content class="has-header" padding="true" scroll="false">
+        <h5 style="text-align:center;">Enter your username and we'll retrieve your security questions. </h5>
         <div class="list list-inset">
-            <h4 style="text-align:center;">Forgotten your password?</h4>
-            <h5 style="text-align:center;">Enter your email address and we'll help you reset your password.</h5>
-            <form name="signupForm" novalidate="" ng-submit="sendResetEmail(signupForm)">
-                <!-- Email -->
+            <form name="signupForm" novalidate="" ng-submit="getQns(signupForm)">
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.email.$invalid && signupForm.$submitted, 'no-errors' : signupForm.email.$valid  && signupForm.$submitted}">
-                    <span class="input-label">Email</span>
-                    <input type="email" name="email" ng-model="input.email" required email>
+                    <span class="input-label">Username</span>
+                    <input type="text" name="username" ng-model="input.username" required>
                 </label>
-                <div class="error-container" ng-show="signupForm.email.$error && signupForm.$submitted" ng-messages="signupForm.email.$error">
+                <div class="error-container" ng-show="signupForm.username.$error && signupForm.$submitted" ng-messages="signupForm.username.$error">
                     <div ng-messages-include="error-list.html"></div>
                 </div>
-                <button class="button button-block button-positive" type="submit">Reset</button>
+                <button class="button button-block button-positive" type="submit">Retrieve</button>
             </form>
         </div>
     </ion-content>
 </ion-view>
 
 <script id="error-list.html" type="text/ng-template">
-    <div class="error" ng-message="email">
-        <i class="ion-information-circled"></i> Invalid Email
-    </div>
     <div class="error" ng-message="required">
         <i class="ion-information-circled"></i> Required Field
     </div>

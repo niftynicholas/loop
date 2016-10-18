@@ -41,4 +41,10 @@ angular.module('app.main.controllers')
             });
         }
     }
+
+    $scope.getQns = function(form) {
+        if (form.$valid) {
+            $state.go("answer");
+        }
+    }
 })

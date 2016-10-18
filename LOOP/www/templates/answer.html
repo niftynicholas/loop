@@ -1,4 +1,4 @@
-<ion-view title="Sign Up">
+<ion-view title="Answer Security Questions">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
     <ion-nav-buttons side="left">
         <a class="button back-button buttons button-clear header-item" ui-sref="landing">
@@ -6,52 +6,11 @@
         </a>
     </ion-nav-buttons>
     <ion-content padding="true" class="has-header">
-        <form name="signupForm" novalidate="" ng-submit="signup(signupForm)">
-            <div class="list">
-                <!-- Username -->
-                <label class="item item-input" ng-class="{ 'has-errors' : signupForm.username.$invalid && signupForm.$submitted, 'no-errors' : signupForm.username.$valid  && signupForm.$submitted}">
-                    <span class="input-label">Username</span>
-                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" ng-maxlength="15" required record-availability-validator="https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/checkUsernameAvailability">
-                </label>
-                <div class="error-container" ng-show="signupForm.username.$error && signupForm.$submitted" ng-messages="signupForm.username.$error">
-                    <div ng-messages-include="error-list.html"></div>
-                </div>
-                <!-- Password -->
-                <label class="item item-input item-icon-right" ng-class="{ 'has-errors' : signupForm.password.$invalid && signupForm.$submitted, 'no-errors' : signupForm.password.$valid  && signupForm.$submitted}">
-                    <span class="input-label">Password</span><i class="icon ion-eye" on-touch="toggleVisibility()"></i>
-                    <input type="{{type}}" name="password" id="password" ng-model="input.password" required password-strength>
-                </label>
-                <div class="error-container" ng-show="signupForm.password.$error && signupForm.$submitted" ng-messages="signupForm.password.$error">
-                    <div ng-messages-include="error-list.html"></div>
-                </div>
-                <!-- Birth Month Year -->
-                <label class="item item-input">
-                    <span class="input-label">Birth Date</span>
-                    <input type="month" name="birthDate" ng-model="input.birthDate" required>
-                </label>
-                <div class="error-container" ng-show="signupForm.birthDate.$error && signupForm.$submitted" ng-messages="signupForm.birthDate.$error">
-                    <div ng-messages-include="error-list.html"></div>
-                </div>
-                <!-- Gender -->
-                <label class="item item-input item-select">
-                    <div class="input-label">
-                        Gender
-                    </div>
-                    <select name="gender" ng-model="input.gender" required>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </label>
-            </div>
-
+        <h5 style="text-align:center;">Answer the security questions to reset the password for your account.</h5>
+        <form name="signupForm" novalidate="" ng-submit="answer(signupForm)">
             <div class="list">
                 <div class="item item-button-right" style="overflow: initial; white-space: initial;">
                     <b>Security Question 1:</b> {{selected1.question}}
-                    <button type="button" class="button button-positive" modal-select="" ng-model="selected1" options="questions1" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
-                        <i class="ion-android-open"></i>
-                        <div class="option">
-                            {{option.question}}
-                        </div>
                     </button>
                 </div>
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.ans1.$invalid && signupForm.$submitted, 'no-errors' : signupForm.ans1.$valid  && signupForm.$submitted}">
@@ -66,12 +25,6 @@
             <div class="list">
                 <div class="item item-button-right" style="overflow: initial; white-space: initial;">
                     <b>Security Question 2:</b> {{selected2.question}}
-                    <button type="button" class="button button-positive" modal-select="" ng-model="selected2" options="questions2" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
-                        <i class="ion-android-open"></i>
-                        <div class="option">
-                            {{option.question}}
-                        </div>
-                    </button>
                 </div>
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.ans2.$invalid && signupForm.$submitted, 'no-errors' : signupForm.ans2.$valid  && signupForm.$submitted}">
                     <span class="input-label">Answer </span>
@@ -85,12 +38,6 @@
             <div class="list">
                 <div class="item item-button-right" style="overflow: initial; white-space: initial;">
                     <b>Security Question 3:</b> {{selected3.question}}
-                    <button type="button"  class="button button-positive" modal-select="" ng-model="selected3" options="questions3" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
-                        <i class="ion-android-open"></i>
-                        <div class="option">
-                            {{option.question}}
-                        </div>
-                    </button>
                 </div>
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.ans3.$invalid && signupForm.$submitted, 'no-errors' : signupForm.ans3.$valid  && signupForm.$submitted}">
                     <span class="input-label">Answer </span>
@@ -101,7 +48,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="button button-positive button-full">Sign Up</button>
+            <button type="submit" class="button button-positive button-full">Continue</button>
         </form>
     </ion-content>
 </ion-view>
