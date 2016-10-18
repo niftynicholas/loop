@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http, $timeout, $ionicPopup) {
+.controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http, $timeout, $ionicPopup, $ionicModal) {
     $scope.input = new Object();
     $scope.input.dateOfBirth = new Date(parseInt(localStorage.getItem("dateOfBirth")));
     $scope.genders = [{
@@ -16,8 +16,27 @@ angular.module('app.main.controllers')
         $scope.input.gender = $scope.genders[1];
     }
     $scope.input.name = localStorage.getItem("name");
-    $scope.input.height = parseFloat(localStorage.getItem("height"));
-    $scope.input.weight = parseFloat(localStorage.getItem("weight"));
+    $scope.input.height = parseFloat(localStorage.getItem("height")).toFixed(2);
+    console.log($scope.input.height);
+    $scope.input.weight = parseFloat(localStorage.getItem("weight")).toFixed(2);
+
+    $scope.imgSrc = "../img/avatars/1.png";
+
+    $scope.images = [];
+
+    $scope.loadImages = function() {
+        for (var i = 1; i <= 18; i++) {
+            $scope.images.push({
+                id: i,
+                src: "../img/avatars/" + i + ".png"
+            });
+        }
+    }
+
+    $scope.select = function(index) {
+        $scope.imgSrc = "../img/avatars/" + index + ".png";
+        $scope.closeModal();
+    }
 
     // $scope.numberPickerObject = {
     //     inputValue: 0, //Optional
@@ -76,4 +95,29 @@ angular.module('app.main.controllers')
             template: 'We do not accept zero value for height/weight.'
         });
     };
+
+    $ionicModal.fromTemplateUrl('my-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+    $scope.openModal = function() {
+        $scope.modal.show();
+    };
+    $scope.closeModal = function() {
+        $scope.modal.hide();
+    };
+    // Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+    });
+    // Execute action on hide modal
+    $scope.$on('modal.hidden', function() {
+        // Execute action
+    });
+    // Execute action on remove modal
+    $scope.$on('modal.removed', function() {
+        // Execute action
+    });
 })
