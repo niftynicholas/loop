@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('forgotUsernameCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading) {
+.controller('forgotUsernameCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading, CONSTANTS) {
     $scope.input = {};
     // Need to prevent empty string and improper email address format
     // No way to verify resetting of password
@@ -10,7 +10,7 @@ angular.module('app.main.controllers')
                 template: '<p>Loading...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
             });
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/forgotUsername",
+                url: CONSTANST.API_URL + "api/cyclist/account/forgotUsername",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

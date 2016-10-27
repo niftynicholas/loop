@@ -32,8 +32,6 @@ angular.module('app.main.controllers')
 
     leafletData.getMap("cycle").then(function(map) {
         if (sharedRoute.hasPlanned) {
-            // map.removeLayer(sharedRoute.markerLayer);
-            // map.removeLayer(sharedRoute.routeLayer);
             sharedRoute.clearData();
         }
     });
@@ -208,7 +206,7 @@ angular.module('app.main.controllers')
                     });
                 } else {
                     $http({
-                        url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/cycle/upload2",
+                        url: CONSTANTS.API_URL + "cyclist/cycle/upload",
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

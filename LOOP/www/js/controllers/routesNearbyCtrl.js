@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('routesNearbyCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, $cordovaGeolocation) {
+.controller('routesNearbyCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, $cordovaGeolocation, CONSTANTS) {
     var profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
     var uids = profilePictures.uids;
     //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method
@@ -25,7 +25,7 @@ angular.module('app.main.controllers')
     $scope.doRefresh = function(){
 
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getNearbyRoutes",
+            url: CONSTANTS.API_URL + "cyclist/route/getNearbyRoutes",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -94,7 +94,7 @@ angular.module('app.main.controllers')
             $cordovaGeolocation.getCurrentPosition({ timeout: 1000, enableHighAccuracy: true }).then(function (position) {
                 currentLocation = {lat: position.coords.latitude, lng: position.coords.longitude};
                 $http({
-                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getNearbyRoutes",
+                    url: CONSTANTS.API_URL + "cyclist/route/getNearbyRoutes",
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

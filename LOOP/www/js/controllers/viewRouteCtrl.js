@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, $ionicPopup, routeName, $http, $state, dataShare, viewSharedRoute, $ionicPopup, $ionicModal, $ionicLoading) {
+.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, $ionicPopup, routeName, $http, $state, dataShare, viewSharedRoute, $ionicPopup, $ionicModal, $ionicLoading, CONSTANTS) {
     $scope.username = localStorage.getItem("username");
     $scope.profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
     var uid = localStorage.getItem("uid");
@@ -36,7 +36,7 @@ angular.module('app.main.controllers')
                 });
             }
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/addComment",
+                url: CONSTANTS.API_URL + "cyclist/comment/addComment",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ angular.module('app.main.controllers')
                     template: '<p>Deleting...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
                 })
                 $http({
-                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/deleteComment",
+                    url: CONSTANTS.API_URL + "cyclist/comment/deleteComment",
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -181,7 +181,7 @@ angular.module('app.main.controllers')
 
     // $scope.editComment = function(commentID, dateTime) {
     //     $http({
-    //         url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/editComment",
+    //         url: CONSTANTS.API_URL + "cyclist/comment/editComment",
     //         method: 'POST',
     //         headers: {
     //             'Content-Type': 'application/json'
@@ -440,7 +440,7 @@ angular.module('app.main.controllers')
         if ($scope.route.isbookmarked === false) {
             $scope.route.isbookmarked = true;
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/bookmark",
+                url: CONSTANTS.API_URL + "cyclist/route/bookmark",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -456,7 +456,7 @@ angular.module('app.main.controllers')
         } else {
             $scope.route.isbookmarked = false;
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/removeBookmark",
+                url: CONSTANTS.API_URL + "cyclist/route/removeBookmark",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

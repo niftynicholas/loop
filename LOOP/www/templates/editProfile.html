@@ -36,18 +36,21 @@
         <ion-content>
             <div class="row" ng-repeat="image in images" ng-if="$index % 4 === 0">
                 <div class="col col-25" ng-if="$index < images.length">
-                    <img ng-src="{{images[$index].src}}" width="100%" ng-click="select($index+1)"/>
+                    <img ng-src="{{images[$index].src}}" width="100%" ng-click="select($index+1)" />
                 </div>
                 <div class="col col-25" ng-if="$index + 1 < images.length">
-                    <img ng-src="{{images[$index + 1].src}}" width="100%"  ng-click="select($index+2)"/>
+                    <img ng-src="{{images[$index + 1].src}}" width="100%" ng-click="select($index+2)" />
                 </div>
                 <div class="col col-25" ng-if="$index + 2 < images.length">
-                    <img ng-src="{{images[$index + 2].src}}" width="100%"  ng-click="select($index+3)"/>
+                    <img ng-src="{{images[$index + 2].src}}" width="100%" ng-click="select($index+3)" />
                 </div>
                 <div class="col col-25" ng-if="$index + 3 < images.length">
-                    <img ng-src="{{images[$index + 3].src}}" width="100%"  ng-click="select($index+4)"/>
+                    <img ng-src="{{images[$index + 3].src}}" width="100%" ng-click="select($index+4)" />
                 </div>
             </div>
         </ion-content>
+        <ion-footer-bar align-title="center" class="bar-balanced">
+            <h1 class="title">designed by <a href="http://www.freepik.com/">Freepik</a> from Flaticon</h1>
+        </ion-footer-bar>
     </ion-modal-view>
 </script>

@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('planResultCtrl', function($scope, $state, $http, leafletData, $cordovaGeolocation, dataShare, sharedRoute, $ionicPopup, $ionicLoading) {
+.controller('planResultCtrl', function($scope, $state, $http, leafletData, $cordovaGeolocation, dataShare, sharedRoute, $ionicPopup, $ionicLoading, CONSTANTS) {
     $scope.routeColours = ["#1ABC9C", "#53599A", "#086375", "#F0A202", "#EF476F"];
     $scope.results = [];
     var plannedResultLayers = null;
@@ -301,7 +301,7 @@ angular.module('app.main.controllers')
         };
 
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/planRoute",
+            url: CONSTANTS.API_URL + "cyclist/route/planRoute",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

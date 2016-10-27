@@ -34,13 +34,6 @@ angular.module('app.routes', [])
         controller: 'signupCtrl'
     })
 
-    .state('verify', {
-        cache: false,
-        url: '/verify',
-        templateUrl: 'templates/verify.html',
-        controller: 'verifyCtrl'
-    })
-
     .state('forgot', {
         cache: false,
         url: '/forgot',
@@ -60,13 +53,6 @@ angular.module('app.routes', [])
         url: '/resetPassword',
         templateUrl: 'templates/resetPassword.html',
         controller: 'resetPasswordCtrl'
-    })
-
-    .state('forgotUsername', {
-        cache: false,
-        url: '/forgotUsername',
-        templateUrl: 'templates/forgotUsername.html',
-        controller: 'forgotUsernameCtrl'
     })
 
     .state('tabsController', {

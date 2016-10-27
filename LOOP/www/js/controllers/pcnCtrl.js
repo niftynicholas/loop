@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData, $cordovaGeolocation, $ionicPopup, $http, $ionicModal) {
+.controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData, $cordovaGeolocation, $ionicPopup, $http, $ionicModal, CONSTANTS) {
     $scope.caption = 'To submit a Comment or Suggestion, simply TAP & HOLD on the map. Then, TAP on "Submit Comment".';
 
     $scope.help = function() {
@@ -129,7 +129,7 @@ angular.module('app.main.controllers')
                     icon: commentMarker
                 }).addTo(geotags).bindPopup(res).openPopup();
                 $http({
-                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/comment/addGeotag",
+                    url: CONSTANTS.API_URL + "cyclist/comment/addGeotag",
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -183,10 +183,6 @@ angular.module('app.main.controllers')
                 contextmenu: true,
                 contextmenuWidth: 140,
                 contextmenuItems: [
-                    //     {
-                    //     text: 'Show coordinates',
-                    //     callback: showCoordinates
-                    // },
                     {
                         text: 'Submit Comment',
                         callback: submitSuggestion
@@ -405,7 +401,7 @@ angular.module('app.main.controllers')
                 $scope.dataLoaded = true;
             } else {
                 $http({
-                    url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/map/getGeotag",
+                    url: CONSTANTS.API_URL + "cyclist/map/getGeotag",
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

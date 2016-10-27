@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('routesMyRoutesCtrl', function($scope, routeName, $state, $http, leafletData, $timeout) {
+.controller('routesMyRoutesCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, CONSTANTS) {
     var profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
     var uids = profilePictures.uids;
     if (uids.length === 0) {
@@ -43,7 +43,7 @@ angular.module('app.main.controllers')
     $scope.doRefresh = function(){
 
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes2",
+            url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -111,7 +111,7 @@ angular.module('app.main.controllers')
         $scope.loadMore = function() {
 
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getUserRoutes2",
+                url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -170,7 +170,7 @@ angular.module('app.main.controllers')
 
         $scope.deleteRoute = function(cid){
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/deleteRoute",
+                url: CONSTANTS.API_URL + "cyclist/route/deleteRoute",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

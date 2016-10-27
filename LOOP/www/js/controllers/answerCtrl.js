@@ -53,8 +53,4 @@ angular.module('app.main.controllers')
                 });
             }
         }
-        //$scope.input.ans1
-        //$scope.input.ans2
-        //$scope.input.ans3
-        //
 })

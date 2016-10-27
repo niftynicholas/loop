@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('changePasswordCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading, $ionicHistory, $timeout, $window) {
+.controller('changePasswordCtrl', function($scope, $state, $http, $ionicPopup, $ionicLoading, $ionicHistory, $timeout, $window, CONSTANTS) {
     $scope.typeOld = "password";
 
     $scope.toggleVisibilityOld = function() {
@@ -28,7 +28,7 @@ angular.module('app.main.controllers')
                 template: '<p>Checking...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
             });
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/login",
+                url: CONSTANTS.API_URL + "cyclist/account/login",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -39,7 +39,7 @@ angular.module('app.main.controllers')
                 }
             }).then(function successCallback(response) {
                     $http({
-                        url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/updatePassword",
+                        url: CONSTANTS.API_URL + "cyclist/account/updatePassword",
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

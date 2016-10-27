@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('homeCtrl', function($scope, homeData, routeName, $state, $http, $timeout, leafletData) {
+.controller('homeCtrl', function($scope, homeData, routeName, $state, $http, $timeout, leafletData, CONSTANTS) {
     // var profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
     // var uids = profilePictures.uids;
     // if (uids.length === 0) {
@@ -39,7 +39,7 @@ angular.module('app.main.controllers')
     $scope.doRefresh = function(){
 
         $http({
-            url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getPopularRoutes2",
+            url: CONSTANTS.API_URL + "cyclist/route/getPopularRoutes",
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -108,7 +108,7 @@ angular.module('app.main.controllers')
 
         $scope.loadMore = function() {
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/route/getPopularRoutes2",
+                url: CONSTANTS.API_URL + "cyclist/route/getPopularRoutes",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -27,7 +27,7 @@ angular.module('app.main.controllers')
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
-                    console.log(response.data);
+                    console.log(response);
                     localStorage.setItem("login_state", "true");
                     localStorage.setItem("avatar", response.data.user.avatar);
                     localStorage.setItem("avgCalories", response.data.user.avgCalories);
@@ -48,20 +48,27 @@ angular.module('app.main.controllers')
                 },
                 function errorCallback(response) {
                     $scope.hide();
-                    $scope.showAlert();
+                    if (response.status == 204) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Login Failed',
+                            template: 'Invalid username or password. Please try again.'
+                        });
+
+                        alertPopup.then(function(res) {
+
+                        });
+                    } else if (response.status = 400) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Login Failed',
+                            template: 'Please update LOOP to the lastest version to enjoy all the features. Thank you.'
+                        });
+
+                        alertPopup.then(function(res) {
+
+                        });
+                    }
+
                 });
         }
     }
-
-    // Invalid username/password
-    $scope.showAlert = function() {
-        var alertPopup = $ionicPopup.alert({
-            title: 'Login Failed',
-            template: 'Invalid username or password. Please try again.'
-        });
-
-        alertPopup.then(function(res) {
-
-        });
-    };
 })
