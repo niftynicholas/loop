@@ -6,13 +6,18 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova', 'jrCrop', 'ionic-numberpicker', 'ng-walkthrough', 'ionic-modal-select'])
-    .filter('digits', function() {
-        return function(input) {
-            if (input < 10) input = '0' + input;
+.constant('CONSTANTS', {
+    API_URL: 'https://sgcycling-ywk93.rhcloud.com/api/',
+    VERSION: "0.0.4"
+})
 
-            return input;
-        }
-    })
+.filter('digits', function() {
+    return function(input) {
+        if (input < 10) input = '0' + input;
+
+        return input;
+    }
+})
 
 .filter('toFixed2', function() {
     return function(input) {
@@ -51,7 +56,38 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     return service;
 })
 
+.factory('shareUsername', function() {
+    var service = {};
+    service.data = false;
+    service.sendData = function(data) {
+        this.data = data;
+    };
+    service.getData = function() {
+        return this.data;
+    };
+    service.clearData = function() {
+        this.data = false;
+    };
+    return service;
+})
+
+
 .factory('mapData', function() {
+    var service = {};
+    service.data = false;
+    service.sendData = function(data) {
+        this.data = data;
+    };
+    service.getData = function() {
+        return this.data;
+    };
+    service.clearData = function() {
+        this.data = false;
+    };
+    return service;
+})
+
+.factory('securityQnsData', function() {
     var service = {};
     service.data = false;
     service.sendData = function(data) {

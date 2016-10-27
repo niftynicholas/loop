@@ -1,4 +1,4 @@
-<ion-view title="Profile" hide-back-button="true">
+<ion-view title="Profile" hide-back-button="true" ng-init="loadImages()">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
     <ion-nav-buttons side="right">
         <button class="button" ui-sref="editProfile">EDIT</button>
@@ -6,11 +6,11 @@
     <ion-content padding="true" class="has-header">
         <ion-list>
             <ion-item style="text-align:center;">
-                <div id="profilephoto" ng-click="show()" class="cropped-photo">
-                    <img style="border-radius: 100%;" ng-src="{{profilePictures[uid] || 'img/profile-placeholder.gif'}}" width="100px" height="100px">
+                <div id="profilephoto" ng-click="openModal()" class="cropped-photo">
+                    <img style="border-radius: 100%;" ng-src="{{profilePicture}}" width="100px" height="100px">
                 </div>
-                <a class="button button-clear button-positive" ng-click="show()">Change</a><br>
-                <h2><b>{{name}}<b></h2>
+                <a class="button button-clear button-positive" ng-click="openModal()">Change</a><br>
+                <h2><b>{{username}}<b></h2>
                 <h2><i class="icon ion-arrow-up-a"></i> Height: {{height}} cm</h2>
                 <h2><i class="icon ion-speedometer"></i> Weight: {{weight}} kg</h2>
             </ion-item>
@@ -36,3 +36,28 @@
         <button class="button button-full button-assertive" ng-click="logOut()">Log Out</button>
     </ion-content>
 </ion-view>
+
+<script id="my-modal.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar-balanced">
+            <h1 class="title">Select Avatar</h1>
+            <button class="button button-clear button-primary" ng-click="closeModal()">Close</button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="row" ng-repeat="image in images" ng-if="$index % 4 === 0">
+                <div class="col col-25" ng-if="$index < images.length">
+                    <img ng-src="{{images[$index].src}}" width="100%" ng-click="select($index+1)"/>
+                </div>
+                <div class="col col-25" ng-if="$index + 1 < images.length">
+                    <img ng-src="{{images[$index + 1].src}}" width="100%"  ng-click="select($index+2)"/>
+                </div>
+                <div class="col col-25" ng-if="$index + 2 < images.length">
+                    <img ng-src="{{images[$index + 2].src}}" width="100%"  ng-click="select($index+3)"/>
+                </div>
+                <div class="col col-25" ng-if="$index + 3 < images.length">
+                    <img ng-src="{{images[$index + 3].src}}" width="100%"  ng-click="select($index+4)"/>
+                </div>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>

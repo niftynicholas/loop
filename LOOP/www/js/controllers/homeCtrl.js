@@ -1,11 +1,11 @@
 angular.module('app.main.controllers')
 
 .controller('homeCtrl', function($scope, homeData, routeName, $state, $http, $timeout, leafletData) {
-    var profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
-    var uids = profilePictures.uids;
-    if (uids.length === 0) {
-      uids = 0;
-    }
+    // var profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
+    // var uids = profilePictures.uids;
+    // if (uids.length === 0) {
+    //   uids = 0;
+    // }
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("popularRoutes"));
     $scope.routeComments = JSON.parse(localStorage.getItem("popularRoutes"));

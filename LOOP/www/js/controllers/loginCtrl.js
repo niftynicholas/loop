@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('loginCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup) {
+.controller('loginCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup, CONSTANTS) {
     $scope.show = function() {
         $ionicLoading.show({
             template: '<p>Logging In...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
@@ -16,35 +16,33 @@ angular.module('app.main.controllers')
         if (form.$valid) {
             $scope.show();
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/login",
+                url: CONSTANTS.API_URL + "cyclist/account/login",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 data: {
+                    version: CONSTANTS.VERSION,
                     username: $scope.authorization.username,
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
+                    console.log(response.data);
                     localStorage.setItem("login_state", "true");
-                    localStorage.setItem("token", response.data.user.token);
+                    localStorage.setItem("avatar", response.data.user.avatar);
+                    localStorage.setItem("avgCalories", response.data.user.avgCalories);
                     localStorage.setItem("dateOfBirth", response.data.user.dateOfBirth);
-                    localStorage.setItem("email", response.data.user.email);
+                    localStorage.setItem("gender", response.data.user.gender);
                     localStorage.setItem("height", response.data.user.height);
-                    localStorage.setItem("name", response.data.user.name);
+                    localStorage.setItem("numActivities", response.data.user.numActivities);
+                    localStorage.setItem("token", response.data.user.token);
+                    localStorage.setItem("totalCalories", response.data.user.totalCalories);
                     localStorage.setItem("username", response.data.user.username);
                     localStorage.setItem("weight", response.data.user.weight);
-                    localStorage.setItem("gender", response.data.user.gender);
-                    localStorage.setItem("uid", response.data.user.uid);
-                    localStorage.setItem("numActivities", response.data.user.numActivities);
-                    localStorage.setItem("totalCalories", response.data.user.totalCalories);
-                    localStorage.setItem("avgCalories", response.data.user.avgCalories);
-                    //Stores the top 5 popular routes
                     localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
-                    //Stores the top 5 bookmarked Routes
                     localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
-                    //Stores the top profilePictures
-                    localStorage.setItem("profilePictures", JSON.stringify(response.data.profilePictures));
+                    localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                    localStorage.setItem("geotagCategories", JSON.stringify(response.data.geotagCategories));
                     $scope.hide();
                     $state.go('tabsController.home');
                 },

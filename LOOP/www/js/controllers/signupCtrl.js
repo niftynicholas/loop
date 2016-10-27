@@ -1,54 +1,19 @@
 angular.module('app.main.controllers')
 
-.controller('signupCtrl', function($scope, $ionicLoading, $ionicPopup, $state, $http) {
-    $scope.questions = [{
-        question: "What was the last name of your primary three teacher?",
-        id: 1
-    }, {
-        question: "What was the name of the boy/girl you had your second kiss with?",
-        id: 2
-    }, {
-        question: "Where were you when you had your first alcoholic drink (or cigarette)?",
-        id: 3
-    }, {
-        question: "What was the name of your second dog/cat/goldfish/etc?",
-        id: 4
-    }, {
-        question: "Where were you when you had your first kiss?",
-        id: 5
-    }, {
-        question: "When you were young, what did you want to be when you grew up?",
-        id: 6
-    }, {
-        question: "Where were you New Year's 2000?",
-        id: 7
-    }, {
-        question: "Who was your childhood hero?",
-        id: 8
-    }, {
-        question: "Which phone number do you remember most from your childhood?",
-        id: 9
-    }];
-
-    $scope.questions1 = $scope.questions.slice(0,3);
-    $scope.questions2 = $scope.questions.slice(3,6);
+.controller('signupCtrl', function($scope, $ionicLoading, $ionicPopup, $state, $http, CONSTANTS, securityQnsData) {
+    $scope.availabilityAPI = CONSTANTS.API_URL + "cyclist/account/checkUsernameAvailability";
+    $scope.questions = securityQnsData.getData();
+    $scope.questions1 = $scope.questions.slice(0, 3);
+    $scope.questions2 = $scope.questions.slice(3, 6);
     $scope.questions3 = $scope.questions.slice(6);
 
     $scope.input = {
         gender: "male",
     };
 
-    $scope.selected1 = {
-        question: $scope.questions[0].question
-    }
-
-    $scope.selected2 = {
-        question: $scope.questions[3].question
-    }
-
-    $scope.selected3 = {
-        question: $scope.questions[6].question
-    }
+    $scope.selected1 = $scope.questions[0];
+    $scope.selected2 = $scope.questions[3];
+    $scope.selected3 = $scope.questions[6];
 
     $scope.type = "password";
 
@@ -62,7 +27,7 @@ angular.module('app.main.controllers')
 
     $scope.show = function() {
         $ionicLoading.show({
-            template: '<p>Loading...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+            template: '<p>Signing Up...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
         });
     };
 
@@ -74,7 +39,7 @@ angular.module('app.main.controllers')
         if (form.$valid) {
             $scope.show();
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/signup",
+                url: CONSTANTS.API_URL + "cyclist/account/signup",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -82,13 +47,30 @@ angular.module('app.main.controllers')
                 data: {
                     username: $scope.input.username,
                     password: $scope.input.password,
-                    name: $scope.input.name,
-                    email: $scope.input.email,
-                    dateTimeStamp: new Date().getTime()
+                    gender: $scope.input.gender,
+                    dateOfBirth: new Date($scope.input.birthDate).getTime(),
+                    dateTimeStamp: new Date().getTime(),
+                    securityQuestions: [{
+                        no: $scope.selected1.no,
+                        answer: $scope.input.ans1
+                    }, {
+                        no: $scope.selected2.no,
+                        answer: $scope.input.ans2
+                    }, {
+                        no: $scope.selected3.no,
+                        answer: $scope.input.ans3
+                    }]
                 }
             }).then(function successCallback(response) {
                 $scope.hide();
-                $state.go('verify');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Sign Up Successful',
+                    template: 'You may now proceed to login'
+                });
+
+                alertPopup.then(function(res) {
+                    $state.go('login');
+                });
             }, function errorCallback(response) {
                 $scope.hide();
                 $scope.showAlert();

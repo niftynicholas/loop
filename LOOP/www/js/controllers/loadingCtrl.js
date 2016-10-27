@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('loadingCtrl', function($scope, mapData, $http, $state, $ionicLoading, $timeout) {
+.controller('loadingCtrl', function($scope, mapData, securityQnsData, $http, $state, $ionicLoading, $timeout, CONSTANTS) {
     $scope.show = function() {
         $ionicLoading.show({
             template: '<p>Loading Resources...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
@@ -13,7 +13,7 @@ angular.module('app.main.controllers')
 
     $scope.getMapData = function() {
         $http({
-            url: 'https://sgcycling-sgloop.rhcloud.com/api/cyclist/map/getMapData',
+            url: CONSTANTS.API_URL + 'cyclist/map/getMapData',
             method: 'POST',
             async: false,
             headers: {
@@ -27,6 +27,23 @@ angular.module('app.main.controllers')
             })
     }
 
+    $scope.getSecurityQnsData = function() {
+        $http({
+            url: CONSTANTS.API_URL + "cyclist/account/retrieveSecurityQuestions",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+
+            }
+        }).then(function successCallback(response) {
+            securityQnsData.sendData(response.data.securityQuestions);
+        }, function errorCallback(response) {
+
+        });
+    }
+
     $scope.show();
     $timeout(function() {
         $scope.hide();
@@ -38,4 +55,5 @@ angular.module('app.main.controllers')
         }
     }, 4000);
     $scope.getMapData();
+    $scope.getSecurityQnsData();
 })

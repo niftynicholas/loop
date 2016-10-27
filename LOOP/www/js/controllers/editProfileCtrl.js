@@ -1,26 +1,21 @@
 angular.module('app.main.controllers')
 
-.controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http, $timeout, $ionicPopup, $ionicModal) {
-    $scope.input = new Object();
-    $scope.input.dateOfBirth = new Date(parseInt(localStorage.getItem("dateOfBirth")));
-    $scope.genders = [{
-        name: "Male",
-        id: 1
-    }, {
-        name: "Female",
-        id: 2
-    }];
-    if (localStorage.getItem("gender") === "Male") {
-        $scope.input.gender = $scope.genders[0];
-    } else {
-        $scope.input.gender = $scope.genders[1];
-    }
-    $scope.input.name = localStorage.getItem("name");
-    $scope.input.height = parseFloat(localStorage.getItem("height")).toFixed(2);
-    console.log($scope.input.height);
-    $scope.input.weight = parseFloat(localStorage.getItem("weight")).toFixed(2);
+.controller('editProfileCtrl', function($scope, $state, $ionicHistory, $http, $timeout, $ionicPopup, $ionicModal, CONSTANTS, $ionicLoading) {
+    $scope.show = function() {
+        $ionicLoading.show({
+            template: '<p>Saving...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        });
+    };
 
-    $scope.imgSrc = "../img/avatars/1.png";
+    $scope.hide = function() {
+        $ionicLoading.hide();
+    };
+
+    $scope.input = {};
+    $scope.input.height = parseFloat(localStorage.getItem("height")).toFixed(2);
+    $scope.input.weight = parseFloat(localStorage.getItem("weight")).toFixed(2);
+    var selectedIndex = localStorage.getItem("avatar");
+    $scope.imgSrc = "../img/avatars/" + localStorage.getItem("avatar") + ".png";
 
     $scope.images = [];
 
@@ -35,56 +30,39 @@ angular.module('app.main.controllers')
 
     $scope.select = function(index) {
         $scope.imgSrc = "../img/avatars/" + index + ".png";
+        selectedIndex = index;
         $scope.closeModal();
     }
-
-    // $scope.numberPickerObject = {
-    //     inputValue: 0, //Optional
-    //     minValue: -9007199254740991,
-    //     maxValue: 9007199254740991,
-    //     precision: 3, //Optional
-    //     decimalStep: 0.25, //Optional
-    //     format: "DECIMAL", //Optional - "WHOLE" or "DECIMAL"
-    //     titleLabel: 'Number Picker', //Optional
-    //     setLabel: 'Set', //Optional
-    //     closeLabel: 'Close', //Optional
-    //     setButtonType: 'button-positive', //Optional
-    //     closeButtonType: 'button-stable', //Optional
-    //     callback: function(val) { //Mandatory
-    //         console.log(val);
-    //     }
-    // };
-
 
     $scope.save = function() {
         if (parseFloat($scope.input.height) == 0 || parseFloat($scope.input.weight) == 0) {
             $scope.showAlert();
         } else {
-            localStorage.setItem("name", $scope.input.name);
-            localStorage.setItem("gender", $scope.input.gender.name);
-            localStorage.setItem("dateOfBirth", new Date($scope.input.dateOfBirth).getTime());
-            localStorage.setItem("height", $scope.input.height);
-            localStorage.setItem("weight", $scope.input.weight);
+            $scope.show();
             $http({
-                url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/updateAccountDetails",
+                url: CONSTANTS.API_URL + "cyclist/account/updateAccountDetails",
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 data: {
+                    avatar: selectedIndex,
                     token: localStorage.getItem("token"),
-                    name: $scope.input.name,
-                    gender: $scope.input.gender.name,
-                    dateOfBirth: new Date($scope.input.dateOfBirth).getTime(),
                     height: $scope.input.height,
-                    weight: $scope.input.weight,
-                    dateTimeStamp: new Date().getTime()
+                    weight:  $scope.input.weight
                 }
             }).then(function successCallback(response) {
-                $state.go('tabsController.profile');
+                $scope.hide();
+                localStorage.setItem("avatar", selectedIndex);
+                localStorage.setItem("height", $scope.input.height);
+                localStorage.setItem("weight", $scope.input.weight);
+                $state.go("tabsController.profile");
             }, function errorCallback(response) {
-                alert("Error Updating Account Details");
-                alert(JSON.stringify(response));
+                $scope.hide();
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Opps!',
+                    template: 'We are unable to edit your account details now. Please try again later.'
+                });
             });
         }
     }

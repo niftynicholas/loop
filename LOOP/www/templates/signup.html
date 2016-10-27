@@ -11,7 +11,7 @@
                 <!-- Username -->
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.username.$invalid && signupForm.$submitted, 'no-errors' : signupForm.username.$valid  && signupForm.$submitted}">
                     <span class="input-label">Username</span>
-                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" ng-maxlength="15" required record-availability-validator="https://sgcycling-sgloop.rhcloud.com/api/cyclist/account/checkUsernameAvailability">
+                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" ng-maxlength="15" required record-availability-validator="{{availabilityAPI}}">
                 </label>
                 <div class="error-container" ng-show="signupForm.username.$error && signupForm.$submitted" ng-messages="signupForm.username.$error">
                     <div ng-messages-include="error-list.html"></div>
@@ -38,8 +38,8 @@
                         Gender
                     </div>
                     <select name="gender" ng-model="input.gender" required>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                     </select>
                 </label>
             </div>
@@ -47,7 +47,7 @@
             <div class="list">
                 <div class="item item-button-right" style="overflow: initial; white-space: initial;">
                     <b>Security Question 1:</b> {{selected1.question}}
-                    <button type="button" class="button button-positive" modal-select="" ng-model="selected1" options="questions1" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
+                    <button type="button" class="button button-positive" modal-select="" ng-model="$parent.selected1" options="questions1" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
                         <i class="ion-android-open"></i>
                         <div class="option">
                             {{option.question}}
@@ -66,7 +66,7 @@
             <div class="list">
                 <div class="item item-button-right" style="overflow: initial; white-space: initial;">
                     <b>Security Question 2:</b> {{selected2.question}}
-                    <button type="button" class="button button-positive" modal-select="" ng-model="selected2" options="questions2" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
+                    <button type="button" class="button button-positive" modal-select="" ng-model="$parent.selected2" options="questions2" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
                         <i class="ion-android-open"></i>
                         <div class="option">
                             {{option.question}}
@@ -85,7 +85,7 @@
             <div class="list">
                 <div class="item item-button-right" style="overflow: initial; white-space: initial;">
                     <b>Security Question 3:</b> {{selected3.question}}
-                    <button type="button"  class="button button-positive" modal-select="" ng-model="selected3" options="questions3" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
+                    <button type="button"  class="button button-positive" modal-select="" ng-model="$parent.selected3" options="questions3" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
                         <i class="ion-android-open"></i>
                         <div class="option">
                             {{option.question}}
@@ -94,13 +94,12 @@
                 </div>
                 <label class="item item-input" ng-class="{ 'has-errors' : signupForm.ans3.$invalid && signupForm.$submitted, 'no-errors' : signupForm.ans3.$valid  && signupForm.$submitted}">
                     <span class="input-label">Answer </span>
-                    <input type="text" name="ans3" ng-model="input.ans3" required>
+                        <input type="text" name="ans3" ng-model="input.ans3" required>
                 </label>
                 <div class="error-container" ng-show="signupForm.ans3.$error && signupForm.$submitted" ng-messages="signupForm.ans3.$error">
                     <div ng-messages-include="error-list.html"></div>
                 </div>
             </div>
-
             <button type="submit" class="button button-positive button-full">Sign Up</button>
         </form>
     </ion-content>
