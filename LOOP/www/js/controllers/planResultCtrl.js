@@ -61,7 +61,7 @@ angular.module('app.main.controllers')
         var endLatLng = data.endLatLng;
         var startPointName = data.startPointName;
         var endPointName = data.endPointName;
-        var type = data.type;
+        var type = data.type.toLowerCase();
         var oneMapToken = data.oneMapToken;
         dataShare.clearData();
 
@@ -299,7 +299,6 @@ angular.module('app.main.controllers')
                 lng: endLatLng.lng
             }
         };
-
         $http({
             url: CONSTANTS.API_URL + "cyclist/route/planRoute",
             method: 'POST',
@@ -307,9 +306,11 @@ angular.module('app.main.controllers')
                 'Content-Type': 'application/json'
             },
             data: {
+                pid: null,
                 token: localStorage.getItem("token"),
                 start: startCoords,
                 end: endCoords,
+                dateTimeStamp: new Date().getTime(),
                 k: 3, // No. of routes to be returned.
                 tolerance: 500,
                 type: type

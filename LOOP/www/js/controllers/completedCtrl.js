@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('completedCtrl', function($scope, $state, $ionicPopup, $ionicLoading, $timeout, leafletData, dataShare, $http, sharedRoute) {
+.controller('completedCtrl', function($scope, $state, $ionicPopup, $ionicLoading, $timeout, leafletData, dataShare, $http, sharedRoute, CONSTANTS) {
     $scope.username = localStorage.getItem("username");
     sharedRoute.hasPlannedRoute = false;
 
@@ -224,6 +224,7 @@ angular.module('app.main.controllers')
                             geotagComments: data.geotagsInfo,
                             isShared: $scope.input.isShared || false,
                             referencedCID: data.referencedCID || null,
+                            pid: null,
                             name: $scope.data.routeName
                         }
                     }).then(function successCallback(response) {

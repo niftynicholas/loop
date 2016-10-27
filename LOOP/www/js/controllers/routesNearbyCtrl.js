@@ -1,13 +1,10 @@
 angular.module('app.main.controllers')
 
 .controller('routesNearbyCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, $cordovaGeolocation, CONSTANTS) {
-    var profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
-    var uids = profilePictures.uids;
+
     //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method
     $scope.count = 0;
-    if (uids.length === 0) {
-        uids = 0;
-    }
+
     $scope.hasMoreRoutes = true;
     var currentLocation = null;
 
@@ -33,7 +30,6 @@ angular.module('app.main.controllers')
             data: {
                 token: localStorage.getItem("token"),
                 to: $scope.count,
-                uids:uids,
                 coordinates: currentLocation
             }
         }).then(function successCallback(response) {
@@ -102,7 +98,6 @@ angular.module('app.main.controllers')
                     data: {
                         token: localStorage.getItem("token"),
                         from: $scope.count,
-                        uids: uids,
                         coordinates: currentLocation
                     }
                 }).then(function successCallback(response) {
@@ -129,18 +124,6 @@ angular.module('app.main.controllers')
                 console.log("Location not found");
             });
 
-        };
-
-        var updateProfilePicture = function(addPics) {
-            profilePictures.uids.concat(addPics.uids);
-            for (var count = 0; count < addPics.uids.length; count++) {
-                profilePictures[addPics.uids[count]] = addPics[addPics.uids[count]];
-            }
-            uids = profilePictures.uids;
-            if (uids.length === 0) {
-                uids = 0;
-            }
-            localStorage.setItem("profilePictures", JSON.stringify(profilePictures));
         };
 
         //Can dump the route data inside here to not need to call getRoute API

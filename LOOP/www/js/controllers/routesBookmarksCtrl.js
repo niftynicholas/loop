@@ -1,11 +1,6 @@
 angular.module('app.main.controllers')
 
 .controller('routesBookmarksCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, CONSTANTS) {
-    var profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
-    var uids = profilePictures.uids;
-    if (uids.length === 0) {
-      uids = 0;
-    }
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
     $scope.hasMoreRoutes = true;
@@ -47,8 +42,7 @@ angular.module('app.main.controllers')
             },
             data: {
                 token: localStorage.getItem("token"),
-                to: $scope.count,
-                uids:uids
+                to: $scope.count
             }
         }).then(function successCallback(response) {
             $scope.routes = response.data.bookmarkedRoutes;
@@ -115,8 +109,7 @@ angular.module('app.main.controllers')
                 },
                 data: {
                     token: localStorage.getItem("token"),
-                    from: $scope.count,
-                    uids:uids
+                    from: $scope.count
                 }
             }).then(function successCallback(response) {
                 var additionalBookmarkedRoutes = response.data.bookmarkedRoutes;
@@ -133,18 +126,6 @@ angular.module('app.main.controllers')
             function errorCallback(response) {
                 console.log("response not found");
             });
-        };
-
-        var updateProfilePicture = function(addPics) {
-            profilePictures.uids.concat(addPics.uids);
-            for (var count = 0; count < addPics.uids.length; count++) {
-              profilePictures[addPics.uids[count]] = addPics[addPics.uids[count]];
-            }
-            uids = profilePictures.uids;
-            if (uids.length === 0) {
-              uids = 0;
-            }
-            localStorage.setItem("profilePictures", JSON.stringify(profilePictures));
         };
 
         //Can dump the route data inside here to not need to call getRoute API

@@ -1,11 +1,6 @@
 angular.module('app.main.controllers')
 
 .controller('homeCtrl', function($scope, homeData, routeName, $state, $http, $timeout, leafletData, CONSTANTS) {
-    // var profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
-    // var uids = profilePictures.uids;
-    // if (uids.length === 0) {
-    //   uids = 0;
-    // }
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("popularRoutes"));
     $scope.routeComments = JSON.parse(localStorage.getItem("popularRoutes"));
@@ -46,8 +41,7 @@ angular.module('app.main.controllers')
             },
             data: {
                 token: localStorage.getItem("token"),
-                to: $scope.count,
-                uids : uids
+                to: $scope.count
             }
         }).then(function successCallback(response) {
             $scope.routes = response.data.popularRoutes;
@@ -115,8 +109,7 @@ angular.module('app.main.controllers')
                 },
                 data: {
                     token: localStorage.getItem("token"),
-                    from: $scope.count,
-                    uids : uids
+                    from: $scope.count
                 }
             }).then(function successCallback(response) {
                 var additionalPopularRoutes = response.data.popularRoutes;
@@ -126,7 +119,6 @@ angular.module('app.main.controllers')
                 $scope.routes = $scope.routes.concat(response.data.popularRoutes);
                 $scope.routeComments = $scope.routeComments.concat(response.data.popularRoutes);
                 localStorage.setItem("popularRoutes", JSON.stringify($scope.routes));
-                updateProfilePicture(response.data.profilePictures);
                 $scope.$broadcast('scroll.infiniteScrollComplete');
                 init();
             },
@@ -135,17 +127,6 @@ angular.module('app.main.controllers')
             });
         };
 
-        var updateProfilePicture = function(addPics) {
-            profilePictures.uids.concat(addPics.uids);
-            for (var count = 0; count < addPics.uids.length; count++) {
-              profilePictures[addPics.uids[count]] = addPics[addPics.uids[count]];
-            }
-            uids = profilePictures.uids;
-            if (uids.length === 0) {
-              uids = 0;
-            }
-            localStorage.setItem("profilePictures", JSON.stringify(profilePictures));
-        };
 
         //Can dump the route data inside here to not need to call getRoute API
         $scope.viewRoute = function(index) {
