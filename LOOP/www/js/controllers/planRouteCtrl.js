@@ -4,6 +4,9 @@ angular.module('app.main.controllers')
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
 
+    // $scope.favourites = [{name: "123", lat: 123, lng: 123}, {name: "asd", lat: 123, lng: 123}];
+    // $scope.favourites = [];
+
     /**
     * Ajax call to get token from OneMap
     */
@@ -23,28 +26,40 @@ angular.module('app.main.controllers')
         token = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi';
     }
 
+    var hasCurrentLocation = false;
     $('#startPoint').focus(function() {
-        if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
-            $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
-        } else {
-            $cordovaGeolocation.getCurrentPosition({
-                timeout: 3000,
-                enableHighAccuracy: true
-            }).then(function(position) {
-                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + "Current Location" + '</div>');
-            }, function(err) {
-                console.log("Location not found");
-            });
+        // var favourites = localStorage.getItem("favourites");
+        // if(favourites != null){
+        //     console.log(favourites);
+        //     $scope.favourites = JSON.parse(favourites);
+        // }else{
+        //     console.log("FAVOURITES IS NULL");
+        // }
+        if(!hasCurrentLocation){
+            if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
+                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + "Current Location" + '</div>');
+                hasCurrentLocation = true;
+            } else {
+                $cordovaGeolocation.getCurrentPosition({
+                    timeout: 3000,
+                    enableHighAccuracy: true
+                }).then(function(position) {
+                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + "Current Location" + '</div>');
+                    hasCurrentLocation = true;
+                }, function(err) {
+                    console.log("Location not found");
+                });
+            }
         }
     });
 
-    $('#startPoint').focusout(function() {
-        $('#startResult').empty();
-    });
-
-    $('#endPoint').focusout(function() {
-        $('#endResult').empty();
-    });
+    // $('#startPoint').focusout(function() {
+    //     $('#startResult').empty();
+    // });
+    //
+    // $('#endPoint').focusout(function() {
+    //     $('#endResult').empty();
+    // });
 
     /**
     * Populate Search Results for Start Point
@@ -89,6 +104,7 @@ angular.module('app.main.controllers')
                         if (searchVal != null) {
                             //Populate the results in the startResult div
                             $('#startResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'start\')">' + searchVal + '</div>');
+                            // $('#startResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'start\')">' + '<i id="star'+ i +'" class="ion-ios-star-outline" style="float:right;color:#ffba49" onclick="favLocation(star'+ i + ')"></i>' + searchVal + '</div>');
                         }
 
                     }
@@ -224,11 +240,37 @@ angular.module('app.main.controllers')
     $scope.setActiveButton = function(index) {
         $scope.activeButton = index;
     };
+
 })
+
+// var clickFavourite = false;
 
 function displayInfo(searchVal, lat, lng, type) {
     $('#' + type + 'Point').val(searchVal);
     $('#' + type + 'Point').attr('data-val', searchVal);
     $('#' + type + 'Point').attr('data-latlng', [lat, lng]);
     $('#' + type + 'Result').html("");
+    hasCurrentLocation = false;
+
+    // if(!clickFavourite){
+    //     $('#' + type + 'Point').val(searchVal);
+    //     $('#' + type + 'Point').attr('data-val', searchVal);
+    //     $('#' + type + 'Point').attr('data-latlng', [lat, lng]);
+    //     $('#' + type + 'Result').html("");
+    //     hasCurrentLocation = false;
+    // }
+    // clickFavourite = false;
 }
+
+// function favLocation(id){ //, lat, lng
+//     clickFavourite = true;
+//     if($(id).attr('class') == "ion-ios-star"){
+//         //Unfavourite
+//         $(id).attr('class', 'ion-ios-star-outline');
+//     }else{
+//         //Favourite
+//         //Add to Database
+//         localStorage.setItem("favourites", JSON.stringify([{name:"123"}]));
+//         $(id).attr('class', 'ion-ios-star');
+//     }
+// }
