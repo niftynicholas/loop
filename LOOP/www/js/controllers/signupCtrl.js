@@ -8,7 +8,7 @@ angular.module('app.main.controllers')
     $scope.questions3 = $scope.questions.slice(6);
 
     $scope.input = {
-        gender: "male",
+        gender: "Male",
     };
 
     $scope.selected1 = $scope.questions[0];

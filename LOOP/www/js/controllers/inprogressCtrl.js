@@ -9,9 +9,11 @@ angular.module('app.main.controllers')
     $scope.duration = 0; //In seconds
     $scope.durationInSeconds = 0;
     $scope.MET = 8; //FINAL variable to be determined by activity type
-    //$scope.age = 25;      //To be retrieve from database
-    //$scope.gender = 'M';  //To be retrieve from database
-    $scope.weight = 60.0; //To be retrieve from database
+
+    $scope.age = Math.floor(((new Date()).getTime() - (new Date(parseInt(localStorage.getItem("dateOfBirth"))))) / (1000 * 60 * 60 * 24 * 365));
+    $scope.gender = localStorage.getItem("gender");
+    $scope.weight = parseFloat(localStorage.getItem("weight")).toFixed(2);
+    $scope.height = parseFloat(localStorage.getItem("height")).toFixed(2);
     $scope.coordsinfo = []; //stores coordinates information e.g. {lat: xxx, lng: xxx, time: xxx}
     $scope.currentLoc = null;
     var currentPath = [];
@@ -371,8 +373,28 @@ angular.module('app.main.controllers')
             var avgSpd = $scope.distance / ($scope.duration / 3600.0);
             $scope.averageSpeed = (Math.round(avgSpd * 100) / 100);
         }
-        var calories = $scope.weight * $scope.MET * ($scope.duration / 3600.0);
-        $scope.calories = (Math.round(calories * 100) / 100);
+
+        var heartRate = (220 - $scope.age) * 0.7; // Average Cycling Heart Rate
+
+        if ($scope.gender.toLowerCase() == "male") {
+            $scope.calories = parseFloat((0.6309 * heartRate + 0.09036 * $scope.weight + 0.2017 * $scope.age - 55.0969) * ($scope.duration / 60.0) / 4.184).toFixed(2);
+            // C = (0.6309 x H + 0.09036 x W + 0.2017 x A -- 55.0969) x T / 4.184.
+            console.log("Height: " + $scope.height);
+            console.log("Weight: " + $scope.weight);
+            console.log("Gender: " + $scope.gender);
+            console.log("Heart Rate: " + heartRate);
+            console.log("Seconds: " + $scope.duration);
+            console.log("Minutes: " + ($scope.duration / 60.0));
+            console.log("Calories: " + $scope.calories);
+        } else if ($scope.gender.toLowerCase() == "female") {
+            $scope.calories = parseFloat((0.4472 * heartRate - 0.05741 * $scope.weight + 0.074 * $scope.age - 20.4022) * ($scope.duration / 60.0) / 4.184).toFixed(2);
+            // C = (0.4472 x HR -- 0.05741 x W + 0.074 x Age -- 20.4022) x T / 4.184.
+        }
+
+        // OLD
+        // var calories = $scope.weight * $scope.MET * ($scope.duration / 3600.0);
+        // $scope.calories = (Math.round(calories * 100) / 100);
+
         /*
         ***************GENERIC*******************
         Calories Burned = Weight X MET X Hour
@@ -580,7 +602,10 @@ angular.module('app.main.controllers')
 
                     geotagsInfo.push({
                         dateTimeStamp: new Date().getTime(),
-                        coordinates: {lat: $scope.currentLoc[1], lng: $scope.currentLoc[0]},
+                        coordinates: {
+                            lat: $scope.currentLoc[1],
+                            lng: $scope.currentLoc[0]
+                        },
                         comment: res
                     });
                     window.plugins.toast.showWithOptions({
