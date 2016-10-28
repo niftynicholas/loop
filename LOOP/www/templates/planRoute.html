@@ -8,16 +8,16 @@
     <ion-content padding="true" class="has-header">
         <form>
             <ion-list>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Start Point</span>
-                    <input type="text" placeholder="Start Point" id="startPoint">
+                <label class="item item-input"> <!-- item-floating-label -->
+                    <!-- <span class="input-label">Start Point</span> -->
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text" placeholder="Choose starting point" id="startPoint">
                 </label>
-                <div id="startResult" style="width:100%;z-index:10000;position:absolute;">
-                    <!-- <div class="item" ng-repeat="favourite in favourites">{{favourite.name}}</div> -->
-                </div>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">End Point</span>
-                    <input type="text" placeholder="End Point" id="endPoint">
+                <div id="startResult" style="width:100%;z-index:10000;position:absolute;"></div>
+                <label class="item item-input"> <!-- item-floating-label -->
+                    <!-- <span class="input-label">End Point</span> -->
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text" placeholder="Choose destination" id="endPoint">
                 </label>
                 <div id="endResult" style="width:100%;z-index:10000;position:absolute;"></div>
                 <div class="button-bar bar-balanced">
@@ -27,7 +27,7 @@
             <button class="button button-full button-positive" type="submit" ng-click="planRoute()">Plan</button>
         </form>
         <!-- <div class="list list-inset">
-            <h5 style="text-align:left;"><b>Note:</b> When you use LOOP's map data, directions, and other Content, you may find that actual conditions differ from the map results and Content, so exercise your independent judgment and use LOOP at your own risk. You’re responsible at all times for your conduct and its consequences.</h5>
-        </div> -->
-    </ion-content>
+        <h5 style="text-align:left;"><b>Note:</b> When you use LOOP's map data, directions, and other Content, you may find that actual conditions differ from the map results and Content, so exercise your independent judgment and use LOOP at your own risk. You’re responsible at all times for your conduct and its consequences.</h5>
+    </div> -->
+</ion-content>
 </ion-view>

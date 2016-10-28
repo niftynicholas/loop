@@ -4,7 +4,7 @@ angular.module('app.main.controllers')
     $scope.routeColours = ["#1ABC9C", "#53599A", "#086375", "#F0A202", "#EF476F"];
     $scope.results = [];
     var plannedResultLayers = null;
-
+    var pid = null;
     var inActiveStyle = {
         "color": "#000000",
         "weight": 8,
@@ -46,7 +46,8 @@ angular.module('app.main.controllers')
         var data = {
             currentLocation: $scope.currentLocation,
             time: $scope.timestamp,
-            startDateTimeStamp: new Date().getTime()
+            startDateTimeStamp: new Date().getTime(),
+            pid: pid
         };
         dataShare.clearData();
         dataShare.sendData(data);
@@ -306,7 +307,6 @@ angular.module('app.main.controllers')
                 'Content-Type': 'application/json'
             },
             data: {
-                pid: null,
                 token: localStorage.getItem("token"),
                 start: startCoords,
                 end: endCoords,
@@ -316,6 +316,7 @@ angular.module('app.main.controllers')
                 type: type
             }
         }).then(function successCallback(response) {
+                pid = response.data.pid
                 sharedRoute.hasPlanned = true;
                 sharedRoute.hasPlannedRoute = true;
                 var firstLoad = true;
@@ -391,53 +392,6 @@ angular.module('app.main.controllers')
                     $state.go('planRoute');
                 });
             });
-
-        // sharedRoute.routeLayer = new L.FeatureGroup().addTo(map);
-        // var travelOptions = r360.travelOptions();
-        // travelOptions.addSource(sourceMarker1);
-        // travelOptions.addTarget(targetMarker1);
-        // travelOptions.setTravelType('bike');
-        //
-        // // define what happens if everything goes smoothly
-        // var successCallBack = function(routes) {
-        //     sharedRoute.hasPlanned = true;
-        //     sharedRoute.hasPlannedRoute = true;
-        //
-        //     for (var i = 0; i < routes.length; i++) {
-        //         var route = routes[i];
-        //         r360.LeafletUtil.fadeIn(sharedRoute.routeLayer, route, 1000, "travelDistance");
-        //         sharedRoute.markerLayer = new L.layerGroup([sourceMarker1, targetMarker1]);
-        //         sharedRoute.routepoints = route.points;
-        //         map.addLayer(sharedRoute.markerLayer);
-        //         targetMarker1.openPopup();
-        //         sourceMarker1.openPopup();
-        //     }
-        //     console.log(sharedRoute);
-        // };
-        //
-        // var errorCallBack = function(status, message) {
-        //     console.log("MY STATUS: ");
-        //     console.log(status);
-        //     console.log("MY ERROR MESSAGE: ");
-        //     console.log(message);
-        //     var confirmPopup = $ionicPopup.confirm({
-        //         title: 'Invalid Location(s)',
-        //         template: 'You have selected invalid start/end point(s). Do you want to replan your route?'
-        //     });
-        //
-        //     confirmPopup.then(function(res) {
-        //         if (res) {
-        //             console.log('Yes');
-        //             $state.go('planRoute');
-        //         } else {
-        //             console.log('No');
-        //         }
-        //     });
-        // };
-        //
-        // r360.RouteService.getRoutes(travelOptions, successCallBack, errorCallBack);
-        //
-
 
     }
 

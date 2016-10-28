@@ -224,7 +224,7 @@ angular.module('app.main.controllers')
                             geotagComments: data.geotagsInfo,
                             isShared: $scope.input.isShared || false,
                             referencedCID: data.referencedCID || null,
-                            pid: null,
+                            pid: data.pid || null,
                             name: $scope.data.routeName
                         }
                     }).then(function successCallback(response) {

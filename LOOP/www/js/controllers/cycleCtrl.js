@@ -5,19 +5,6 @@ angular.module('app.main.controllers')
     $scope.firstLoad = true;
     $scope.timestamp = 0;
 
-    $scope.hasPlannedRoute = function() {
-        return sharedRoute.hasPlannedRoute;
-    }
-
-    $scope.clearPlannedRoute = function() {
-        leafletData.getMap("cycle").then(function(map) {
-            map.removeLayer(sharedRoute.markerLayer);
-            map.removeLayer(sharedRoute.routeLayer);
-        });
-        sharedRoute.hasPlanned = false;
-        sharedRoute.hasPlannedRoute = false;
-    }
-
     angular.extend($scope, {
         center: {
             lat: 1.3521,

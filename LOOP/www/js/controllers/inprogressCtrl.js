@@ -295,6 +295,7 @@ angular.module('app.main.controllers')
     if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
         //Pass currentLocation from cycle.html
         var data = dataShare.getData();
+        $scope.pid = data.pid || null;
         $scope.currentLoc = [data.currentLocation.lng, data.currentLocation.lat]; //GeoJson Format, EPSG:4326
         view.setCenter($scope.currentLoc);
         view.setZoom(18);
@@ -522,7 +523,8 @@ angular.module('app.main.controllers')
                     durationInSeconds: $scope.durationInSeconds,
                     startDateTimeStamp: $scope.startDateTimeStamp,
                     geotagsInfo: geotagsInfo,
-                    referencedCID: viewSharedRoute.cid
+                    referencedCID: viewSharedRoute.cid,
+                    pid: $scope.pid
                 };
                 dataShare.sendData(data); //pass as JS object
                 viewSharedRoute.clearData();
