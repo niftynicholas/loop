@@ -16,7 +16,7 @@ angular.module('app.main.controllers')
     $scope.totalCalories = parseFloat(localStorage.getItem("totalCalories"));
     $scope.numActivities = parseInt(localStorage.getItem("numActivities"));
     $scope.username = localStorage.getItem("username");
-    $scope.profilePicture = 'img/avatars/' + localStorage.getItem("avatar") + ".png";
+    $scope.profilePicture = '../img/avatars/' + localStorage.getItem("avatar") + ".png";
 
     $scope.logOut = function() {
         $ionicLoading.show({

@@ -27,26 +27,41 @@ angular.module('app.main.controllers')
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
+                    console.log("successcallback");
                     console.log(response);
-                    localStorage.setItem("login_state", "true");
-                    localStorage.setItem("avatar", response.data.user.avatar);
-                    localStorage.setItem("avgCalories", response.data.user.avgCalories);
-                    localStorage.setItem("dateOfBirth", response.data.user.dateOfBirth);
-                    localStorage.setItem("gender", response.data.user.gender);
-                    localStorage.setItem("height", response.data.user.height);
-                    localStorage.setItem("numActivities", response.data.user.numActivities);
-                    localStorage.setItem("token", response.data.user.token);
-                    localStorage.setItem("totalCalories", response.data.user.totalCalories);
-                    localStorage.setItem("username", response.data.user.username);
-                    localStorage.setItem("weight", response.data.user.weight);
-                    localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
-                    localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
-                    localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
-                    localStorage.setItem("geotagCategories", JSON.stringify(response.data.geotagCategories));
-                    $scope.hide();
-                    $state.go('tabsController.home');
+                    if (response.status == 203) {
+                        $scope.hide();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Login Failed',
+                            template: 'Please update your security questions before logging in. Thank you.'
+                        });
+
+                        alertPopup.then(function(res) {
+
+                        });
+                    } else {
+                        localStorage.setItem("login_state", "true");
+                        localStorage.setItem("avatar", response.data.user.avatar);
+                        localStorage.setItem("avgCalories", response.data.user.avgCalories);
+                        localStorage.setItem("dateOfBirth", response.data.user.dateOfBirth);
+                        localStorage.setItem("gender", response.data.user.gender);
+                        localStorage.setItem("height", response.data.user.height);
+                        localStorage.setItem("numActivities", response.data.user.numActivities);
+                        localStorage.setItem("token", response.data.user.token);
+                        localStorage.setItem("totalCalories", response.data.user.totalCalories);
+                        localStorage.setItem("username", response.data.user.username);
+                        localStorage.setItem("weight", response.data.user.weight);
+                        localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+                        localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+                        localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                        localStorage.setItem("geotagCategories", JSON.stringify(response.data.geotagCategories));
+                        $scope.hide();
+                        $state.go('tabsController.home');
+                    }
                 },
                 function errorCallback(response) {
+                    console.log("errorcallback");
+                    console.log(response);
                     $scope.hide();
                     if (response.status == 204) {
                         var alertPopup = $ionicPopup.alert({
@@ -57,10 +72,19 @@ angular.module('app.main.controllers')
                         alertPopup.then(function(res) {
 
                         });
-                    } else if (response.status = 400) {
+                    } else if (response.status == 400) {
                         var alertPopup = $ionicPopup.alert({
                             title: 'Login Failed',
                             template: 'Please update LOOP to the lastest version to enjoy all the features. Thank you.'
+                        });
+
+                        alertPopup.then(function(res) {
+
+                        });
+                    } else {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Login Failed',
+                            template: 'Sorry. Something went wrong with the server. Please try again later.'
                         });
 
                         alertPopup.then(function(res) {
