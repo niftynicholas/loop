@@ -42,14 +42,13 @@
 
                 <!--<a class="item" href="#" ng-repeat="c in route.comments">-->
                 <a class="item item-avatar" href="#" ng-repeat="c in route.comments">
-                    <img src="{{profilePictures[c.uid] || 'img/profile-placeholder.gif'}}">
+                    <img ng-src="./img/avatars/{{c.avatar}}.png">
                     <h2><b>{{c.username === username && "Me" || c.username}}</b></h2>
                     <p style="overflow: initial; white-space: initial;">{{c.comment}}
-                        <br>
+                        <!-- <br>
                         <div ng-if='c.username === username && "Me"' style="text-align: right;">
-                            <!--<p ng-click="editComment(route.cid, c.datetimestamp)" style="display: inline;"><u>Edit</u></p>-->
                             <p ng-click="deleteComment(route.cid, c.datetimestamp, c.comment)" style="display: inline;"><u>Delete</u></p>
-                        </div>
+                        </div> -->
                     </p>
                 </a>
                 <form>
@@ -74,34 +73,3 @@
         </button>
     </ion-footer-bar>
 </ion-view>
-
-<!-- <script id="editComment.html" type="text/ng-template">
-    <ion-modal-view>
-        <ion-header-bar class="bar-balanced">
-            <h1 class="title">Edit Comment</h1>
-            <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
-        </ion-header-bar>
-        <ion-content>
-            <form name="form" novalidate="" ng-submit="editComment(form)">
-                <br>
-                <h4 style="text-align:center;"><b>Enter your email address and we will resend you a verification code shortly.</b></h4>
-                <br>
-                <div class="list">
-                    <label class="item item-input" ng-class="{ 'has-errors' : resendForm.email.$invalid && resendForm.$submitted, 'no-errors' : resendForm.email.$valid  && resendForm.$submitted}">
-                        <span class="input-label">Comment</span>
-                        <input type="text" name="comment" ng-model="input.comment" required >
-                    </label>
-                    <div class="error-container" ng-show="resendForm.email.$error && resendForm.$submitted" ng-messages="resendForm.email.$error">
-                        <div ng-messages-include="error-list.html"></div>
-                    </div>
-                </div>
-                <button type="submit" class="button button-positive button-full">Resend</button>
-            </form>
-        </ion-content>
-    </ion-modal-view>
-    <script id="error-list.html" type="text/ng-template">
-        <div class="error" ng-message="required">
-            <i class="ion-information-circled"></i> Required Field
-        </div>
-    </script>
-</script> -->

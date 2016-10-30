@@ -1,6 +1,11 @@
 angular.module('app.main.controllers')
 
 .controller('loginCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup, CONSTANTS, shareUsername, sharePassword) {
+
+    ionic.Platform.ready(function(){
+    // will execute when device is ready, or immediately if the device is already ready.
+  });
+
     $scope.show = function() {
         $ionicLoading.show({
             template: '<p>Logging In...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
@@ -15,6 +20,20 @@ angular.module('app.main.controllers')
     $scope.login = function(form) {
         if (form.$valid) {
             $scope.show();
+            var appleVersion = "";
+            var androidVersion = "";
+            console.log("Running on " + ionic.Platform.platform());
+            var isIOS = ionic.Platform.isIOS();
+            var isAndroid = ionic.Platform.isAndroid();
+             var isWebView = ionic.Platform.isWebView();
+
+             if (isIOS) {
+                 appleVersion = CONSTANTS.VERSION;
+             } else if (isAndroid) {
+                 androidVersion = CONSTANTS.VERSION;
+             } else {
+                androidVersion = CONSTANTS.VERSION;
+             }
             $http({
                 url: CONSTANTS.API_URL + "cyclist/account/login",
                 method: 'POST',
@@ -22,7 +41,8 @@ angular.module('app.main.controllers')
                     'Content-Type': 'application/json'
                 },
                 data: {
-                    version: CONSTANTS.VERSION,
+                    appleVersion: appleVersion,
+                    androidVersion: androidVersion,
                     username: $scope.authorization.username,
                     password: $scope.authorization.password
                 }

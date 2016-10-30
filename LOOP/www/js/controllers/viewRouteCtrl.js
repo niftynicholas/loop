@@ -15,6 +15,7 @@ angular.module('app.main.controllers')
         comment: ""
     };
 
+    console.log($scope.route.comments);
     var tempDateTimeStamp = "";
 
     $scope.postComment = function() {
@@ -23,6 +24,7 @@ angular.module('app.main.controllers')
             if ($scope.route.comments === null) {
                 $scope.route.comments = [{
                     uid: uid,
+                    avatar: localStorage.getItem("avatar"),
                     comment: $scope.input.comment,
                     username: $scope.username,
                     datetimestamp: dts
@@ -30,6 +32,7 @@ angular.module('app.main.controllers')
             } else {
                 $scope.route.comments.push({
                     uid: uid,
+                    avatar: localStorage.getItem("avatar"),
                     comment: $scope.input.comment,
                     username: $scope.username,
                     datetimestamp: dts
@@ -80,8 +83,7 @@ angular.module('app.main.controllers')
                         'Content-Type': 'application/json'
                     },
                     data: {
-                        cid: routeCID,
-                        dateTimeStamp: dateTime,
+                        coid: routeCID,
                         token: localStorage.getItem("token")
                     }
                 }).then(function successCallback(response) {
@@ -179,54 +181,6 @@ angular.module('app.main.controllers')
         });
     }
 
-    // $scope.editComment = function(commentID, dateTime) {
-    //     $http({
-    //         url: CONSTANTS.API_URL + "cyclist/comment/editComment",
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         data: {
-    //             cid: commentID,
-    //             dateTimeStamp: dateTime,
-    //             token: localStorage.getItem("token")
-    //         }
-    //     }).then(function successCallback(response) {
-    //             $ionicLoading.hide();
-    //         },
-    //         function errorCallback(response) {
-    //             $ionicLoading.hide();
-    //             var alertPopup = $ionicPopup.alert({
-    //                 title: 'Unable to Delete Comment',
-    //                 template: 'There is a problem with the server. Please try again later.'
-    //             });
-    //         });
-    // }
-
-    // Model to edit comment
-    // $ionicModal.fromTemplateUrl('editComment.html', {
-    //     scope: $scope,
-    //     animation: 'slide-in-up'
-    // }).then(function(modal) {
-    //     $scope.modal = modal;
-    // });
-    // $scope.openModal = function() {
-    //     $scope.modal.show();
-    // };
-    // $scope.closeModal = function() {
-    //     $scope.modal.hide();
-    // };
-    // // Cleanup the modal when we're done with it!
-    // $scope.$on('$destroy', function() {
-    //     $scope.modal.remove();
-    // });
-
-    /*
-    var index = routeName.getData().index;
-    var routesType = routeName.getData().routesType;
-    var routes = JSON.parse(localStorage.getItem(routesType));
-    $scope.route = routes[index];
-    */
     var updateRoute = function() {
         var popularRoutes = JSON.parse(localStorage.getItem("popularRoutes"));
         for (var i = 0; i < popularRoutes.length; i++) {
