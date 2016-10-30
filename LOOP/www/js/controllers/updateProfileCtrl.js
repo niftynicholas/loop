@@ -1,31 +1,9 @@
 angular.module('app.main.controllers')
 
-.controller('signupCtrl', function($scope, $ionicLoading, $ionicPopup, $state, $http, CONSTANTS, securityQnsData) {
-    $scope.availabilityAPI = CONSTANTS.API_URL + "cyclist/account/checkUsernameAvailability";
-    $scope.questions = securityQnsData.getData();
-    $scope.questions1 = $scope.questions.slice(0, 3);
-    $scope.questions2 = $scope.questions.slice(3, 6);
-    $scope.questions3 = $scope.questions.slice(6);
-
-    $scope.input = { };
-
-    $scope.selected1 = $scope.questions[0];
-    $scope.selected2 = $scope.questions[3];
-    $scope.selected3 = $scope.questions[6];
-
-    $scope.type = "password";
-
-    $scope.toggleVisibility = function() {
-        if ($scope.type == "password") {
-            $scope.type = "text";
-        } else if ($scope.type == "text") {
-            $scope.type = "password";
-        }
-    }
-
+.controller('updateProfileCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup, CONSTANTS, shareUsername, sharePassword, securityQnsData) {
     $scope.show = function() {
         $ionicLoading.show({
-            template: '<p>Signing Up...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+            template: '<p>Loading...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
         });
     };
 
@@ -33,8 +11,26 @@ angular.module('app.main.controllers')
         $ionicLoading.hide();
     };
 
-    $scope.signup = function(form) {
+    $scope.questions = securityQnsData.getData();
+    $scope.questions1 = $scope.questions.slice(0, 3);
+    $scope.questions2 = $scope.questions.slice(3, 6);
+    $scope.questions3 = $scope.questions.slice(6);
+
+    $scope.input = {};
+
+    $scope.selected1 = $scope.questions[0];
+    $scope.selected2 = $scope.questions[3];
+    $scope.selected3 = $scope.questions[6];
+
+    $scope.update = function(form) {
         if (form.$valid) {
+            // update
+
+            // sgcycling-ywk93/api/cyclist/account/existingUsersUpdateQuestions
+            // token
+            // gender
+            // dateOfBirth
+            // securityQuestions[{answer:<ans>, no:<no>}]
             $scope.show();
             $http({
                 url: CONSTANTS.API_URL + "cyclist/account/signup",
@@ -73,18 +69,9 @@ angular.module('app.main.controllers')
                 $scope.hide();
                 $scope.showAlert();
             });
+
+            // login
+
         }
     }
-
-    // Invalid Sign Up Details
-    $scope.showAlert = function() {
-        var alertPopup = $ionicPopup.alert({
-            title: 'Sign Up Failed',
-            template: 'You have provided invalid details. Please try again.'
-        });
-
-        alertPopup.then(function(res) {
-
-        });
-    };
 })
