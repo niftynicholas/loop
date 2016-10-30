@@ -103,7 +103,7 @@ angular.module('app.main.controllers')
                 text: '<b>Save</b>',
                 type: 'button-positive',
                 onTap: function(e) {
-                    $scope.data.geotag = 'Category: ' + $scope.data.cat + ', Comment: ' + $scope.data.comment;
+                    $scope.data.geotag = '<b>Category:</b> ' + $scope.data.cat + '<br><b>Comment:</b> ' + $scope.data.comment;
                     if (!$scope.data.comment) {
                         e.preventDefault();
                         var alertPopup = $ionicPopup.alert({
@@ -505,8 +505,8 @@ angular.module('app.main.controllers')
     });
 
     function onEachFeature(feature, layer) {
-        if (feature.properties && feature.properties.comment) {
-            layer.bindPopup(feature.properties.comment);
+        if (feature.properties && feature.properties.comment && feature.properties.category) {
+            layer.bindPopup("<b>Category:</b> " + feature.properties.category + "<br><b>Comment:</b> " + feature.properties.comment);
         }
         if (feature.properties && feature.properties.name) {
             layer.bindPopup(feature.properties.name);

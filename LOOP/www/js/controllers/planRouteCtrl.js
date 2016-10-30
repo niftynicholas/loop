@@ -378,7 +378,7 @@ function favLocation(id, searchVal, lat, lng, url, fid){ //, lat, lng
         $.ajax({
             type: "POST",
             dataType: 'json',
-            contentType: 'application/json', // This is the money shot
+            contentType: 'application/json',
             url: favURL,
             data: JSON.stringify({
                 token: localStorage.getItem("token"),
