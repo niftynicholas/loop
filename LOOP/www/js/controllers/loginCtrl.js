@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('loginCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup, CONSTANTS) {
+.controller('loginCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup, CONSTANTS, shareUsername, sharePassword) {
     $scope.show = function() {
         $ionicLoading.show({
             template: '<p>Logging In...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
@@ -34,7 +34,7 @@ angular.module('app.main.controllers')
                     // old version - 409
 
                     console.log("successcallback");
-                    console.log(response);
+                    console.log(response.data);
                     if (response.status == 203) {
                         $scope.hide();
 
@@ -45,9 +45,11 @@ angular.module('app.main.controllers')
 
                         confirmPopup.then(function(res) {
                             if (res) {
-                                console.log('You are sure');
+                                shareUsername.sendData($scope.authorization.username);
+                                sharePassword.sendData($scope.authorization.password);
+                                $state.go("updateProfile");
                             } else {
-                                console.log('You are not sure');
+
                             }
                         });
                     } else {

@@ -1,29 +1,13 @@
-<ion-view title="Sign Up">
+<ion-view title="Update Profile" ng-init="loadQuestions()">
     <ion-nav-bar class="bar-balanced"></ion-nav-bar>
     <ion-nav-buttons side="left">
-        <a class="button back-button buttons button-clear header-item" ui-sref="landing">
+        <a class="button back-button buttons button-clear header-item" ui-sref="login">
             <i class="icon ion-ios-arrow-back" style="color:white;"> Back</i>
         </a>
     </ion-nav-buttons>
     <ion-content padding="true" class="has-header">
-        <form name="signupForm" novalidate="" ng-submit="signup(signupForm)">
+        <form name="signupForm" novalidate="" ng-submit="update(signupForm)">
             <div class="list">
-                <!-- Username -->
-                <label class="item item-input" ng-class="{ 'has-errors' : signupForm.username.$invalid && signupForm.$submitted, 'no-errors' : signupForm.username.$valid  && signupForm.$submitted}">
-                    <span class="input-label">Username</span>
-                    <input type="text" name="username" ng-model="input.username" ng-minlength="8" ng-maxlength="15" required record-availability-validator="{{availabilityAPI}}">
-                </label>
-                <div class="error-container" ng-show="signupForm.username.$error && signupForm.$submitted" ng-messages="signupForm.username.$error">
-                    <div ng-messages-include="error-list.html"></div>
-                </div>
-                <!-- Password -->
-                <label class="item item-input item-icon-right" ng-class="{ 'has-errors' : signupForm.password.$invalid && signupForm.$submitted, 'no-errors' : signupForm.password.$valid  && signupForm.$submitted}">
-                    <span class="input-label">Password</span><i class="icon ion-eye" on-touch="toggleVisibility()"></i>
-                    <input type="{{type}}" name="password" id="password" ng-model="input.password" required password-strength>
-                </label>
-                <div class="error-container" ng-show="signupForm.password.$error && signupForm.$submitted" ng-messages="signupForm.password.$error">
-                    <div ng-messages-include="error-list.html"></div>
-                </div>
                 <!-- Birth Month Year -->
                 <label class="item item-input">
                     <span class="input-label">Birth Date</span>
@@ -88,7 +72,7 @@
             <div class="list">
                 <div class="item item-button-right" style="overflow: initial; white-space: initial;">
                     <b>Security Question 3:</b> {{selected3.question}}
-                    <button type="button" class="button button-positive" modal-select="" ng-model="$parent.selected3" options="questions3" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
+                    <button type="button"  class="button button-positive" modal-select="" ng-model="$parent.selected3" options="questions3" modal-title="Select a Security Question" header-footer-class="bar-balanced" hide-reset="true">
                         <i class="ion-android-open"></i>
                         <div class="option">
                             {{option.question}}
@@ -103,7 +87,7 @@
                     <div ng-messages-include="error-list.html"></div>
                 </div>
             </div>
-            <button type="submit" class="button button-positive button-full">Sign Up</button>
+            <button type="submit" class="button button-positive button-full">Update</button>
         </form>
     </ion-content>
 </ion-view>

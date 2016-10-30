@@ -71,6 +71,21 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     return service;
 })
 
+.factory('sharePassword', function() {
+    var service = {};
+    service.data = false;
+    service.sendData = function(data) {
+        this.data = data;
+    };
+    service.getData = function() {
+        return this.data;
+    };
+    service.clearData = function() {
+        this.data = false;
+    };
+    return service;
+})
+
 
 .factory('mapData', function() {
     var service = {};

@@ -34,6 +34,13 @@ angular.module('app.routes', [])
         controller: 'signupCtrl'
     })
 
+    .state('updateProfile', {
+        cache: false,
+        url: '/updateProfile',
+        templateUrl: 'templates/updateProfile.html',
+        controller: 'updateProfileCtrl'
+    })
+
     .state('forgot', {
         cache: false,
         url: '/forgot',
