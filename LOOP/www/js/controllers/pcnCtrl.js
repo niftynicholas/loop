@@ -103,7 +103,10 @@ angular.module('app.main.controllers')
                 text: '<b>Save</b>',
                 type: 'button-positive',
                 onTap: function(e) {
-                    $scope.data.geotag = '<b>Category:</b> ' + $scope.data.cat + '<br><b>Comment:</b> ' + $scope.data.comment;
+                    $scope.data.geotag = {
+                        cat: $scope.data.cat,
+                        comment: $scope.data.comment
+                    };
                     if (!$scope.data.comment) {
                         e.preventDefault();
                         var alertPopup = $ionicPopup.alert({
@@ -125,9 +128,10 @@ angular.module('app.main.controllers')
                     markerColor: 'cadetblue',
                     prefix: 'fa'
                 });
+                var popup = "<b>Category:</b> " + res.cat + "<br><b>Comment:</b> " + res.comment;
                 L.marker(e.latlng, {
                     icon: commentMarker
-                }).addTo(geotags).bindPopup(res).openPopup();
+                }).addTo(geotags).bindPopup(popup).openPopup();
                 $http({
                     url: CONSTANTS.API_URL + "cyclist/comment/addGeotag",
                     method: 'POST',
@@ -138,7 +142,8 @@ angular.module('app.main.controllers')
                         token: localStorage.getItem("token"),
                         dateTimeStamp: new Date().getTime(),
                         coordinates: e.latlng,
-                        comment: res
+                        comment: res.comment,
+                        category: res.cat
                     }
                 }).then(function successCallback(response) {
                     window.plugins.toast.showWithOptions({
