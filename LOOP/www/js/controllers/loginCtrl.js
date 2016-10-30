@@ -27,17 +27,28 @@ angular.module('app.main.controllers')
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
+                    // success login - 200
+                    // incorrect password/username - 406
+                    // sec qn not set - 203
+                    // error - 400
+                    // old version - 409
+
                     console.log("successcallback");
                     console.log(response);
                     if (response.status == 203) {
                         $scope.hide();
-                        var alertPopup = $ionicPopup.alert({
-                            title: 'Login Failed',
-                            template: 'Please update your security questions before logging in. Thank you.'
+
+                        var confirmPopup = $ionicPopup.confirm({
+                            title: 'Update Profile',
+                            template: 'You are required to update your profile before logging in. Do you wish to proceed?'
                         });
 
-                        alertPopup.then(function(res) {
-
+                        confirmPopup.then(function(res) {
+                            if (res) {
+                                console.log('You are sure');
+                            } else {
+                                console.log('You are not sure');
+                            }
                         });
                     } else {
                         localStorage.setItem("login_state", "true");
@@ -60,10 +71,8 @@ angular.module('app.main.controllers')
                     }
                 },
                 function errorCallback(response) {
-                    console.log("errorcallback");
-                    console.log(response);
                     $scope.hide();
-                    if (response.status == 204) {
+                    if (response.status == 406) {
                         var alertPopup = $ionicPopup.alert({
                             title: 'Login Failed',
                             template: 'Invalid username or password. Please try again.'
@@ -72,7 +81,7 @@ angular.module('app.main.controllers')
                         alertPopup.then(function(res) {
 
                         });
-                    } else if (response.status == 400) {
+                    } else if (response.status == 409) {
                         var alertPopup = $ionicPopup.alert({
                             title: 'Login Failed',
                             template: 'Please update LOOP to the lastest version to enjoy all the features. Thank you.'
