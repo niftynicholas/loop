@@ -15,7 +15,7 @@ angular.module('app.main.controllers')
     $scope.input.height = parseFloat(localStorage.getItem("height")).toFixed(2);
     $scope.input.weight = parseFloat(localStorage.getItem("weight")).toFixed(2);
     var selectedIndex = localStorage.getItem("avatar");
-    $scope.imgSrc = "../img/avatars/" + localStorage.getItem("avatar") + ".png";
+    $scope.imgSrc = "img/avatars/" + localStorage.getItem("avatar") + ".png";
 
     $scope.images = [];
 
@@ -23,13 +23,13 @@ angular.module('app.main.controllers')
         for (var i = 1; i <= 18; i++) {
             $scope.images.push({
                 id: i,
-                src: "../img/avatars/" + i + ".png"
+                src: "img/avatars/" + i + ".png"
             });
         }
     }
 
     $scope.select = function(index) {
-        $scope.imgSrc = "../img/avatars/" + index + ".png";
+        $scope.imgSrc = "img/avatars/" + index + ".png";
         selectedIndex = index;
         $scope.closeModal();
     }
