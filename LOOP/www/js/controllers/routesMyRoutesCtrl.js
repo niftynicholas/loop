@@ -2,13 +2,13 @@ angular.module('app.main.controllers')
 
 .controller('routesMyRoutesCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, CONSTANTS) {
     // //Retrieves and parses the popularRoutes that was retrieved when the user logged in
-    // $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
-    //
-    // //Pre-existing scope variable
-    // $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
-    // $scope.$on('$ionicView.enter', function(){
-    //     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
-    // });
+    $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
+
+    //Pre-existing scope variable
+    $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+    $scope.$on('$ionicView.enter', function(){
+        $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
+    });
 
     $scope.hasMoreRoutes = true;
 
@@ -127,7 +127,6 @@ angular.module('app.main.controllers')
                     $scope.routeComments = $scope.routeComments.concat(response.data.userRoutes);
                 }
                 localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
-                updateProfilePicture(response.data.profilePictures);
                 $scope.$broadcast('scroll.infiniteScrollComplete');
                 init();
             },

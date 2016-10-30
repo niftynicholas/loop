@@ -113,7 +113,6 @@ angular.module('app.main.controllers')
                         $scope.routeComments = $scope.routeComments.concat(response.data.nearbyRoutes);
                     }
                     localStorage.setItem("nearbyRoutes", JSON.stringify($scope.routes));
-                    updateProfilePicture(response.data.profilePictures);
                     $scope.$broadcast('scroll.infiniteScrollComplete');
                     $timeout(init, 0);
                 },

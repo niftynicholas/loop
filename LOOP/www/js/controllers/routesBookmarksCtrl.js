@@ -3,12 +3,13 @@ angular.module('app.main.controllers')
 .controller('routesBookmarksCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, CONSTANTS) {
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
-    $scope.hasMoreRoutes = true;
+
     $scope.routeComments = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
     $scope.$on('$ionicView.enter', function(){
         $scope.routeComments = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
     });
 
+    $scope.hasMoreRoutes = true;
     $scope.checkHasMoreRoutes = function() {
         return $scope.hasMoreRoutes;
     }
@@ -119,7 +120,6 @@ angular.module('app.main.controllers')
                 $scope.routes = $scope.routes.concat(response.data.bookmarkedRoutes);
                 $scope.routeComments = $scope.routeComments.concat(response.data.bookmarkedRoutes);
                 localStorage.setItem("bookmarkedRoutes", JSON.stringify($scope.routes));
-                updateProfilePicture(response.data.profilePictures);
                 $scope.$broadcast('scroll.infiniteScrollComplete');
                 init();
             },
