@@ -36,7 +36,6 @@ angular.module('app.main.controllers')
             $scope.routes = response.data.nearbyRoutes;
             $scope.routeComments = response.data.nearbyRoutes;
             localStorage.setItem("nearbyRoutes", JSON.stringify($scope.routes));
-            updateProfilePicture(response.data.profilePictures);
             $scope.$broadcast('scroll.refreshComplete');
             $scope.count = 0;
             $timeout(init, 0);
