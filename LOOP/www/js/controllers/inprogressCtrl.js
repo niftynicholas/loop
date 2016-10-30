@@ -380,13 +380,6 @@ angular.module('app.main.controllers')
         if ($scope.gender.toLowerCase() == "male") {
             $scope.calories = parseFloat((0.6309 * heartRate + 0.09036 * $scope.weight + 0.2017 * $scope.age - 55.0969) * ($scope.duration / 60.0) / 4.184).toFixed(2);
             // C = (0.6309 x H + 0.09036 x W + 0.2017 x A -- 55.0969) x T / 4.184.
-            console.log("Height: " + $scope.height);
-            console.log("Weight: " + $scope.weight);
-            console.log("Gender: " + $scope.gender);
-            console.log("Heart Rate: " + heartRate);
-            console.log("Seconds: " + $scope.duration);
-            console.log("Minutes: " + ($scope.duration / 60.0));
-            console.log("Calories: " + $scope.calories);
         } else if ($scope.gender.toLowerCase() == "female") {
             $scope.calories = parseFloat((0.4472 * heartRate - 0.05741 * $scope.weight + 0.074 * $scope.age - 20.4022) * ($scope.duration / 60.0) / 4.184).toFixed(2);
             // C = (0.4472 x HR -- 0.05741 x W + 0.074 x Age -- 20.4022) x T / 4.184.

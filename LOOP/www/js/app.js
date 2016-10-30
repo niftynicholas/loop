@@ -5,9 +5,10 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
+
 angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova', 'jrCrop', 'ionic-numberpicker', 'ng-walkthrough', 'ionic-modal-select'])
 .constant('CONSTANTS', {
-    API_URL: 'https://sgcycling-ywk93.rhcloud.com/api/',
+    API_URL: "https://sgcycling-sgloop.rhcloud.com/api/",
     VERSION: "0.0.4"
 })
 
@@ -86,6 +87,20 @@ angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', '
     return service;
 })
 
+.factory('shareToken', function() {
+    var service = {};
+    service.data = false;
+    service.sendData = function(data) {
+        this.data = data;
+    };
+    service.getData = function() {
+        return this.data;
+    };
+    service.clearData = function() {
+        this.data = false;
+    };
+    return service;
+})
 
 .factory('mapData', function() {
     var service = {};

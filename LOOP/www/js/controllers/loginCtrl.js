@@ -1,10 +1,9 @@
 angular.module('app.main.controllers')
 
-.controller('loginCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup, CONSTANTS, shareUsername, sharePassword) {
-
-    ionic.Platform.ready(function(){
-    // will execute when device is ready, or immediately if the device is already ready.
-  });
+.controller('loginCtrl', function($scope, $ionicLoading, $state, $http, $ionicPopup, CONSTANTS, shareUsername, sharePassword, shareToken) {
+    ionic.Platform.ready(function() {
+        // will execute when device is ready, or immediately if the device is already ready.
+    });
 
     $scope.show = function() {
         $ionicLoading.show({
@@ -25,15 +24,15 @@ angular.module('app.main.controllers')
             console.log("Running on " + ionic.Platform.platform());
             var isIOS = ionic.Platform.isIOS();
             var isAndroid = ionic.Platform.isAndroid();
-             var isWebView = ionic.Platform.isWebView();
+            var isWebView = ionic.Platform.isWebView();
 
-             if (isIOS) {
-                 appleVersion = CONSTANTS.VERSION;
-             } else if (isAndroid) {
-                 androidVersion = CONSTANTS.VERSION;
-             } else {
+            if (isIOS) {
+                appleVersion = CONSTANTS.VERSION;
+            } else if (isAndroid) {
                 androidVersion = CONSTANTS.VERSION;
-             }
+            } else {
+                androidVersion = CONSTANTS.VERSION;
+            }
             $http({
                 url: CONSTANTS.API_URL + "cyclist/account/login",
                 method: 'POST',
@@ -47,14 +46,6 @@ angular.module('app.main.controllers')
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
-                    // success login - 200
-                    // incorrect password/username - 406
-                    // sec qn not set - 203
-                    // error - 400
-                    // old version - 409
-
-                    console.log("successcallback");
-                    console.log(response.data);
                     if (response.status == 203) {
                         $scope.hide();
 
@@ -65,6 +56,7 @@ angular.module('app.main.controllers')
 
                         confirmPopup.then(function(res) {
                             if (res) {
+                                shareToken.sendData(response.data.token);
                                 shareUsername.sendData($scope.authorization.username);
                                 sharePassword.sendData($scope.authorization.password);
                                 $state.go("updateProfile");
@@ -122,7 +114,6 @@ angular.module('app.main.controllers')
 
                         });
                     }
-
                 });
         }
     }

@@ -54,6 +54,22 @@ angular.module('app.main.controllers')
             $state.go('landing');
         }
     }, 4000);
-    $scope.getMapData();
-    $scope.getSecurityQnsData();
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json', // This is the money shot
+        url: "https://sgcycling-sgloop.rhcloud.com/api/cyclist/others/getURL",
+        success: function(data) {
+            CONSTANTS.API_URL = data.url + "/api/";
+            $scope.getMapData();
+            $scope.getSecurityQnsData();
+            console.log("success " + CONSTANTS.API_URL);
+        },
+        error: function(data) {
+            $scope.getMapData();
+            $scope.getSecurityQnsData();
+            console.log("error " + CONSTANTS.API_URL);
+        }
+    })
+
 })
