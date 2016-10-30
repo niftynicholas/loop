@@ -16,7 +16,7 @@ angular.module('app.main.controllers')
     $scope.totalCalories = parseFloat(localStorage.getItem("totalCalories"));
     $scope.numActivities = parseInt(localStorage.getItem("numActivities"));
     $scope.username = localStorage.getItem("username");
-    $scope.profilePicture = '../img/avatars/' + localStorage.getItem("avatar") + ".png";
+    $scope.profilePicture = 'img/avatars/' + localStorage.getItem("avatar") + ".png";
 
     $scope.logOut = function() {
         $ionicLoading.show({
@@ -44,7 +44,7 @@ angular.module('app.main.controllers')
         for (var i = 1; i <= 18; i++) {
             $scope.images.push({
                 id: i,
-                src: "../img/avatars/" + i + ".png"
+                src: "img/avatars/" + i + ".png"
             });
         }
     }
@@ -66,7 +66,7 @@ angular.module('app.main.controllers')
         }).then(function successCallback(response) {
             $scope.hide();
             $scope.closeModal();
-            $scope.profilePicture = "../img/avatars/" + index + ".png";
+            $scope.profilePicture = "img/avatars/" + index + ".png";
             localStorage.setItem("avatar", index);
         }, function errorCallback(response) {
 
