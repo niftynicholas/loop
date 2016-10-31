@@ -100,9 +100,9 @@ angular.module('app.main.controllers')
         };
         //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
         //Test whether the timeout is still required, not tested by Wee Kian
+        $timeout(init, 0);
 
         $scope.loadMore = function() {
-
             $http({
                 url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
                 method: 'POST',

@@ -84,7 +84,6 @@ angular.module('app.main.controllers')
         //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
         //Test whether the timeout is still required, not tested by Wee Kian
 
-
         $scope.loadMore = function() {
             $cordovaGeolocation.getCurrentPosition({ timeout: 1000, enableHighAccuracy: true }).then(function (position) {
                 currentLocation = {lat: position.coords.latitude, lng: position.coords.longitude};
