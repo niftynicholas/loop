@@ -406,13 +406,14 @@ angular.module('app.main.controllers')
                 $scope.dataLoaded = true;
             } else {
                 $http({
-                    url: CONSTANTS.API_URL + "cyclist/map/getGeotag",
+                    url: CONSTANTS.API_URL + "cyclist/comment/getGeotag",
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     data: {
                         token: localStorage.getItem("token"),
+                        username: localStorage.getItem("username")
                     }
                 }).then(function successCallback(response) {
                     if ($scope.geotags.checked) {

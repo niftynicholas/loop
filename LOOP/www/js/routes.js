@@ -123,6 +123,7 @@ angular.module('app.routes', [])
     })
 
     .state('tabsController.routes.myRoutes', {
+        cache: false,
         url: "/routesMyRoutes",
         views: {
             'routes-tab': {

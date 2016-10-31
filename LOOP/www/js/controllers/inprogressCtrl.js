@@ -546,17 +546,17 @@ angular.module('app.main.controllers')
                 text: '<b>Save</b>',
                 type: 'button-positive',
                 onTap: function(e) {
-                    $scope.data.geotag = 'Category: ' + $scope.data.cat + ', Comment: ' + $scope.data.comment;
+                    $scope.data.geotag = {
+                        cat: $scope.data.cat,
+                        comment: $scope.data.comment
+                    };
                     if (!$scope.data.comment) {
                         e.preventDefault();
                         var alertPopup = $ionicPopup.alert({
                             title: 'Opps!',
                             template: 'We do not accept blank submissions.'
                         });
-
-                        alertPopup.then(function(res) {
-
-                        });
+                        alertPopup.then(function(res) {});
                     } else {
                         return $scope.data.geotag;
                     }
@@ -568,9 +568,10 @@ angular.module('app.main.controllers')
             if (!(typeof res === "undefined")) {
                 if ($scope.currentLoc != null) {
                     // L.marker($scope.currentLoc).addTo(geotags).bindPopup(res).openPopup();
+                    var popup = "<b>Category:</b> " + res.cat + "<br><b>Comment:</b> " + res.comment;
                     var geotagFeature = new ol.Feature({
                         geometry: new ol.geom.Point($scope.currentLoc),
-                        name: res,
+                        name: popup,
                         type: "geotag"
                     });
                     var commentStyle = new ol.style.Style({
@@ -591,7 +592,7 @@ angular.module('app.main.controllers')
                     $("#geotag").popover({
                         'placement': 'top',
                         'html': true,
-                        'content': res
+                        'content': popup
                     });
                     $("#geotag").popover('show');
 
@@ -601,7 +602,8 @@ angular.module('app.main.controllers')
                             lat: $scope.currentLoc[1],
                             lng: $scope.currentLoc[0]
                         },
-                        comment: res
+                        comment: res.comment,
+                        category: res.cat
                     });
                     window.plugins.toast.showWithOptions({
                         message: "Comment Added Successfully",
