@@ -23,8 +23,7 @@ angular.module('app.main.controllers')
         color: '#09493E'
     };
 
-    //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method
-    $scope.count = 0;
+
 
     //Used for the leafletData.getMap() to find the map with the cid
     $scope.cidList = [];
@@ -53,7 +52,7 @@ angular.module('app.main.controllers')
             localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
             $scope.$broadcast('scroll.refreshComplete');
             $scope.count = 0;
-            $timeout(init, 0);
+            $timeout(getMyRoutes, 0);
         },
         function errorCallback(response) {
             console.log("response not found");
@@ -61,8 +60,8 @@ angular.module('app.main.controllers')
     }
 
     //Method that is called after 0seconds after the template has loaded using the $timeout that calls this method
-    var init = function() {
 
+    var getMyRoutes = function() {
         //Loops through the number of routes retrieved to configure the relevant maps
         for (var i = $scope.count; i < $scope.routes.length; i++) {
             var cid = $scope.routes[i].cid;
@@ -96,11 +95,16 @@ angular.module('app.main.controllers')
                     $scope.count = $scope.count + 1;
                 })
             }
-
         };
+
+        $scope.init = function(){
+            //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method
+            $scope.count = 0;
+            getMyRoutes();
+        }
         //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
         //Test whether the timeout is still required, not tested by Wee Kian
-        $timeout(init, 0);
+        // $timeout(init, 0);
 
         $scope.loadMore = function() {
             $http({
@@ -127,7 +131,7 @@ angular.module('app.main.controllers')
                 }
                 localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
                 $scope.$broadcast('scroll.infiniteScrollComplete');
-                init();
+                getMyRoutes();
             },
             function errorCallback(response) {
                 console.log("response not found");
