@@ -27,6 +27,21 @@ angular.module('app.main.controllers')
             $ionicLoading.show({
                 template: '<p>Checking...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
             });
+
+            var appleVersion = "";
+            var androidVersion = "";
+            console.log("Running on " + ionic.Platform.platform());
+            var isIOS = ionic.Platform.isIOS();
+            var isAndroid = ionic.Platform.isAndroid();
+            var isWebView = ionic.Platform.isWebView();
+
+            if (isIOS) {
+                appleVersion = CONSTANTS.VERSION;
+            } else if (isAndroid) {
+                androidVersion = CONSTANTS.VERSION;
+            } else {
+                androidVersion = CONSTANTS.VERSION;
+            }
             $http({
                 url: CONSTANTS.API_URL + "cyclist/account/login",
                 method: 'POST',
@@ -34,6 +49,8 @@ angular.module('app.main.controllers')
                     'Content-Type': 'application/json'
                 },
                 data: {
+                    appleVersion: appleVersion,
+                    androidVersion: androidVersion,
                     username: localStorage.getItem("username"),
                     password: $scope.input.password
                 }
