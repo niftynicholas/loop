@@ -202,7 +202,7 @@ angular.module('app.main.controllers')
     });
 
     leafletData.getMap("pcn").then(function(map) {
-        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q', {
+        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=' + CONSTANTS.mapbox_access_token, {
             attribution: '<a href="https://www.mapbox.com/map-feedback/">© Mapbox</a> <a href="http://www.openstreetmap.org/copyright">© OpenStreetMap</a>',
             edgeBufferTiles: 2
         }).addTo(map);

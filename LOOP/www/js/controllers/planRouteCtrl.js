@@ -40,7 +40,12 @@ angular.module('app.main.controllers')
         favourites = response.data.favouriteLocations;
         $ionicLoading.hide();
     }, function errorCallback(response) {
-        console.log(response);
+        // Invalid Start Point
+        $ionicLoading.hide();
+        $ionicPopup.alert({
+            title: '<b>Error</b>',
+            template: 'Unable to Load Favourite Locations'
+        });
     });
 
     var delURL = CONSTANTS.API_URL + "cyclist/route/deleteLocation";
@@ -52,18 +57,18 @@ angular.module('app.main.controllers')
         if(!hasCurrentLocation && startPoint.length==0){
             hasCurrentLocation = true;
             if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
-                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + '<i class="ion-android-locate" style="float:right;"></i>' + "Current Location" + '</div>');
+                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + '<i class="ion-android-locate" style="float:right;font-size:25px"></i>' + "Current Location" + '</div>');
                 for(var i=0;i<favourites.length;i++){
-                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'start\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
+                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'start\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49;font-size:25px" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
                 }
             } else {
                 $cordovaGeolocation.getCurrentPosition({
                     timeout: 3000,
                     enableHighAccuracy: true
                 }).then(function(position) {
-                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + '<i class="ion-android-locate" style="float:right;"></i>' + "Current Location" + '</div>');
+                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + '<i class="ion-android-locate" style="float:right;font-size:25px"></i>' + "Current Location" + '</div>');
                     for(var i=0;i<favourites.length;i++){
-                        $('#startResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'start\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
+                        $('#startResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'start\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49;font-size:25px" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
                     }
                 }, function(err) {
                     console.log("Location not found");
@@ -78,7 +83,7 @@ angular.module('app.main.controllers')
         if(!hasEndFavourite && endPoint.length==0){
             hasEndFavourite = true;
             for(var i=0;i<favourites.length;i++){
-                $('#endResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'end\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
+                $('#endResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'end\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49;font-size:25px" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
             }
         }
     });
@@ -97,18 +102,18 @@ angular.module('app.main.controllers')
         if (input.length == 0) {
             hasCurrentLocation = true;
             if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
-                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + '<i class="ion-android-locate" style="float:right;"></i>' + "Current Location" + '</div>');
+                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + '<i class="ion-android-locate" style="float:right;font-size:25px"></i>' + "Current Location" + '</div>');
                 for(var i=0;i<favourites.length;i++){
-                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'start\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
+                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'start\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49;font-size:25px" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
                 }
             } else {
                 $cordovaGeolocation.getCurrentPosition({
                     timeout: 3000,
                     enableHighAccuracy: true
                 }).then(function(position) {
-                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + '<i class="ion-android-locate" style="float:right;"></i>' + "Current Location" + '</div>');
+                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + position.coords.latitude + ',' + position.coords.longitude + ',\'start\')">' + '<i class="ion-android-locate" style="float:right;font-size:25px"></i>' + "Current Location" + '</div>');
                     for(var i=0;i<favourites.length;i++){
-                        $('#startResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'start\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
+                        $('#startResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'start\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49;font-size:25px" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
                     }
                 }, function(err) {
                     console.log("Location not found");
@@ -138,13 +143,13 @@ angular.module('app.main.controllers')
                             var isFavourite = false;
                             for(var j=0;j<favourites.length;j++){
                                 if(searchVal == favourites[j].name){
-                                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'start\',' + favourites[j].fid + ')">' + '<i id="star'+ i +'" class="ion-ios-star" style="float:right;color:#ffba49" onclick="favLocation(star'+ i + ',\'' + searchVal + '\',' + lat + ',' + lng + ',\'' + url + '\',' + favourites[j].fid + ')"></i>' + searchVal + '</div>');
+                                    $('#startResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'start\',' + favourites[j].fid + ')">' + '<i id="star'+ i +'" class="ion-ios-star" style="float:right;color:#ffba49;font-size:25px" onclick="favLocation(star'+ i + ',\'' + searchVal + '\',' + lat + ',' + lng + ',\'' + url + '\',' + favourites[j].fid + ')"></i>' + searchVal + '</div>');
                                     isFavourite = true;
                                     j = favourites.length;
                                 }
                             }
                             if(!isFavourite){
-                                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'start\')">' + '<i id="star'+ i +'" class="ion-ios-star-outline" style="float:right;color:#ffba49" onclick="favLocation(star'+ i + ',\'' + searchVal + '\',' + lat + ',' + lng + ',\'' + url + '\',\'blank\')"></i>' + searchVal + '</div>');
+                                $('#startResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'start\')">' + '<i id="star'+ i +'" class="ion-ios-star-outline" style="float:right;color:#ffba49;font-size:25px" onclick="favLocation(star'+ i + ',\'' + searchVal + '\',' + lat + ',' + lng + ',\'' + url + '\',\'blank\')"></i>' + searchVal + '</div>');
                             }
                         }
 
@@ -171,7 +176,7 @@ angular.module('app.main.controllers')
         if(input.length == 0){
             hasEndFavourite = true;
             for(var i=0;i<favourites.length;i++){
-                $('#endResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'end\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
+                $('#endResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'end\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49;font-size:25px" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
             }
         } else {
             type = 'WGS84';
@@ -198,13 +203,13 @@ angular.module('app.main.controllers')
                             var isFavourite = false;
                             for(var j=0;j<favourites.length;j++){
                                 if(searchVal == favourites[j].name){
-                                    $('#endResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'end\',' + favourites[j].fid + ')">' + '<i id="star'+ i +'" class="ion-ios-star" style="float:right;color:#ffba49" onclick="favLocation(star'+ i + ',\'' + searchVal + '\',' + lat + ',' + lng + ',\'' + url + '\',' + favourites[j].fid + ')"></i>' + searchVal + '</div>');
+                                    $('#endResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'end\',' + favourites[j].fid + ')">' + '<i id="star'+ i +'" class="ion-ios-star" style="float:right;color:#ffba49;font-size:25px" onclick="favLocation(star'+ i + ',\'' + searchVal + '\',' + lat + ',' + lng + ',\'' + url + '\',' + favourites[j].fid + ')"></i>' + searchVal + '</div>');
                                     isFavourite = true;
                                     j = favourites.length;
                                 }
                             }
                             if(!isFavourite){
-                                $('#endResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'end\')">' + '<i id="star'+ i +'" class="ion-ios-star-outline" style="float:right;color:#ffba49" onclick="favLocation(star'+ i + ',\'' + searchVal + '\',' + lat + ',' + lng + ',\'' + url + '\',\'blank\')"></i>' + searchVal + '</div>');
+                                $('#endResult').append('<div class="item" onclick="displayInfo(\'' + searchVal + '\',' + lat + ',' + lng + ',\'end\')">' + '<i id="star'+ i +'" class="ion-ios-star-outline" style="float:right;color:#ffba49;font-size:25px" onclick="favLocation(star'+ i + ',\'' + searchVal + '\',' + lat + ',' + lng + ',\'' + url + '\',\'blank\')"></i>' + searchVal + '</div>');
                             }
                         }
 

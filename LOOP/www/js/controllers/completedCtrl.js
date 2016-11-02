@@ -230,6 +230,7 @@ angular.module('app.main.controllers')
                     }).then(function successCallback(response) {
                         $ionicLoading.hide();
                         dataShare.clearData();
+                        //save into localStrorage userRoute + envelop
                         $state.go('tabsController.routes.myRoutes');
                     }, function errorCallback(response) {
                         $ionicLoading.hide();
