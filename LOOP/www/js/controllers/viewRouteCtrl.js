@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, $ionicPopup, routeName, $http, $state, dataShare, viewSharedRoute, $ionicPopup, $ionicModal, $ionicLoading, CONSTANTS) {
+.controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, $ionicPopup, routeName, $http, $state, dataShare, viewSharedRoute, $ionicPopup, $ionicModal, $ionicLoading, CONSTANTS, shareUsername, sharePassword, shareToken) {
     $scope.username = localStorage.getItem("username");
     $scope.profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
     var uid = localStorage.getItem("uid");
@@ -14,30 +14,15 @@ angular.module('app.main.controllers')
     $scope.input = {
         comment: ""
     };
-
-    console.log($scope.route.comments);
     var tempDateTimeStamp = "";
+    $scope.coid;
 
     $scope.postComment = function() {
+        $ionicLoading.show({
+            template: '<p>Posting...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        })
         var dts = new Date().getTime();
         if ($scope.input.comment.length > 0) {
-            if ($scope.route.comments === null) {
-                $scope.route.comments = [{
-                    uid: uid,
-                    avatar: localStorage.getItem("avatar"),
-                    comment: $scope.input.comment,
-                    username: $scope.username,
-                    datetimestamp: dts
-                }];
-            } else {
-                $scope.route.comments.push({
-                    uid: uid,
-                    avatar: localStorage.getItem("avatar"),
-                    comment: $scope.input.comment,
-                    username: $scope.username,
-                    datetimestamp: dts
-                });
-            }
             $http({
                 url: CONSTANTS.API_URL + "cyclist/comment/addComment",
                 method: 'POST',
@@ -49,23 +34,83 @@ angular.module('app.main.controllers')
                     token: localStorage.getItem("token"),
                     comment: {
                         comment: $scope.input.comment,
-                        username: $scope.username,
                         dateTimeStamp: new Date().getTime()
                     }
                 }
 
             }).then(function successCallback(response) {
-                    console.log("success");
+                    $http({
+                        url: CONSTANTS.API_URL + "cyclist/route/getPopularRoutes",
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: {
+                            token: localStorage.getItem("token")
+                        }
+                    }).then(function successCallback(response) {
+                            localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+                            $http({
+                                url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                data: {
+                                    token: localStorage.getItem("token")
+                                }
+                            }).then(function successCallback(response) {
+                                    localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                                    $http({
+                                        url: CONSTANTS.API_URL + "cyclist/route/getBookmarkedRoutes",
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        data: {
+                                            token: localStorage.getItem("token")
+                                        }
+                                    }).then(function successCallback(response) {
+                                            localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+                                            $scope.input.comment = "";
+                                            var routes = JSON.parse(localStorage.getItem(routesType));
+                                            $scope.route = routes[index];
+                                            $ionicLoading.hide();
+                                        },
+                                        function errorCallback(response) {
+                                            $ionicLoading.hide();
+                                            var alertPopup = $ionicPopup.alert({
+                                                title: 'Server Error',
+                                                template: 'Unable to post comment. Please try again later.'
+                                            });
+                                        });
+                                },
+                                function errorCallback(response) {
+                                    $ionicLoading.hide();
+                                    var alertPopup = $ionicPopup.alert({
+                                        title: 'Server Error',
+                                        template: 'Unable to post comment. Please try again later.'
+                                    });
+                                });
+                        },
+                        function errorCallback(response) {
+                            $ionicLoading.hide();
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Server Error',
+                                template: 'Unable to post comment. Please try again later.'
+                            });
+                        });
                 },
                 function errorCallback(response) {
-                    console.log("error with sending http request for posting comment to server");
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Server Error',
+                        template: 'Unable to post comment. Please try again later.'
+                    });
                 });
-            $scope.input.comment = "";
-            updateRoute();
         }
     };
 
-    $scope.deleteComment = function(routeCID, dateTime, commentText) {
+    $scope.deleteComment = function(coid) {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Delete Comment',
             template: 'Are you sure you want to delete this comment?'
@@ -83,90 +128,70 @@ angular.module('app.main.controllers')
                         'Content-Type': 'application/json'
                     },
                     data: {
-                        coid: routeCID,
+                        coid: coid,
                         token: localStorage.getItem("token")
                     }
                 }).then(function successCallback(response) {
-                        for (var i = 0; i < $scope.route.comments.length; i++) {
-                            var comment = $scope.route.comments[i];
-                            var tempUID = comment.uid;
-                            var tempDTS = comment.datetimestamp;
-                            var tempText = comment.comment;
-
-
-                            var thisUID = localStorage.getItem("uid");
-                            var thisDTS = dateTime;
-                            var thisText = commentText;
-                            if (thisUID == tempUID && thisDTS == tempDTS && thisText == tempText) {
-                                $scope.route.comments.splice(i, 1);
+                        $http({
+                            url: CONSTANTS.API_URL + "cyclist/route/getPopularRoutes",
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            data: {
+                                token: localStorage.getItem("token")
                             }
-                        }
-
-                        // Delete from Local Arrays
-                        popularRoutes = JSON.parse(localStorage.getItem("popularRoutes"));
-                        for (var i = 0; i < popularRoutes.length; i++) {
-                            route = popularRoutes[i];
-                            if (route.cid == routeCID) {
-                                for (var ii = 0; ii < route.comments.length; ii++) {
-                                    var comment = route.comments[ii];
-                                    var tempUID = comment.uid;
-                                    var tempDTS = comment.datetimestamp;
-                                    var tempText = comment.comment;
-                                    var thisUID = localStorage.getItem("uid");
-                                    var thisDTS = dateTime;
-                                    var thisText = commentText;
-                                    if (thisUID == tempUID && thisDTS == tempDTS && thisText == tempText) {
-                                        route.comments.splice(ii, 1);
+                        }).then(function successCallback(response) {
+                                localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+                                $http({
+                                    url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    data: {
+                                        token: localStorage.getItem("token")
                                     }
-                                }
-                            }
-                        }
-                        localStorage.setItem("popularRoutes", JSON.stringify(popularRoutes));
-
-                        bookmarkedRoutes = JSON.parse(localStorage.getItem("bookmarkedRoutes"));
-                        for (var j = 0; j < bookmarkedRoutes.length; j++) {
-                            route = bookmarkedRoutes[j];
-                            if (route.cid == routeCID) {
-                                for (var jj = 0; jj < route.comments.length; jj++) {
-                                    var comment = route.comments[jj];
-                                    var tempUID = comment.uid;
-                                    var tempDTS = comment.datetimestamp;
-                                    var tempText = comment.comment;
-
-                                    var thisUID = localStorage.getItem("uid");
-                                    var thisDTS = dateTime;
-                                    var thisText = commentText;
-                                    if (thisUID == tempUID && thisDTS == tempDTS && thisText == tempText) {
-                                        route.comments.splice(jj, 1);
-                                    }
-                                }
-                            }
-                        }
-                        localStorage.setItem("bookmarkedRoutes", JSON.stringify(bookmarkedRoutes));
-
-                        myRoutes = JSON.parse(localStorage.getItem("userRoutes"));
-                        for (var k = 0; k < myRoutes.length; k++) {
-                            route = myRoutes[k];
-                            if (route.cid == routeCID) {
-                                for (var kk = 0; kk < route.comments.length; kk++) {
-                                    var comment = route.comments[kk];
-                                    var tempUID = comment.uid;
-                                    var tempDTS = comment.datetimestamp;
-                                    var tempText = comment.comment;
-
-                                    var thisUID = localStorage.getItem("uid");
-                                    var thisDTS = dateTime;
-                                    var thisText = commentText;
-                                    if (thisUID == tempUID && thisDTS == tempDTS && thisText == tempText) {
-                                        route.comments.splice(kk, 1);
-                                    }
-                                }
-                            }
-
-                        }
-                        localStorage.setItem("userRoutes", JSON.stringify(myRoutes));
-
-                        $ionicLoading.hide();
+                                }).then(function successCallback(response) {
+                                        localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                                        $http({
+                                            url: CONSTANTS.API_URL + "cyclist/route/getBookmarkedRoutes",
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            data: {
+                                                token: localStorage.getItem("token")
+                                            }
+                                        }).then(function successCallback(response) {
+                                                localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+                                                var routes = JSON.parse(localStorage.getItem(routesType));
+                                                $scope.route = routes[index];
+                                                $ionicLoading.hide();                                                
+                                            },
+                                            function errorCallback(response) {
+                                                $ionicLoading.hide();
+                                                var alertPopup = $ionicPopup.alert({
+                                                    title: 'Server Error',
+                                                    template: 'Unable to delete comment. Please try again later.'
+                                                });
+                                            });
+                                    },
+                                    function errorCallback(response) {
+                                        $ionicLoading.hide();
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: 'Server Error',
+                                            template: 'Unable to delete comment. Please try again later.'
+                                        });
+                                    });
+                            },
+                            function errorCallback(response) {
+                                $ionicLoading.hide();
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Server Error',
+                                    template: 'Unable to delete comment. Please try again later.'
+                                });
+                            });
                     },
                     function errorCallback(response) {
                         $ionicLoading.hide();
@@ -176,9 +201,112 @@ angular.module('app.main.controllers')
                         });
                     });
             } else {
-
+                // User clicks No
             }
         });
+    }
+
+    $ionicModal.fromTemplateUrl('my-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+
+    $scope.openModal = function(coid, comment) {
+        $scope.modal.show();
+        $scope.input.edittedComment = comment;
+        $scope.coid = coid;
+    };
+    $scope.closeModal = function() {
+        $scope.modal.hide();
+    };
+
+    $scope.editComment = function() {
+        $ionicLoading.show({
+            template: '<p>Saving...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        })
+        $http({
+            url: CONSTANTS.API_URL + "cyclist/comment/editComment",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                comment: $scope.input.edittedComment,
+                coid: $scope.coid,
+                token: localStorage.getItem("token")
+            }
+        }).then(function successCallback(response) {
+                $http({
+                    url: CONSTANTS.API_URL + "cyclist/route/getPopularRoutes",
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        token: localStorage.getItem("token")
+                    }
+                }).then(function successCallback(response) {
+                        localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+                        $http({
+                            url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            data: {
+                                token: localStorage.getItem("token")
+                            }
+                        }).then(function successCallback(response) {
+                                localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                                $http({
+                                    url: CONSTANTS.API_URL + "cyclist/route/getBookmarkedRoutes",
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    data: {
+                                        token: localStorage.getItem("token")
+                                    }
+                                }).then(function successCallback(response) {
+                                        localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+                                        $scope.input.comment = "";
+                                        var routes = JSON.parse(localStorage.getItem(routesType));
+                                        $scope.route = routes[index];
+                                        $ionicLoading.hide();
+                                        $scope.closeModal();
+                                    },
+                                    function errorCallback(response) {
+                                        $ionicLoading.hide();
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: 'Server Error',
+                                            template: 'Unable to edit comment. Please try again later.'
+                                        });
+                                    });
+                            },
+                            function errorCallback(response) {
+                                $ionicLoading.hide();
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Server Error',
+                                    template: 'Unable to edit comment. Please try again later.'
+                                });
+                            });
+                    },
+                    function errorCallback(response) {
+                        $ionicLoading.hide();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Server Error',
+                            template: 'Unable to edit comment. Please try again later.'
+                        });
+                    });
+            },
+            function errorCallback(response) {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Server Error',
+                    template: 'Unable to edit comment. Please try again later.'
+                });
+            });
     }
 
     var updateRoute = function() {
@@ -282,7 +410,9 @@ angular.module('app.main.controllers')
             });
         map.addLayer(osm);
 
-        var attribution = L.control.attribution({position: 'bottomright'});
+        var attribution = L.control.attribution({
+            position: 'bottomright'
+        });
 
         var attributionBtn = L.easyButton({
             id: 'animated-marker-toggle',
@@ -383,7 +513,7 @@ angular.module('app.main.controllers')
             $state.go('tabsController.routes.nearby');
         } else if (routesType === 'bookmarkedRoutes') {
             $state.go('tabsController.routes.bookmarks');
-        } else if (routesType === 'userRoutes'){
+        } else if (routesType === 'userRoutes') {
             $state.go('tabsController.routes.myRoutes');
         } else {
             $state.go('tabsController.home');
