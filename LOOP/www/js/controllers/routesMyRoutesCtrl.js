@@ -3,9 +3,10 @@ angular.module('app.main.controllers')
 .controller('routesMyRoutesCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, CONSTANTS) {
     // //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
+    console.log($scope.routes);
     //Pre-existing scope variable
     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
-    
+
     $scope.$on('$ionicView.enter', function(){
         $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
     });
@@ -33,7 +34,6 @@ angular.module('app.main.controllers')
     $scope.coordinatesList = [];
 
     $scope.doRefresh = function(){
-
         $http({
             url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
             method: 'POST',
@@ -97,13 +97,14 @@ angular.module('app.main.controllers')
 
 
         $scope.init = function(){
+            console.log("called init");
             //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method
             $scope.count = 0;
             getMyRoutes();
         }
         //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
         //Test whether the timeout is still required, not tested by Wee Kian
-        // $timeout(init, 0);
+        $timeout($scope.init, 0);
 
         $scope.loadMore = function() {
             $http({
