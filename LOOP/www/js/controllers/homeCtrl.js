@@ -47,7 +47,6 @@ angular.module('app.main.controllers')
             $scope.routes = response.data.popularRoutes;
             $scope.routeComments = response.data.popularRoutes;
             localStorage.setItem("popularRoutes", JSON.stringify($scope.routes));
-            updateProfilePicture(response.data.profilePictures);
             $scope.$broadcast('scroll.refreshComplete');
             $scope.count = 0;
             $timeout(init, 0);

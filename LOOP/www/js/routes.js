@@ -114,6 +114,7 @@ angular.module('app.routes', [])
     })
 
     .state('tabsController.routes', {
+        cache: false,
         url: '/routes',
         views: {
             'tab2': {

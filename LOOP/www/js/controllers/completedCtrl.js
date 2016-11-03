@@ -230,7 +230,22 @@ angular.module('app.main.controllers')
                     }).then(function successCallback(response) {
                         $ionicLoading.hide();
                         dataShare.clearData();
-                        //save into localStrorage userRoute + envelop
+                        var routes = JSON.parse(localStorage.getItem("userRoutes"));
+                        var userRoute = [{
+                            calories: data.calories,
+                            cid: response.data.cid,
+                            comments: $scope.comments,
+                            distance: data.distance,
+                            duration: data.durationInSeconds,
+                            envelope: response.data.envelope,
+                            geotags: data.geotagsInfo,
+                            isbookmarked: false,
+                            name: $scope.data.routeName,
+                            ratings: $scope.rating || 2,
+                            route: response.data.geojson 
+                        }];
+                        userRoute = userRoute.concat(routes);
+                        localStorage.setItem("userRoutes", JSON.stringify(userRoute));
                         $state.go('tabsController.routes.myRoutes');
                     }, function errorCallback(response) {
                         $ionicLoading.hide();

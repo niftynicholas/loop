@@ -3,7 +3,6 @@ angular.module('app.main.controllers')
 .controller('routesMyRoutesCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, CONSTANTS) {
     // //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
-
     //Pre-existing scope variable
     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
     $scope.$on('$ionicView.enter', function(){
@@ -22,8 +21,6 @@ angular.module('app.main.controllers')
         opacity: 1,
         color: '#09493E'
     };
-
-
 
     //Used for the leafletData.getMap() to find the map with the cid
     $scope.cidList = [];
@@ -97,6 +94,7 @@ angular.module('app.main.controllers')
             }
         };
 
+
         $scope.init = function(){
             //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method
             $scope.count = 0;
@@ -129,9 +127,10 @@ angular.module('app.main.controllers')
                     $scope.routes = $scope.routes.concat(response.data.userRoutes);
                     $scope.routeComments = $scope.routeComments.concat(response.data.userRoutes);
                 }
+                getMyRoutes();
                 localStorage.setItem("userRoutes", JSON.stringify($scope.routes));
                 $scope.$broadcast('scroll.infiniteScrollComplete');
-                getMyRoutes();
+
             },
             function errorCallback(response) {
                 console.log("response not found");
