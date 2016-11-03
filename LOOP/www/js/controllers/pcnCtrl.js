@@ -412,8 +412,7 @@ angular.module('app.main.controllers')
                         'Content-Type': 'application/json'
                     },
                     data: {
-                        token: localStorage.getItem("token"),
-                        username: localStorage.getItem("username")
+                        token: localStorage.getItem("token")
                     }
                 }).then(function successCallback(response) {
                     if ($scope.geotags.checked) {
