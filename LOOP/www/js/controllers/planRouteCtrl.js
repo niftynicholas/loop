@@ -120,6 +120,7 @@ angular.module('app.main.controllers')
                 });
             }
         } else {
+            // $("#startCross").attr("style","margin-right:5px");
             var type = 'WGS84';
             var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
             $.getJSON(requestURL, {
@@ -136,6 +137,8 @@ angular.module('app.main.controllers')
                     }
                     for (var i = 1; i <= toLoopTill; i++) {
                         var searchVal = data.SearchResults[i].SEARCHVAL;
+                        searchVal = searchVal.replace(new RegExp("'",'g'), "&#8217");
+                        searchVal = searchVal.replace(new RegExp("&#X27;",'g'), "&#8217");
                         var lat = data.SearchResults[i].Y;
                         var lng = data.SearchResults[i].X;
                         if (searchVal != null) {
@@ -196,6 +199,8 @@ angular.module('app.main.controllers')
                     }
                     for (var i = 1; i <= toLoopTill; i++) {
                         var searchVal = data.SearchResults[i].SEARCHVAL;
+                        searchVal = searchVal.replace(new RegExp("'",'g'), "&#8217");
+                        searchVal = searchVal.replace(new RegExp("&#X27;",'g'), "&#8217");
                         var lat = data.SearchResults[i].Y;
                         var lng = data.SearchResults[i].X;
                         if (searchVal != null) {
@@ -246,7 +251,6 @@ angular.module('app.main.controllers')
                 startPointName = "Starting Location";
             }
             var endPointName = endInput.getAttribute("data-val");
-
             dataShare.data = {
                 startLatLng: startLatLng,
                 endLatLng: endLatLng,
