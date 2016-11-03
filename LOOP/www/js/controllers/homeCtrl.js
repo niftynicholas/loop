@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('homeCtrl', function($scope, homeData, routeName, $state, $http, $timeout, leafletData, CONSTANTS) {
+.controller('homeCtrl', function($scope, homeData, routeName, $state, $http, $timeout, $ionicLoading, leafletData, CONSTANTS) {
     //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("popularRoutes"));
     $scope.routeComments = JSON.parse(localStorage.getItem("popularRoutes"));
@@ -93,7 +93,6 @@ angular.module('app.main.controllers')
                     $scope.count = $scope.count + 1;
                 })
             }
-
         };
         //Only configures the map after the template has loaded due to some loading timing between the angular leaflet and html
         //Test whether the timeout is still required, not tested by Wee Kian

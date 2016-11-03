@@ -46,7 +46,6 @@ angular.module('app.main.controllers')
 
     $scope.show();
     $timeout(function() {
-        $scope.hide();
         var login_state = localStorage.getItem('login_state');
         if (login_state === 'true') {
             var appleVersion = "";
@@ -96,13 +95,14 @@ angular.module('app.main.controllers')
                     $state.go('tabsController.home');
                 },
                 function errorCallback(response) {
+                    $scope.hide();
                     $state.go('landing');
                 });
-            $state.go('tabsController.home');
         } else {
+            $scope.hide();
             $state.go('landing');
         }
-    }, 4000);
+    }, 3000);
     $.ajax({
         type: "GET",
         dataType: 'json',

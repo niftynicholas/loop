@@ -49,14 +49,71 @@ angular.module('app.main.controllers')
                     avatar: selectedIndex,
                     token: localStorage.getItem("token"),
                     height: $scope.input.height,
-                    weight:  $scope.input.weight
+                    weight: $scope.input.weight
                 }
             }).then(function successCallback(response) {
-                $scope.hide();
-                localStorage.setItem("avatar", selectedIndex);
-                localStorage.setItem("height", $scope.input.height);
-                localStorage.setItem("weight", $scope.input.weight);
-                $state.go("tabsController.profile");
+                $http({
+                    url: CONSTANTS.API_URL + "cyclist/route/getPopularRoutes",
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        token: localStorage.getItem("token")
+                    }
+                }).then(function successCallback(response) {
+                        localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+                        $http({
+                            url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            data: {
+                                token: localStorage.getItem("token")
+                            }
+                        }).then(function successCallback(response) {
+                                localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                                $http({
+                                    url: CONSTANTS.API_URL + "cyclist/route/getBookmarkedRoutes",
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    data: {
+                                        token: localStorage.getItem("token")
+                                    }
+                                }).then(function successCallback(response) {
+                                        localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+                                        localStorage.setItem("avatar", selectedIndex);
+                                        localStorage.setItem("height", $scope.input.height);
+                                        localStorage.setItem("weight", $scope.input.weight);
+                                        $scope.hide();
+                                        $state.go("tabsController.profile");
+                                    },
+                                    function errorCallback(response) {
+                                        $scope.hide();
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: 'Opps!',
+                                            template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                                        });
+                                    });
+                            },
+                            function errorCallback(response) {
+                                $scope.hide();
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Opps!',
+                                    template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                                });
+                            });
+                    },
+                    function errorCallback(response) {
+                        $scope.hide();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Opps!',
+                            template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                        });
+                    });
             }, function errorCallback(response) {
                 $scope.hide();
                 var alertPopup = $ionicPopup.alert({

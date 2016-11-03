@@ -49,13 +49,21 @@
                 Comments
             </div>
             <!-- If there is no comment -->
-            <a class="item" href="#" ng-if="!(comments.length !== 0)">There are no comments yet.</a>
+            <a class="item" href="#" ng-if="comments == null">There are no comments yet.</a>
 
             <!-- If there are comments -->
+
+            <!--<a class="item" href="#" ng-repeat="c in route.comments">-->
             <a class="item item-avatar" href="#" ng-repeat="c in comments">
-                <img src="img/profile-placeholder.gif">
-                <h2><b>{{ "Me" || c.username}}</b></h2>
-                <p>{{c.comment}}</p>
+                <img ng-src="./img/avatars/{{c.avatar}}.png">
+                <h2><b>{{c.username === username && "Me" || c.username}}</b></h2>
+                <p style="overflow: initial; white-space: initial;">{{c.comment}}
+                    <br>
+                    <div ng-if='c.username === username && "Me"' style="text-align: right;">
+                        <p ng-click="openModal($index, c.comment)" style="display: inline;"><u>Edit</u></p>
+                        <p ng-click="deleteComment($index)" style="display: inline;"><u>Delete</u></p>
+                    </div>
+                </p>
             </a>
             <form>
                 <div class="item item-input-inset">
@@ -70,3 +78,19 @@
         </div>
     </ion-content>
 </ion-view>
+
+<script id="my-modal.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar-balanced">
+                <button class="button" ng-click="closeModal()">DISCARD</button>
+            <h1 class="title">Edit Comment</h1>
+                <button class="button" ng-click="editComment()">SAVE</button>
+        </ion-header-bar>
+        <ion-content>
+            <label class="item item-input">
+                <textarea ng-model="input.edittedComment"></textarea>
+            </label>
+            <button class="button button-block button-positive" ng-click="editComment()">Save</button>
+        </ion-content>
+    </ion-modal-view>
+</script>

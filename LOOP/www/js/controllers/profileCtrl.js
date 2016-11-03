@@ -64,12 +64,73 @@ angular.module('app.main.controllers')
                 weight: localStorage.getItem("weight")
             }
         }).then(function successCallback(response) {
-            $scope.hide();
-            $scope.closeModal();
-            $scope.profilePicture = "img/avatars/" + index + ".png";
-            localStorage.setItem("avatar", index);
-        }, function errorCallback(response) {
 
+            $http({
+                url: CONSTANTS.API_URL + "cyclist/route/getPopularRoutes",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    token: localStorage.getItem("token")
+                }
+            }).then(function successCallback(response) {
+                    localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+                    $http({
+                        url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: {
+                            token: localStorage.getItem("token")
+                        }
+                    }).then(function successCallback(response) {
+                            localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                            $http({
+                                url: CONSTANTS.API_URL + "cyclist/route/getBookmarkedRoutes",
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                data: {
+                                    token: localStorage.getItem("token")
+                                }
+                            }).then(function successCallback(response) {
+                                    localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+                                    $scope.closeModal();
+                                    $scope.profilePicture = "img/avatars/" + index + ".png";
+                                    localStorage.setItem("avatar", index);
+                                    $scope.hide();
+                                },
+                                function errorCallback(response) {
+                                    $scope.hide();
+                                    var alertPopup = $ionicPopup.alert({
+                                        title: 'Opps!',
+                                        template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                                    });
+                                });
+                        },
+                        function errorCallback(response) {
+                            $scope.hide();
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Opps!',
+                                template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                            });
+                        });
+                },
+                function errorCallback(response) {
+                    $scope.hide();
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Opps!',
+                        template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                    });
+                });
+        }, function errorCallback(response) {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Opps!',
+                template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+            });
         });
     }
 

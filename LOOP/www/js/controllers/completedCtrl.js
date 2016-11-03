@@ -1,8 +1,9 @@
 angular.module('app.main.controllers')
 
-.controller('completedCtrl', function($scope, $state, $ionicPopup, $ionicLoading, $timeout, leafletData, dataShare, $http, sharedRoute, CONSTANTS) {
+.controller('completedCtrl', function($scope, $state, $ionicPopup, $ionicModal, $ionicLoading, $timeout, leafletData, dataShare, $http, sharedRoute, CONSTANTS) {
     $scope.username = localStorage.getItem("username");
     sharedRoute.hasPlannedRoute = false;
+    $scope.index = "";
 
     $scope.input = {
         isShared: false,
@@ -153,10 +154,47 @@ angular.module('app.main.controllers')
         if ($scope.input.comment.length > 0) {
             $scope.comments.push({
                 dateTimeStamp: new Date().getTime(),
-                comment: $scope.input.comment
+                comment: $scope.input.comment,
+                avatar: localStorage.getItem("avatar"),
+                username: localStorage.getItem("username"),
             });
             $scope.input.comment = "";
         }
+    }
+
+    $scope.deleteComment = function(index) {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Delete Comment',
+            template: 'Are you sure you want to delete this comment?'
+        });
+        confirmPopup.then(function(res) {
+            if (res) {
+                $scope.comments.splice(index, 1);
+            } else {
+
+            }
+        })
+    }
+
+    $ionicModal.fromTemplateUrl('my-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+
+    $scope.openModal = function(index, comment) {
+        $scope.modal.show();
+        $scope.input.edittedComment = comment;
+        $scope.index = index;
+    };
+    $scope.closeModal = function() {
+        $scope.modal.hide();
+    };
+
+    $scope.editComment = function() {
+        $scope.modal.hide();
+        $scope.comments[$scope.index].comment = $scope.input.edittedComment;
     }
 
     $scope.data = {};
@@ -228,25 +266,66 @@ angular.module('app.main.controllers')
                             name: $scope.data.routeName
                         }
                     }).then(function successCallback(response) {
-                        $ionicLoading.hide();
-                        dataShare.clearData();
-                        var routes = JSON.parse(localStorage.getItem("userRoutes"));
-                        var userRoute = [{
-                            calories: data.calories,
-                            cid: response.data.cid,
-                            comments: $scope.comments,
-                            distance: data.distance,
-                            duration: data.durationInSeconds,
-                            envelope: response.data.envelope,
-                            geotags: data.geotagsInfo,
-                            isbookmarked: false,
-                            name: $scope.data.routeName,
-                            ratings: $scope.rating || 2,
-                            route: response.data.geojson 
-                        }];
-                        userRoute = userRoute.concat(routes);
-                        localStorage.setItem("userRoutes", JSON.stringify(userRoute));
-                        $state.go('tabsController.routes.myRoutes');
+                        $http({
+                            url: CONSTANTS.API_URL + "cyclist/route/getPopularRoutes",
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            data: {
+                                token: localStorage.getItem("token")
+                            }
+                        }).then(function successCallback(response) {
+                                localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+                                $http({
+                                    url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    data: {
+                                        token: localStorage.getItem("token")
+                                    }
+                                }).then(function successCallback(response) {
+                                        localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                                        $http({
+                                            url: CONSTANTS.API_URL + "cyclist/route/getBookmarkedRoutes",
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            data: {
+                                                token: localStorage.getItem("token")
+                                            }
+                                        }).then(function successCallback(response) {
+                                                localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+                                                $ionicLoading.hide();
+                                                dataShare.clearData();
+                                                $state.go('tabsController.routes.myRoutes');
+                                            },
+                                            function errorCallback(response) {
+                                                $ionicLoading.hide();
+                                                var alertPopup = $ionicPopup.alert({
+                                                    title: 'Opps!',
+                                                    template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                                                });
+                                            });
+                                    },
+                                    function errorCallback(response) {
+                                        $ionicLoading.hide();
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: 'Opps!',
+                                            template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                                        });
+                                    });
+                            },
+                            function errorCallback(response) {
+                                $ionicLoading.hide();
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Opps!',
+                                    template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
+                                });
+                            });
                     }, function errorCallback(response) {
                         $ionicLoading.hide();
                         var alertPopup = $ionicPopup.alert({

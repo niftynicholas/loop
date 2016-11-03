@@ -8,6 +8,7 @@ angular.module('app.main.controllers')
     var routesType = routeName.getData().routesType;
     var routes = JSON.parse(localStorage.getItem(routesType));
     $scope.route = routes[index];
+    console.log($scope.route);
     $scope.stars = Math.round($scope.route.ratings);
     $scope.ratings = $scope.route.ratings + "";
     $scope.readOnly = true;
@@ -167,7 +168,7 @@ angular.module('app.main.controllers')
                                                 localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
                                                 var routes = JSON.parse(localStorage.getItem(routesType));
                                                 $scope.route = routes[index];
-                                                $ionicLoading.hide();                                                
+                                                $ionicLoading.hide();
                                             },
                                             function errorCallback(response) {
                                                 $ionicLoading.hide();
