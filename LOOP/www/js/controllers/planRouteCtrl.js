@@ -1,6 +1,7 @@
 angular.module('app.main.controllers')
 
 .controller('planRouteCtrl', function($scope, leafletData, $http, $state, $ionicPopup, dataShare, sharedRoute, $cordovaGeolocation, CONSTANTS, $ionicLoading) {
+    $scope.input = {};
     var token = "";
     var searchLimit = 10; //10 or more because has digit 0 to 9 for last digit in postal code
 
