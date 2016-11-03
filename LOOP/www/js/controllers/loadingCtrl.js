@@ -49,6 +49,55 @@ angular.module('app.main.controllers')
         $scope.hide();
         var login_state = localStorage.getItem('login_state');
         if (login_state === 'true') {
+            var appleVersion = "";
+            var androidVersion = "";
+            var isIOS = ionic.Platform.isIOS();
+            var isAndroid = ionic.Platform.isAndroid();
+            var isWebView = ionic.Platform.isWebView();
+
+            if (isIOS) {
+                appleVersion = CONSTANTS.VERSION;
+            } else if (isAndroid) {
+                androidVersion = CONSTANTS.VERSION;
+            } else {
+                androidVersion = CONSTANTS.VERSION;
+            }
+
+            $http({
+                url: CONSTANTS.API_URL + "cyclist/account/login",
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    appleVersion: appleVersion,
+                    androidVersion: androidVersion,
+                    username: localStorage.getItem("username"),
+                    password: localStorage.getItem("password")
+                }
+            }).then(function successCallback(response) {
+                    localStorage.setItem("login_state", "true");
+                    localStorage.setItem("avatar", response.data.user.avatar);
+                    localStorage.setItem("avgCalories", response.data.user.avgCalories);
+                    localStorage.setItem("dateOfBirth", response.data.user.dateOfBirth);
+                    localStorage.setItem("gender", response.data.user.gender);
+                    localStorage.setItem("height", response.data.user.height);
+                    localStorage.setItem("numActivities", response.data.user.numActivities);
+                    localStorage.setItem("token", response.data.user.token);
+                    localStorage.setItem("totalCalories", response.data.user.totalCalories);
+                    localStorage.setItem("username", response.data.user.username);
+                    localStorage.setItem("password", localStorage.getItem("password"));
+                    localStorage.setItem("weight", response.data.user.weight);
+                    localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+                    localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+                    localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                    localStorage.setItem("geotagCategories", JSON.stringify(response.data.geotagCategories));
+                    $scope.hide();
+                    $state.go('tabsController.home');
+                },
+                function errorCallback(response) {
+                    $state.go('landing');
+                });
             $state.go('tabsController.home');
         } else {
             $state.go('landing');

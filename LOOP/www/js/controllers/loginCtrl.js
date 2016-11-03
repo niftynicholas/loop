@@ -46,7 +46,6 @@ angular.module('app.main.controllers')
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
-                console.log(response.data);
                     if (response.status == 203) {
                         $scope.hide();
 
@@ -76,6 +75,7 @@ angular.module('app.main.controllers')
                         localStorage.setItem("token", response.data.user.token);
                         localStorage.setItem("totalCalories", response.data.user.totalCalories);
                         localStorage.setItem("username", response.data.user.username);
+                        localStorage.setItem("password", $scope.authorization.password);
                         localStorage.setItem("weight", response.data.user.weight);
                         localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
                         localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
