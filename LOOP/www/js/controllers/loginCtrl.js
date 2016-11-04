@@ -99,7 +99,7 @@ angular.module('app.main.controllers')
                     } else if (response.status == 409) {
                         var alertPopup = $ionicPopup.alert({
                             title: 'Login Failed',
-                            template: 'Please update LOOP to the lastest version to enjoy all the features. Thank you.'
+                            template: 'Please update LOOP to the latest version to enjoy all the features. Thank you.'
                         });
 
                         alertPopup.then(function(res) {
