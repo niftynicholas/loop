@@ -10,7 +10,7 @@
             <div class="list">
                 <label class="item item-input" ng-class="{ 'has-errors' : authorizationForm.username.$invalid && authorizationForm.$submitted, 'no-errors' : authorizationForm.username.$valid && authorizationForm.$submitted}">
                     <span class="input-label">Username</span>
-                    <input type="text" name="username" ng-model="authorization.username" required>
+                    <input type="text" name="username" ng-model="authorization.username" disallow-spaces required>
                 </label>
                 <div class="error-container" ng-show="authorizationForm.username.$error && authorizationForm.$submitted" ng-messages="authorizationForm.username.$error">
                     <div ng-messages-include="error-list.html"></div>
