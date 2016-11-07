@@ -321,7 +321,7 @@ angular.module('app.main.controllers')
                 if($scope.results.length == 0){
                     var confirmPopup = $ionicPopup.alert({
                         title: 'Oops',
-                        template: 'There are no cycling routes between these the start and end points.'
+                        template: 'There are no cycling routes between the start and end points.'
                     });
 
                     confirmPopup.then(function(res) {
