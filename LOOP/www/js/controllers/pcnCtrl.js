@@ -354,7 +354,12 @@ angular.module('app.main.controllers')
                 }
 
                 $scope.onChangeGeotag = function(isChecked) {
-                    $scope.toggleCount++;
+                    if(isChecked){
+                        $scope.toggleCount++;
+                    }else{
+                        $scope.toggleCount--;
+                    }
+
                     if (isChecked && $scope.toggleCount <= 3){
                         map.addLayer($scope.geotaggedLayer);
                     }
@@ -364,13 +369,16 @@ angular.module('app.main.controllers')
                         $scope.geotags.checked = false;
                     }
                     else{
-                        $scope.toggleCount--;
                         map.removeLayer($scope.geotaggedLayer);
                     }
                 }
 
                 $scope.onChangePCN = function(isChecked) {
-                    $scope.toggleCount++;
+                    if(isChecked){
+                        $scope.toggleCount++;
+                    }else{
+                        $scope.toggleCount--;
+                    }
                     if (isChecked && $scope.toggleCount <= 3){
                         map.addLayer(pcnLayer);
                     }
@@ -380,13 +388,16 @@ angular.module('app.main.controllers')
                         $scope.pcn.checked = false;
                     }
                     else{
-                        $scope.toggleCount--;
                         map.removeLayer(pcnLayer);
                     }
                 }
 
                 $scope.onChangeITPCN = function(isChecked) {
-                    $scope.toggleCount++;
+                    if(isChecked){
+                        $scope.toggleCount++;
+                    }else{
+                        $scope.toggleCount--;
+                    }
                     if (isChecked && $scope.toggleCount <= 3){
                         map.addLayer(intraTownCyclingPathLayer);
                     }
@@ -396,13 +407,16 @@ angular.module('app.main.controllers')
                         $scope.itpcn.checked = false;
                     }
                     else{
-                        $scope.toggleCount--;
                         map.removeLayer(intraTownCyclingPathLayer);
                     }
                 }
 
                 $scope.onChangeToilets = function(isChecked) {
-                    $scope.toggleCount++;
+                    if(isChecked){
+                        $scope.toggleCount++;
+                    }else{
+                        $scope.toggleCount--;
+                    }
                     if (isChecked && $scope.toggleCount <= 3){
                         map.addLayer(toiletsLayer);
                     }
@@ -412,13 +426,16 @@ angular.module('app.main.controllers')
                         $scope.toilets.checked = false;
                     }
                     else{
-                        $scope.toggleCount--;
                         map.removeLayer(toiletsLayer);
                     }
                 }
 
                 $scope.onChangeFNB = function(isChecked) {
-                    $scope.toggleCount++;
+                    if(isChecked){
+                        $scope.toggleCount++;
+                    }else{
+                        $scope.toggleCount--;
+                    }
                     if (isChecked && $scope.toggleCount <= 3){
                         map.addLayer(foodLayer);
                     }
@@ -428,13 +445,16 @@ angular.module('app.main.controllers')
                         $scope.fnb.checked = false;
                     }
                     else{
-                        $scope.toggleCount--;
                         map.removeLayer(foodLayer);
                     }
                 }
 
                 $scope.onChangeShelters = function(isChecked) {
-                    $scope.toggleCount++;
+                    if(isChecked){
+                        $scope.toggleCount++;
+                    }else{
+                        $scope.toggleCount--;
+                    }
                     if (isChecked && $scope.toggleCount <= 3){
                         map.addLayer(sheltersLayer);
                     }
@@ -444,13 +464,16 @@ angular.module('app.main.controllers')
                         $scope.shelters.checked = false;
                     }
                     else{
-                        $scope.toggleCount--;
                         map.removeLayer(sheltersLayer);
                     }
                 }
 
                 $scope.onChangeDrinkingWater = function(isChecked) {
-                    $scope.toggleCount++;
+                    if(isChecked){
+                        $scope.toggleCount++;
+                    }else{
+                        $scope.toggleCount--;
+                    }
                     if (isChecked && $scope.toggleCount <= 3){
                         map.addLayer(drinkingWaterLayer);
                     }
@@ -460,13 +483,16 @@ angular.module('app.main.controllers')
                         $scope.drinkingwater.checked = false;
                     }
                     else{
-                        $scope.toggleCount--;
                         map.removeLayer(drinkingWaterLayer);
                     }
                 }
 
                 $scope.onChangeBikeLots = function(isChecked) {
-                    $scope.toggleCount++;
+                    if(isChecked){
+                        $scope.toggleCount++;
+                    }else{
+                        $scope.toggleCount--;
+                    }
                     if (isChecked && $scope.toggleCount <= 3){
                         map.addLayer(bicycleParkingLayer);
                     }
@@ -476,13 +502,16 @@ angular.module('app.main.controllers')
                         $scope.bikelots.checked = false;
                     }
                     else{
-                        $scope.toggleCount--;
                         map.removeLayer(bicycleParkingLayer);
                     }
                 }
 
                 $scope.onChangeBikeRentals = function(isChecked) {
-                    $scope.toggleCount++;
+                    if(isChecked){
+                        $scope.toggleCount++;
+                    }else{
+                        $scope.toggleCount--;
+                    }
                     if (isChecked && $scope.toggleCount <= 3){
                         map.addLayer(bicycleRentalLayer);
                     }
@@ -492,7 +521,6 @@ angular.module('app.main.controllers')
                         $scope.bikerentals.checked = false;
                     }
                     else{
-                        $scope.toggleCount--;
                         map.removeLayer(bicycleRentalLayer);
                     }
                 }
