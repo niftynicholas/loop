@@ -316,70 +316,83 @@ angular.module('app.main.controllers')
                 type: type
             }
         }).then(function successCallback(response) {
-                pid = response.data.pid
-                sharedRoute.hasPlanned = true;
-                sharedRoute.hasPlannedRoute = true;
-                var firstLoad = true;
+                $scope.results = response.data.result;
                 $ionicLoading.hide();
-                plannedResultLayers.addLayer(sourceMarker1);
-                plannedResultLayers.addLayer(targetMarker1);
-                sourceMarker1.openPopup();
-                targetMarker1.openPopup();
+                if($scope.results.length == 0){
+                    var confirmPopup = $ionicPopup.alert({
+                        title: 'Oops',
+                        template: 'There are no cycling routes between these the start and end points.'
+                    });
 
-                function onEachFeature(feature, layer) {
-                    var routeNo = $scope.routesNo++;
-                    if (firstLoad) {
-                        $scope.no = routeNo + 1;
-                        firstLoad = false;
-                        layer.setStyle({
-                            "color": $scope.routeColours[$scope.no - 1],
-                            "weight": 8,
-                            "opacity": 1,
-                            "dashArray": ""
+                    confirmPopup.then(function(res) {
+                        $state.go('planRoute');
+                    });
+                }else{
+                    pid = response.data.pid
+                    sharedRoute.hasPlanned = true;
+                    sharedRoute.hasPlannedRoute = true;
+                    var firstLoad = true;
+                    plannedResultLayers.addLayer(sourceMarker1);
+                    plannedResultLayers.addLayer(targetMarker1);
+                    sourceMarker1.openPopup();
+                    targetMarker1.openPopup();
+
+                    function onEachFeature(feature, layer) {
+                        var routeNo = $scope.routesNo++;
+                        if (firstLoad) {
+                            $scope.no = routeNo + 1;
+                            firstLoad = false;
+                            layer.setStyle({
+                                "color": $scope.routeColours[$scope.no - 1],
+                                "weight": 8,
+                                "opacity": 1,
+                                "dashArray": ""
+                            });
+                        }
+                        layer.on('mousedown', function(e) {
+                            plannedResultLayers.eachLayer(function(anotherLayer) {
+                                if (anotherLayer instanceof L.GeoJSON) {
+                                    anotherLayer.setStyle(inActiveStyle);
+                                }
+                            });
+                            $scope.no = routeNo + 1;
+                            layer.bringToFront();
+                            layer.setStyle({
+                                "color": $scope.routeColours[$scope.no - 1],
+                                "weight": 8,
+                                "opacity": 1,
+                                "dashArray": ""
+                            });
                         });
                     }
-                    layer.on('mousedown', function(e) {
-                        plannedResultLayers.eachLayer(function(anotherLayer) {
-                            if (anotherLayer instanceof L.GeoJSON) {
-                                anotherLayer.setStyle(inActiveStyle);
-                            }
+
+                    for (var i = 0; i < response.data.result.length; i++) {
+                        var route = response.data.result[i].geojson;
+                        var routeLayer = L.geoJson(route, {
+                            style: inActiveStyle,
+                            onEachFeature: onEachFeature
                         });
-                        $scope.no = routeNo + 1;
-                        layer.bringToFront();
-                        layer.setStyle({
-                            "color": $scope.routeColours[$scope.no - 1],
-                            "weight": 8,
-                            "opacity": 1,
-                            "dashArray": ""
+                        plannedResultLayers.addLayer(routeLayer);
+                        routeLayer.bringToBack();
+                    }
+
+                    if ($scope.currentLocation == "undefined") {
+                        map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
+                            animate: false,
+                            reset: true,
+                            maxZoom: 16,
+                            padding: [80, 80]
                         });
-                    });
-                }
-                $scope.results = response.data.result;
-                for (var i = 0; i < response.data.result.length; i++) {
-                    var route = response.data.result[i].geojson;
-                    var routeLayer = L.geoJson(route, {
-                        style: inActiveStyle,
-                        onEachFeature: onEachFeature
-                    });
-                    plannedResultLayers.addLayer(routeLayer);
-                    routeLayer.bringToBack();
+                    } else {
+                        map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
+                            animate: false,
+                            reset: true,
+                            maxZoom: 16,
+                            padding: [80, 80]
+                        });
+                    }
                 }
 
-                if ($scope.currentLocation == "undefined") {
-                    map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
-                        animate: false,
-                        reset: true,
-                        maxZoom: 16,
-                        padding: [80, 80]
-                    });
-                } else {
-                    map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
-                        animate: false,
-                        reset: true,
-                        maxZoom: 16,
-                        padding: [80, 80]
-                    });
-                }
             },
             function errorCallback(response) {
                 $ionicLoading.hide();
