@@ -311,7 +311,7 @@ angular.module('app.main.controllers')
                 start: startCoords,
                 end: endCoords,
                 dateTimeStamp: new Date().getTime(),
-                k: 3, // No. of routes to be returned.
+                k: 1, // No. of routes to be returned.
                 tolerance: 500,
                 type: type
             }
