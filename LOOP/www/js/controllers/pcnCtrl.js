@@ -25,7 +25,7 @@ angular.module('app.main.controllers')
     var intraTownCyclingPath = response.intraTownCyclingPath;
     var food = response.food;
     var geotags = L.layerGroup();
-
+    $scope.toggleCount = 0;
     $scope.geotags = {
         checked: false
     };
@@ -346,49 +346,155 @@ angular.module('app.main.controllers')
                     onEachFeature: onEachFeature
                 });
 
+                $scope.alertPopup = function(){
+                    $ionicPopup.alert({
+                        title: 'Oops',
+                        template: 'Due to performance issues, you can select up to only 3 amenities.'
+                    });
+                }
+
                 $scope.onChangeGeotag = function(isChecked) {
-                    if (isChecked) map.addLayer($scope.geotaggedLayer);
-                    else map.removeLayer($scope.geotaggedLayer);
+                    $scope.toggleCount++;
+                    if (isChecked && $scope.toggleCount <= 3){
+                        map.addLayer($scope.geotaggedLayer);
+                    }
+                    else if($scope.toggleCount == 4){
+                        $scope.toggleCount--;
+                        $scope.alertPopup();
+                        $scope.geotags.checked = false;
+                    }
+                    else{
+                        $scope.toggleCount--;
+                        map.removeLayer($scope.geotaggedLayer);
+                    }
                 }
 
                 $scope.onChangePCN = function(isChecked) {
-                    if (isChecked) map.addLayer(pcnLayer);
-                    else map.removeLayer(pcnLayer);
+                    $scope.toggleCount++;
+                    if (isChecked && $scope.toggleCount <= 3){
+                        map.addLayer(pcnLayer);
+                    }
+                    else if($scope.toggleCount == 4){
+                        $scope.toggleCount--;
+                        $scope.alertPopup();
+                        $scope.pcn.checked = false;
+                    }
+                    else{
+                        $scope.toggleCount--;
+                        map.removeLayer(pcnLayer);
+                    }
                 }
 
                 $scope.onChangeITPCN = function(isChecked) {
-                    if (isChecked) map.addLayer(intraTownCyclingPathLayer);
-                    else map.removeLayer(intraTownCyclingPathLayer);
+                    $scope.toggleCount++;
+                    if (isChecked && $scope.toggleCount <= 3){
+                        map.addLayer(intraTownCyclingPathLayer);
+                    }
+                    else if($scope.toggleCount == 4){
+                        $scope.toggleCount--;
+                        $scope.alertPopup();
+                        $scope.itpcn.checked = false;
+                    }
+                    else{
+                        $scope.toggleCount--;
+                        map.removeLayer(intraTownCyclingPathLayer);
+                    }
                 }
 
                 $scope.onChangeToilets = function(isChecked) {
-                    if (isChecked) map.addLayer(toiletsLayer);
-                    else map.removeLayer(toiletsLayer);
+                    $scope.toggleCount++;
+                    if (isChecked && $scope.toggleCount <= 3){
+                        map.addLayer(toiletsLayer);
+                    }
+                    else if($scope.toggleCount == 4){
+                        $scope.toggleCount--;
+                        $scope.alertPopup();
+                        $scope.toilets.checked = false;
+                    }
+                    else{
+                        $scope.toggleCount--;
+                        map.removeLayer(toiletsLayer);
+                    }
                 }
 
                 $scope.onChangeFNB = function(isChecked) {
-                    if (isChecked) map.addLayer(foodLayer);
-                    else map.removeLayer(foodLayer);
+                    $scope.toggleCount++;
+                    if (isChecked && $scope.toggleCount <= 3){
+                        map.addLayer(foodLayer);
+                    }
+                    else if($scope.toggleCount == 4){
+                        $scope.toggleCount--;
+                        $scope.alertPopup();
+                        $scope.fnb.checked = false;
+                    }
+                    else{
+                        $scope.toggleCount--;
+                        map.removeLayer(foodLayer);
+                    }
                 }
 
                 $scope.onChangeShelters = function(isChecked) {
-                    if (isChecked) map.addLayer(sheltersLayer);
-                    else map.removeLayer(sheltersLayer);
+                    $scope.toggleCount++;
+                    if (isChecked && $scope.toggleCount <= 3){
+                        map.addLayer(sheltersLayer);
+                    }
+                    else if($scope.toggleCount == 4){
+                        $scope.toggleCount--;
+                        $scope.alertPopup();
+                        $scope.shelters.checked = false;
+                    }
+                    else{
+                        $scope.toggleCount--;
+                        map.removeLayer(sheltersLayer);
+                    }
                 }
 
                 $scope.onChangeDrinkingWater = function(isChecked) {
-                    if (isChecked) map.addLayer(drinkingWaterLayer);
-                    else map.removeLayer(drinkingWaterLayer);
+                    $scope.toggleCount++;
+                    if (isChecked && $scope.toggleCount <= 3){
+                        map.addLayer(drinkingWaterLayer);
+                    }
+                    else if($scope.toggleCount == 4){
+                        $scope.toggleCount--;
+                        $scope.alertPopup();
+                        $scope.drinkingwater.checked = false;
+                    }
+                    else{
+                        $scope.toggleCount--;
+                        map.removeLayer(drinkingWaterLayer);
+                    }
                 }
 
                 $scope.onChangeBikeLots = function(isChecked) {
-                    if (isChecked) map.addLayer(bicycleParkingLayer);
-                    else map.removeLayer(bicycleParkingLayer);
+                    $scope.toggleCount++;
+                    if (isChecked && $scope.toggleCount <= 3){
+                        map.addLayer(bicycleParkingLayer);
+                    }
+                    else if($scope.toggleCount == 4){
+                        $scope.toggleCount--;
+                        $scope.alertPopup();
+                        $scope.bikelots.checked = false;
+                    }
+                    else{
+                        $scope.toggleCount--;
+                        map.removeLayer(bicycleParkingLayer);
+                    }
                 }
 
                 $scope.onChangeBikeRentals = function(isChecked) {
-                    if (isChecked) map.addLayer(bicycleRentalLayer);
-                    else map.removeLayer(bicycleRentalLayer);
+                    $scope.toggleCount++;
+                    if (isChecked && $scope.toggleCount <= 3){
+                        map.addLayer(bicycleRentalLayer);
+                    }
+                    else if($scope.toggleCount == 4){
+                        $scope.toggleCount--;
+                        $scope.alertPopup();
+                        $scope.bikerentals.checked = false;
+                    }
+                    else{
+                        $scope.toggleCount--;
+                        map.removeLayer(bicycleRentalLayer);
+                    }
                 }
 
                 var materialOptions = {
