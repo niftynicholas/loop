@@ -142,7 +142,6 @@ angular.module('app.main.controllers')
     });
 
     $scope.$on("$ionicSlides.slideChangeStart", function(event, data) {
-        console.log('Slide change is beginning');
     });
 
     $scope.$on("$ionicSlides.slideChangeEnd", function(event, data) {

@@ -41,7 +41,6 @@ angular.module('app.main.controllers')
     });
 
     $scope.$on("$ionicSlides.slideChangeStart", function(event, data) {
-        console.log('Slide change is beginning');
     });
 
     $scope.$on("$ionicSlides.slideChangeEnd", function(event, data) {
@@ -323,7 +322,6 @@ angular.module('app.main.controllers')
             timeout: 3000,
             enableHighAccuracy: true
         }).then(function(position) {
-            //console.log("lat: " + position.coords.latitude + "lng: " + position.coords.longitude);
             $scope.currentLoc = [position.coords.longitude, position.coords.latitude]; //GeoJson Format, EPSG:4326
             currentLoc.setGeometry(new ol.geom.Point($scope.currentLoc));
             if (setWatch) {
@@ -363,7 +361,6 @@ angular.module('app.main.controllers')
             }
         }, function(err) {
             console.log("Location not found");
-            //alert('Location nt found');
         });
 
     }, 3000); //every 3s

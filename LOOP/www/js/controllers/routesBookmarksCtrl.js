@@ -60,7 +60,6 @@ angular.module('app.main.controllers')
 
     //Method that is called after 0seconds after the template has loaded using the $timeout that calls this method
     var init = function() {
-        console.log("called init");
         //Loops through the number of routes retrieved to configure the relevant maps
         for (var i = $scope.count; i < $scope.routes.length; i++) {
             var cid = $scope.routes[i].cid;
@@ -101,7 +100,6 @@ angular.module('app.main.controllers')
         $timeout(init, 0);
 
         $scope.loadMore = function() {
-            console.log("called loadMore");
             $http({
                 url: CONSTANTS.API_URL + "cyclist/route/getBookmarkedRoutes",
                 method: 'POST',

@@ -80,7 +80,6 @@ angular.module('app.main.controllers')
         });
 
         myPopup.then(function(res) {
-            console.log('Tapped!', res);
         });
     };
 

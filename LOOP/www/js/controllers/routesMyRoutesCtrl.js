@@ -3,7 +3,6 @@ angular.module('app.main.controllers')
 .controller('routesMyRoutesCtrl', function($scope, routeName, $state, $http, leafletData, $timeout, CONSTANTS) {
     // //Retrieves and parses the popularRoutes that was retrieved when the user logged in
     $scope.routes = JSON.parse(localStorage.getItem("userRoutes"));
-    console.log($scope.routes);
     //Pre-existing scope variable
     $scope.routeComments = JSON.parse(localStorage.getItem("userRoutes"));
 
@@ -97,7 +96,6 @@ angular.module('app.main.controllers')
 
 
         $scope.init = function(){
-            console.log("called init");
             //Used for recording which cid, geojson and coordinates to use inside the leafletData.getMap() method
             $scope.count = 0;
             getMyRoutes();
