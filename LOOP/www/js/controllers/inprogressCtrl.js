@@ -15,6 +15,7 @@ angular.module('app.main.controllers')
     $scope.weight = parseFloat(localStorage.getItem("weight")).toFixed(2);
     $scope.height = parseFloat(localStorage.getItem("height")).toFixed(2);
     $scope.coordsinfo = []; //stores coordinates information e.g. {lat: xxx, lng: xxx, time: xxx}
+    $scope.timestamps = [];
     $scope.currentLoc = null;
     var currentPath = [];
     var latlngs = [];
@@ -309,8 +310,8 @@ angular.module('app.main.controllers')
             lat: data.currentLocation.lat,
             lng: data.currentLocation.lng,
             //alt: e.altitude,
-            time: data.time
         });
+        $scope.timestamps.push(data.time);
     }
 
     dataShare.clearData();
@@ -337,9 +338,8 @@ angular.module('app.main.controllers')
             $scope.coordsinfo.push({ //storing each coordinate information
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
-                //alt: e.altitude,
-                time: position.timestamp
             });
+            $scope.timestamps.push(position.timestamp);
 
             if (latlngs.length >= 2) {
                 var latestCoord = $scope.coordsinfo[$scope.coordsinfo.length - 1];
@@ -517,7 +517,8 @@ angular.module('app.main.controllers')
                     startDateTimeStamp: $scope.startDateTimeStamp,
                     geotagsInfo: geotagsInfo,
                     referencedCID: viewSharedRoute.cid,
-                    pid: $scope.pid
+                    pid: $scope.pid,
+                    timestamps: $scope.timestamps
                 };
                 dataShare.sendData(data); //pass as JS object
                 viewSharedRoute.clearData();

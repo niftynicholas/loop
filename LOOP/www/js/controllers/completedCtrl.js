@@ -263,7 +263,8 @@ angular.module('app.main.controllers')
                             isShared: $scope.input.isShared || false,
                             referencedCID: data.referencedCID || null,
                             pid: data.pid || null,
-                            name: $scope.data.routeName
+                            name: $scope.data.routeName,
+                            timestamps: data.timestamps
                         }
                     }).then(function successCallback(response) {
                         $http({
