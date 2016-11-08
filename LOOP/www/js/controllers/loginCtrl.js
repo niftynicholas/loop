@@ -46,6 +46,7 @@ angular.module('app.main.controllers')
                     password: $scope.authorization.password
                 }
             }).then(function successCallback(response) {
+                    console.log(response.data);
                     if (response.status == 203) {
                         $scope.hide();
 

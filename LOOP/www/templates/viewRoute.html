@@ -5,6 +5,9 @@
                 <i class="icon ion-ios-arrow-back" style="color:white;"> Back</i>
             </a>
         </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <button ng-if="owns" class="button" ng-click="edit()">EDIT</button>
+        </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-title>{{route.name}}</ion-nav-title>
     <ion-content>

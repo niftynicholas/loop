@@ -1,14 +1,31 @@
 angular.module('app.main.controllers')
 
 .controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, $ionicPopup, routeName, $http, $state, dataShare, viewSharedRoute, $ionicPopup, $ionicModal, $ionicLoading, CONSTANTS, shareUsername, sharePassword, shareToken) {
+    $ionicLoading.show({
+        template: '<p>Posting...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+    })
+
     $scope.username = localStorage.getItem("username");
     $scope.profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
     var uid = localStorage.getItem("uid");
     var index = routeName.getData().index;
     var routesType = routeName.getData().routesType;
     var routes = JSON.parse(localStorage.getItem(routesType));
+    var userRoutes = JSON.parse(localStorage.getItem("userRoutes"));
     $scope.route = routes[index];
     console.log($scope.route);
+    $scope.owns = false;
+
+    for (var i = 0; i < userRoutes.length; i++) {
+        if ($scope.route.cid == userRoutes[i].cid) {
+            $scope.owns = true;
+        }
+        $ionicLoading.hide();
+    }
+    $scope.data = {
+        newName: $scope.route.name
+    };
+
     $scope.stars = Math.round($scope.route.ratings);
     $scope.ratings = $scope.route.ratings + "";
     $scope.readOnly = true;
@@ -17,6 +34,115 @@ angular.module('app.main.controllers')
     };
     var tempDateTimeStamp = "";
     $scope.coid;
+
+    $scope.edit = function() {
+        var myPopUp = $ionicPopup.show({
+            template: '<input type="text" ng-model="data.newName" select-on-click>',
+            title: 'Route Name',
+            subTitle: 'Enter a new name for your route',
+            scope: $scope,
+            buttons: [{
+                text: 'Cancel'
+            }, {
+                text: '<b>Save</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                    if (!$scope.data.newName) {
+                        e.preventDefault();
+                    } else {
+                        $ionicLoading.show({
+                            template: '<p>Saving...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+                        })
+                        $http({
+                            url: CONSTANTS.API_URL + "cyclist/route/changeName",
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            data: {
+                                cid: $scope.route.cid,
+                                token: localStorage.getItem("token"),
+                                name: $scope.data.newName
+                            }
+
+                        }).then(function successCallback(response) {
+                                $http({
+                                    url: CONSTANTS.API_URL + "cyclist/route/getPopularRoutes",
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    data: {
+                                        token: localStorage.getItem("token")
+                                    }
+                                }).then(function successCallback(response) {
+                                        localStorage.setItem("popularRoutes", JSON.stringify(response.data.popularRoutes));
+                                        $http({
+                                            url: CONSTANTS.API_URL + "cyclist/route/getUserRoutes",
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            data: {
+                                                token: localStorage.getItem("token")
+                                            }
+                                        }).then(function successCallback(response) {
+                                                localStorage.setItem("userRoutes", JSON.stringify(response.data.userRoutes));
+                                                $http({
+                                                    url: CONSTANTS.API_URL + "cyclist/route/getBookmarkedRoutes",
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json'
+                                                    },
+                                                    data: {
+                                                        token: localStorage.getItem("token")
+                                                    }
+                                                }).then(function successCallback(response) {
+                                                        localStorage.setItem("bookmarkedRoutes", JSON.stringify(response.data.bookmarkedRoutes));
+                                                        var routes = JSON.parse(localStorage.getItem(routesType));
+                                                        $scope.route = routes[index];
+                                                        $ionicLoading.hide();
+                                                    },
+                                                    function errorCallback(response) {
+                                                        $ionicLoading.hide();
+                                                        var alertPopup = $ionicPopup.alert({
+                                                            title: 'Server Error',
+                                                            template: 'Unable to rename route. Please try again later.'
+                                                        });
+                                                    });
+                                            },
+                                            function errorCallback(response) {
+                                                $ionicLoading.hide();
+                                                var alertPopup = $ionicPopup.alert({
+                                                    title: 'Server Error',
+                                                    template: 'Unable to rename route. Please try again later.'
+                                                });
+                                            });
+                                    },
+                                    function errorCallback(response) {
+                                        $ionicLoading.hide();
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: 'Server Error',
+                                            template: 'Unable to rename route. Please try again later.'
+                                        });
+                                    });
+                            },
+                            function errorCallback(response) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Server Error',
+                                    template: 'Unable to rename route. Please try again later.'
+                                });
+                            });
+                    }
+                }
+            }]
+        })
+
+        myPopUp.then(function(res) {
+            $scope.data.newName = $scope.route.name;
+        });
+
+    }
 
     $scope.postComment = function() {
         $ionicLoading.show({

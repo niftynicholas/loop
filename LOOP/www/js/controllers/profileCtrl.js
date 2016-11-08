@@ -14,7 +14,7 @@ angular.module('app.main.controllers')
     $scope.weight = parseFloat(localStorage.getItem("weight")).toFixed(2);
     $scope.height = parseFloat(localStorage.getItem("height")).toFixed(2);
     $scope.totalCalories = parseFloat(localStorage.getItem("totalCalories"));
-    $scope.numActivities = parseInt(localStorage.getItem("numActivities"));
+    $scope.numActivities = JSON.parse(localStorage.getItem("userRoutes")).length;
     $scope.username = localStorage.getItem("username");
     $scope.profilePicture = 'img/avatars/' + localStorage.getItem("avatar") + ".png";
 

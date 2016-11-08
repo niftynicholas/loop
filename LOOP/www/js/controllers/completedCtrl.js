@@ -199,6 +199,7 @@ angular.module('app.main.controllers')
 
     $scope.data = {};
     $scope.data.routeName = "Activity on " + $scope.today + " at " + $scope.timeNow;
+    var persistedRouteName = $scope.data.routeName;
 
     /**
      * Save Button
@@ -206,7 +207,7 @@ angular.module('app.main.controllers')
     $scope.save = function() {
         // An elaborate, custom popup
         var myPopup = $ionicPopup.show({
-            template: '<input type="text" ng-model="data.routeName">',
+            template: '<input type="text" ng-model="data.routeName" select-on-click>',
             title: 'Save Route As',
             scope: $scope,
             buttons: [{
@@ -336,6 +337,7 @@ angular.module('app.main.controllers')
                     });
                 }
             }
+            $scope.data.routeName = persistedRouteName;
         });
     };
 })
