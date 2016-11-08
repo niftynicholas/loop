@@ -9,7 +9,7 @@
 angular.module('app', ['ionic', 'ion-profile-picture', 'app.main.controllers', 'app.routes', 'app.directives', 'leaflet-directive', 'timer', 'ion-floating-menu', 'ionic-ratings', 'ngMessages', 'ngCordova', 'jrCrop', 'ionic-numberpicker', 'ng-walkthrough', 'ionic-modal-select'])
 .constant('CONSTANTS', {
     API_URL: "https://sgcycling-sgloop.rhcloud.com/api/",
-    VERSION: "0.0.5",
+    VERSION: "0.0.6",
     mapbox_access_token: "pk.eyJ1Ijoic2dsb29wYXBwbGljYXRpb24iLCJhIjoiY2lydnoxN3ZxMGlpdGZmbTYzOWU5NTF6biJ9.ylXvnapNFigSQ_r4768y5Q"
     //Mapbox Access Token For Deployment: pk.eyJ1Ijoic2dsb29wYXBwbGljYXRpb24iLCJhIjoiY2lydnoxN3ZxMGlpdGZmbTYzOWU5NTF6biJ9.ylXvnapNFigSQ_r4768y5Q
     //Mapbox Access Token For Testing & Development: pk.eyJ1IjoibmlmdHluaWNob2xhcyIsImEiOiJjaXIxcDhvcWIwMnU1ZmxtOGxjNHpnOGU4In0.pWUMFrYIUOi5ocgcRWbW8Q
