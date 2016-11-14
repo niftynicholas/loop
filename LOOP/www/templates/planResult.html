@@ -13,7 +13,7 @@
     </ion-content>
     <ion-footer-bar style='background-color: {{routeColours[no-1]}};' on-swipe-left="nextRoute()" on-swipe-right="prevRoute()">
         <button ng-if='no > 1' class="button button-light icon ion-ios-arrow-back" ng-click="prevRoute()"></button>
-        <h1 class="title" ng-if="no!=-1" style="color: white;"><i class="icon ion-ios-location"></i> {{cost | km}} km&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon ion-clock"></i> {{timetaken | duration}}</h1>
+        <h1 class="title" ng-if="no!=-1" style="color: white;"><i class="icon ion-ios-location"></i> {{cost[no-1] | km}} km&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon ion-clock"></i> {{timetaken[no-1] | duration}}</h1>
         <h1 class="title" ng-if="no==-1" style="color: black;">Loading...</h1>
         <button ng-if='no!=-1 && no < results.length' class="button button-light icon ion-ios-arrow-forward" ng-click="nextRoute()"></button>
     </ion-footer-bar>

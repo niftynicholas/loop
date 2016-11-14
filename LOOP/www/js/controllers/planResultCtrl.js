@@ -3,8 +3,8 @@ angular.module('app.main.controllers')
 .controller('planResultCtrl', function($scope, $state, $http, leafletData, $cordovaGeolocation, dataShare, sharedRoute, $ionicPopup, $ionicLoading, CONSTANTS) {
     $scope.routeColours = ["#1ABC9C", "#53599A", "#086375", "#F0A202", "#EF476F"];
     $scope.results = [];
-    $scope.timetaken = 0;
-    $scope.cost = 0;
+    $scope.timetaken = [];
+    $scope.cost = [];
     var plannedResultLayers = null;
     var pid = null;
     var inActiveStyle = {
@@ -340,8 +340,8 @@ angular.module('app.main.controllers')
                 targetMarker1.openPopup();
 
                 function onEachFeature(feature, layer) {
-                    $scope.timetaken = feature.properties.timetaken
-                    $scope.cost = feature.properties.cost
+                    $scope.timetaken.push(feature.properties.timetaken);
+                    $scope.cost.push(feature.properties.cost);
                     var routeNo = $scope.routesNo++;
                     if (firstLoad) {
                         $scope.no = routeNo + 1;

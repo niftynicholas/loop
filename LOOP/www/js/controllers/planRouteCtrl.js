@@ -95,13 +95,11 @@ angular.module('app.main.controllers')
     */
 
     $('#startPoint').keyup(function() {
-
-        hasCurrentLocation = false;
         var input = $('#startPoint').val();
         //To add Home / Office for Advanced Navigation Module
         document.getElementById("startResult").innerHTML = "";
-        if (input.length == 0) {
-            hasCurrentLocation = true;
+        hasCurrentLocation = false;
+        if (input.length == 0 && document.getElementById("startResult").innerHTML == "") {
             if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
                 $('#startResult').append('<div class="item" onclick="displayInfo(\'' + "Current Location" + '\',' + dataShare.getData().currentLocation.lat + ',' + dataShare.getData().currentLocation.lng + ',\'start\')">' + '<i class="ion-android-locate" style="float:right;font-size:25px"></i>' + "Current Location" + '</div>');
                 for(var i=0;i<favourites.length;i++){
@@ -120,6 +118,7 @@ angular.module('app.main.controllers')
                     console.log("Location not found");
                 });
             }
+            hasCurrentLocation = true;
         } else {
             // $("#startCross").attr("style","margin-right:5px");
             var type = 'WGS84';
@@ -175,14 +174,15 @@ angular.module('app.main.controllers')
     * Populate Search Results for End Point
     */
     $('#endPoint').keyup(function() {
-        hasEndFavourite = false;
+
         var input = $('#endPoint').val();
         document.getElementById("endResult").innerHTML = "";
-        if(input.length == 0){
-            hasEndFavourite = true;
+        hasEndFavourite = false;
+        if(input.length == 0 && !hasEndFavourite){
             for(var i=0;i<favourites.length;i++){
                 $('#endResult').append('<div class="item" onclick="displayInfo(\'' + favourites[i].name + '\',' + favourites[i].lat +',' + favourites[i].lng + ', \'end\',' + favourites[i].fid +')">' + '<i class="ion-ios-star" style="float:right;color:#ffba49;font-size:25px" onclick="deleteLocation(\''+ favourites[i].fid +'\',\'' + delURL +'\', this)"></i>' + favourites[i].name + '</div>');
             }
+            hasEndFavourite = true;
         } else {
             type = 'WGS84';
             var requestURL = 'http://www.onemap.sg/APIV2/services.svc/basicSearchV2?callback=?';
