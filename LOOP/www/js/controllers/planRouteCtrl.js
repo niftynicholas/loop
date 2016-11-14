@@ -99,7 +99,7 @@ angular.module('app.main.controllers')
         hasCurrentLocation = false;
         var input = $('#startPoint').val();
         //To add Home / Office for Advanced Navigation Module
-        $('#startResult').html('');
+        document.getElementById("startResult").innerHTML = "";
         if (input.length == 0) {
             hasCurrentLocation = true;
             if (dataShare.data != false && typeof(dataShare.getData().currentLocation.lat) != "undefined") {
@@ -177,6 +177,7 @@ angular.module('app.main.controllers')
     $('#endPoint').keyup(function() {
         hasEndFavourite = false;
         var input = $('#endPoint').val();
+        document.getElementById("endResult").innerHTML = "";
         if(input.length == 0){
             hasEndFavourite = true;
             for(var i=0;i<favourites.length;i++){
