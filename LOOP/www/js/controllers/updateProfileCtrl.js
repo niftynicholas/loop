@@ -117,7 +117,7 @@ angular.module('app.main.controllers')
             }, function errorCallback(response) {
                 $scope.hide();
                 var alertPopup = $ionicPopup.alert({
-                    title: 'Opps!',
+                    title: 'Oops!',
                     template: 'Something went wrong with the server. Please try again later.'
                 });
 

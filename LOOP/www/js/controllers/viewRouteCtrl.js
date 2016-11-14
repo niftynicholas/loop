@@ -1,10 +1,6 @@
 angular.module('app.main.controllers')
 
 .controller('viewRouteCtrl', function($scope, leafletData, $ionicHistory, $ionicPopup, routeName, $http, $state, dataShare, viewSharedRoute, $ionicPopup, $ionicModal, $ionicLoading, CONSTANTS, shareUsername, sharePassword, shareToken) {
-    $ionicLoading.show({
-        template: '<p>Posting...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
-    })
-
     $scope.username = localStorage.getItem("username");
     $scope.profilePictures = JSON.parse(localStorage.getItem("profilePictures"));
     var uid = localStorage.getItem("uid");
@@ -13,10 +9,12 @@ angular.module('app.main.controllers')
     var routes = JSON.parse(localStorage.getItem(routesType));
     var userRoutes = JSON.parse(localStorage.getItem("userRoutes"));
     $scope.route = routes[index];
-    console.log($scope.route);
     $scope.owns = false;
 
     for (var i = 0; i < userRoutes.length; i++) {
+        $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner icon="bubbles" class="spinner-balanced"></ion-spinner>'
+        })
         if ($scope.route.cid == userRoutes[i].cid) {
             $scope.owns = true;
         }

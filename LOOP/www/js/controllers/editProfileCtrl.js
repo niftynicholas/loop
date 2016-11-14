@@ -94,7 +94,7 @@ angular.module('app.main.controllers')
                                     function errorCallback(response) {
                                         $scope.hide();
                                         var alertPopup = $ionicPopup.alert({
-                                            title: 'Opps!',
+                                            title: 'Oops!',
                                             template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
                                         });
                                     });
@@ -102,7 +102,7 @@ angular.module('app.main.controllers')
                             function errorCallback(response) {
                                 $scope.hide();
                                 var alertPopup = $ionicPopup.alert({
-                                    title: 'Opps!',
+                                    title: 'Oops!',
                                     template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
                                 });
                             });
@@ -110,14 +110,14 @@ angular.module('app.main.controllers')
                     function errorCallback(response) {
                         $scope.hide();
                         var alertPopup = $ionicPopup.alert({
-                            title: 'Opps!',
+                            title: 'Oops!',
                             template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
                         });
                     });
             }, function errorCallback(response) {
                 $scope.hide();
                 var alertPopup = $ionicPopup.alert({
-                    title: 'Opps!',
+                    title: 'Oops!',
                     template: 'We are unable to edit your account details now. Please try again later.'
                 });
             });
@@ -126,7 +126,7 @@ angular.module('app.main.controllers')
 
     $scope.showAlert = function() {
         var alertPopup = $ionicPopup.alert({
-            title: 'Opps!',
+            title: 'Oops!',
             template: 'We do not accept zero value for height/weight.'
         });
     };

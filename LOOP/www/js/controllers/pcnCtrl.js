@@ -109,7 +109,7 @@ angular.module('app.main.controllers')
                     if (!$scope.data.comment) {
                         e.preventDefault();
                         var alertPopup = $ionicPopup.alert({
-                            title: 'Opps!',
+                            title: 'Oops!',
                             template: 'We do not accept blank submissions.'
                         });
                         alertPopup.then(function(res) {});
@@ -348,7 +348,7 @@ angular.module('app.main.controllers')
 
                 $scope.alertPopup = function(){
                     $ionicPopup.alert({
-                        title: 'Oops',
+                        title: 'Oops!',
                         template: 'Due to performance issues, you can select up to only 3 amenities.'
                     });
                 }

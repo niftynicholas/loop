@@ -49,7 +49,7 @@ angular.module('app.main.controllers')
             }, function errorCallback(response) {
                 $scope.hide();
                 var alertPopup = $ionicPopup.alert({
-                    title: 'Opps!',
+                    title: 'Oops!',
                     template: 'We are unable to reset your password due to server issues. Please try again later.'
                 });
 

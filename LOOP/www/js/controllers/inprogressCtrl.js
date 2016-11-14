@@ -551,7 +551,7 @@ angular.module('app.main.controllers')
                     if (!$scope.data.comment) {
                         e.preventDefault();
                         var alertPopup = $ionicPopup.alert({
-                            title: 'Opps!',
+                            title: 'Oops!',
                             template: 'We do not accept blank submissions.'
                         });
                         alertPopup.then(function(res) {});

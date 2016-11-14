@@ -9,7 +9,7 @@
                 <h2>{{route.name}}</h2>
                 <p>Distance: {{route.distance | km}} km</br>Duration: {{route.duration | duration}}</br>Comments: {{routeComments[$index].comments.length||0}}</p>
             </ion-item>
-            <ion-item class="item" style="text-align: center;" ng-if="!(routes.length !== 0)">Start by bookmarking one of the <a ui-sref="tabsController.home">Popular Routes</a>!</ion-item>
+            <ion-item class="item" style="text-align: center;" ng-if="!(routes.length !== 0)">Check out the <a ui-sref="tabsController.home">Popular Routes</a>!</ion-item>
         </ion-list>
         <ion-infinite-scroll ng-if="checkHasMoreRoutes()" on-infinite="loadMore()" distance="1%">
         </ion-infinite-scroll>

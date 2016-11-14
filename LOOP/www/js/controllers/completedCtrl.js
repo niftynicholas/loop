@@ -220,7 +220,7 @@ angular.module('app.main.controllers')
                         //don't allow the user to close unless he enters wifi password
                         e.preventDefault();
                         var alertPopup = $ionicPopup.alert({
-                            title: 'Opps!',
+                            title: 'Oops!',
                             template: 'We do not accept blank route names.'
                         });
                     } else {
@@ -240,7 +240,7 @@ angular.module('app.main.controllers')
                 if (route.length === 0) {
                     $ionicLoading.hide();
                     var alertPopup = $ionicPopup.alert({
-                        title: 'Opps!',
+                        title: 'Oops!',
                         template: 'We are unable to save this activity as there is no GPS data recorded.'
                     });
                 } else {
@@ -308,7 +308,7 @@ angular.module('app.main.controllers')
                                             function errorCallback(response) {
                                                 $ionicLoading.hide();
                                                 var alertPopup = $ionicPopup.alert({
-                                                    title: 'Opps!',
+                                                    title: 'Oops!',
                                                     template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
                                                 });
                                             });
@@ -316,7 +316,7 @@ angular.module('app.main.controllers')
                                     function errorCallback(response) {
                                         $ionicLoading.hide();
                                         var alertPopup = $ionicPopup.alert({
-                                            title: 'Opps!',
+                                            title: 'Oops!',
                                             template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
                                         });
                                     });
@@ -324,14 +324,14 @@ angular.module('app.main.controllers')
                             function errorCallback(response) {
                                 $ionicLoading.hide();
                                 var alertPopup = $ionicPopup.alert({
-                                    title: 'Opps!',
+                                    title: 'Oops!',
                                     template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
                                 });
                             });
                     }, function errorCallback(response) {
                         $ionicLoading.hide();
                         var alertPopup = $ionicPopup.alert({
-                            title: 'Opps!',
+                            title: 'Oops!',
                             template: 'The server is currently busy. Please try again later. Sorry for any inconvenience caused.'
                         });
                     });

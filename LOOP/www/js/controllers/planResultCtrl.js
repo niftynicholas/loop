@@ -3,6 +3,8 @@ angular.module('app.main.controllers')
 .controller('planResultCtrl', function($scope, $state, $http, leafletData, $cordovaGeolocation, dataShare, sharedRoute, $ionicPopup, $ionicLoading, CONSTANTS) {
     $scope.routeColours = ["#1ABC9C", "#53599A", "#086375", "#F0A202", "#EF476F"];
     $scope.results = [];
+    $scope.timetaken = 0;
+    $scope.cost = 0;
     var plannedResultLayers = null;
     var pid = null;
     var inActiveStyle = {
@@ -316,95 +318,97 @@ angular.module('app.main.controllers')
                 type: type
             }
         }).then(function successCallback(response) {
-                $scope.results = response.data.result;
-                $ionicLoading.hide();
-                if($scope.results.length == 0){
-                    var confirmPopup = $ionicPopup.alert({
-                        title: 'Oops',
-                        template: 'There are no cycling routes between the start and end points.'
-                    });
-
-                    confirmPopup.then(function(res) {
-                        $state.go('planRoute');
-                    });
-                }else{
-                    pid = response.data.pid
-                    sharedRoute.hasPlanned = true;
-                    sharedRoute.hasPlannedRoute = true;
-                    var firstLoad = true;
-                    plannedResultLayers.addLayer(sourceMarker1);
-                    plannedResultLayers.addLayer(targetMarker1);
-                    sourceMarker1.openPopup();
-                    targetMarker1.openPopup();
-
-                    function onEachFeature(feature, layer) {
-                        var routeNo = $scope.routesNo++;
-                        if (firstLoad) {
-                            $scope.no = routeNo + 1;
-                            firstLoad = false;
-                            layer.setStyle({
-                                "color": $scope.routeColours[$scope.no - 1],
-                                "weight": 8,
-                                "opacity": 1,
-                                "dashArray": ""
-                            });
-                        }
-                        layer.on('mousedown', function(e) {
-                            plannedResultLayers.eachLayer(function(anotherLayer) {
-                                if (anotherLayer instanceof L.GeoJSON) {
-                                    anotherLayer.setStyle(inActiveStyle);
-                                }
-                            });
-                            $scope.no = routeNo + 1;
-                            layer.bringToFront();
-                            layer.setStyle({
-                                "color": $scope.routeColours[$scope.no - 1],
-                                "weight": 8,
-                                "opacity": 1,
-                                "dashArray": ""
-                            });
-                        });
-                    }
-
-                    for (var i = 0; i < response.data.result.length; i++) {
-                        var route = response.data.result[i].geojson;
-                        var routeLayer = L.geoJson(route, {
-                            style: inActiveStyle,
-                            onEachFeature: onEachFeature
-                        });
-                        plannedResultLayers.addLayer(routeLayer);
-                        routeLayer.bringToBack();
-                    }
-
-                    if ($scope.currentLocation == "undefined") {
-                        map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
-                            animate: false,
-                            reset: true,
-                            maxZoom: 16,
-                            padding: [80, 80]
-                        });
-                    } else {
-                        map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
-                            animate: false,
-                            reset: true,
-                            maxZoom: 16,
-                            padding: [80, 80]
-                        });
-                    }
-                }
-
-            },
-            function errorCallback(response) {
-                $ionicLoading.hide();
+            $scope.results = response.data.result;
+            $ionicLoading.hide();
+            if($scope.results.length == 0){
                 var confirmPopup = $ionicPopup.alert({
-                    title: 'Invalid Location(s)',
-                    template: 'You have selected invalid start/end point(s). Please replan your route.'
+                    title: 'Oops',
+                    template: 'There are no cycling routes between the start and end points.'
                 });
 
                 confirmPopup.then(function(res) {
                     $state.go('planRoute');
                 });
+            }else{
+                pid = response.data.pid
+                sharedRoute.hasPlanned = true;
+                sharedRoute.hasPlannedRoute = true;
+                var firstLoad = true;
+                plannedResultLayers.addLayer(sourceMarker1);
+                plannedResultLayers.addLayer(targetMarker1);
+                sourceMarker1.openPopup();
+                targetMarker1.openPopup();
+
+                function onEachFeature(feature, layer) {
+                    $scope.timetaken = feature.properties.timetaken
+                    $scope.cost = feature.properties.cost
+                    var routeNo = $scope.routesNo++;
+                    if (firstLoad) {
+                        $scope.no = routeNo + 1;
+                        firstLoad = false;
+                        layer.setStyle({
+                            "color": $scope.routeColours[$scope.no - 1],
+                            "weight": 8,
+                            "opacity": 1,
+                            "dashArray": ""
+                        });
+                    }
+                    layer.on('mousedown', function(e) {
+                        plannedResultLayers.eachLayer(function(anotherLayer) {
+                            if (anotherLayer instanceof L.GeoJSON) {
+                                anotherLayer.setStyle(inActiveStyle);
+                            }
+                        });
+                        $scope.no = routeNo + 1;
+                        layer.bringToFront();
+                        layer.setStyle({
+                            "color": $scope.routeColours[$scope.no - 1],
+                            "weight": 8,
+                            "opacity": 1,
+                            "dashArray": ""
+                        });
+                    });
+                }
+
+                for (var i = 0; i < response.data.result.length; i++) {
+                    var route = response.data.result[i].geojson;
+                    var routeLayer = L.geoJson(route, {
+                        style: inActiveStyle,
+                        onEachFeature: onEachFeature
+                    });
+                    plannedResultLayers.addLayer(routeLayer);
+                    routeLayer.bringToBack();
+                }
+
+                if ($scope.currentLocation == "undefined") {
+                    map.fitBounds([startLatLng, endLatLng], { //startLatLng [lat,lng]
+                        animate: false,
+                        reset: true,
+                        maxZoom: 16,
+                        padding: [80, 80]
+                    });
+                } else {
+                    map.fitBounds([startLatLng, endLatLng, $scope.currentLocation], {
+                        animate: false,
+                        reset: true,
+                        maxZoom: 16,
+                        padding: [80, 80]
+                    });
+                }
+            }
+
+        },
+        function errorCallback(response) {
+            $ionicLoading.hide();
+            var confirmPopup = $ionicPopup.alert({
+                title: 'Invalid Location(s)',
+                template: 'You have selected invalid start/end point(s). Please replan your route.'
             });
+
+            confirmPopup.then(function(res) {
+                $state.go('planRoute');
+            });
+        });
 
     }
 
