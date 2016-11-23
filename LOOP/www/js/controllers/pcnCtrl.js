@@ -79,8 +79,7 @@ angular.module('app.main.controllers')
             }]
         });
 
-        myPopup.then(function(res) {
-        });
+        myPopup.then(function(res) {});
     };
 
 
@@ -186,12 +185,10 @@ angular.module('app.main.controllers')
             map: {
                 contextmenu: true,
                 contextmenuWidth: 140,
-                contextmenuItems: [
-                    {
-                        text: 'Submit Comment',
-                        callback: submitSuggestion
-                    }
-                ]
+                contextmenuItems: [{
+                    text: 'Submit Comment',
+                    callback: submitSuggestion
+                }]
             }
         }
     });
@@ -234,6 +231,82 @@ angular.module('app.main.controllers')
         });
         attributionBtn.addTo(map);
     });
+
+    function onEachFeature(feature, layer) {
+        if (feature.properties && feature.properties.comment && feature.properties.category) {
+            layer.bindPopup($("<div align='center'><b>Category:</b> " + feature.properties.category + "<br><b>Comment:</b> " + feature.properties.comment + "<br><span style='color:#1abc9c;'><i class='ion-android-bicycle'/> <b>Get There</b></span></div>").click(function() {
+                dataShare.data = {
+                    startLatLng: $scope.paths.currentLoc.latlngs,
+                    endLatLng: [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+                    startPointName: "Starting Location",
+                    endPointName: "Destination",
+                    type: "shortest",
+                    oneMapToken: "",
+                    k: 1
+                }
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Get There',
+                    template: 'Are you sure you want to go there?'
+                });
+
+                confirmPopup.then(function(res) {
+                    if (res) {
+                        $state.go("planResult");
+                    } else {
+
+                    }
+                });
+            })[0]);
+        } else if (feature.properties && feature.properties.name) {
+            layer.bindPopup($("<div align='center'><b>" + feature.properties.name + "</b><br><span style='color:#1abc9c;'><i class='ion-android-bicycle'/> <b>Get There</b></span></div>").click(function() {
+                dataShare.data = {
+                    startLatLng: $scope.paths.currentLoc.latlngs,
+                    endLatLng: [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+                    startPointName: "Starting Location",
+                    endPointName: feature.properties.name,
+                    type: "shortest",
+                    oneMapToken: "",
+                    k: 1
+                }
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Get There',
+                    template: 'Are you sure you want to go there?'
+                });
+
+                confirmPopup.then(function(res) {
+                    if (res) {
+                        $state.go("planResult");
+                    } else {
+
+                    }
+                });
+            })[0]);
+        } else {
+            layer.bindPopup($("<span align='center' style='color:#1abc9c;'><i class='ion-android-bicycle'/> <b>Get There</b></span>").click(function() {
+                dataShare.data = {
+                    startLatLng: $scope.paths.currentLoc.latlngs,
+                    endLatLng: [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+                    startPointName: "Starting Location",
+                    endPointName: "Destination",
+                    type: "shortest",
+                    oneMapToken: "",
+                    k: 1
+                }
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Get There',
+                    template: 'Are you sure you want to go there?'
+                });
+
+                confirmPopup.then(function(res) {
+                    if (res) {
+                        $state.go("planResult");
+                    } else {
+
+                    }
+                });
+            })[0]);
+        }
+    }
 
     $scope.$on("$ionicView.afterEnter", function() {
 
@@ -346,7 +419,7 @@ angular.module('app.main.controllers')
                     onEachFeature: onEachFeature
                 });
 
-                $scope.alertPopup = function(){
+                $scope.alertPopup = function() {
                     $ionicPopup.alert({
                         title: 'Oops!',
                         template: 'Due to performance issues, you can select up to only 3 amenities.'
@@ -354,173 +427,155 @@ angular.module('app.main.controllers')
                 }
 
                 $scope.onChangeGeotag = function(isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         $scope.toggleCount++;
-                    }else{
+                    } else {
                         $scope.toggleCount--;
                     }
 
-                    if (isChecked && $scope.toggleCount <= 3){
+                    if (isChecked && $scope.toggleCount <= 3) {
                         map.addLayer($scope.geotaggedLayer);
-                    }
-                    else if($scope.toggleCount == 4){
+                    } else if ($scope.toggleCount == 4) {
                         $scope.toggleCount--;
                         $scope.alertPopup();
                         $scope.geotags.checked = false;
-                    }
-                    else{
+                    } else {
                         map.removeLayer($scope.geotaggedLayer);
                     }
                 }
 
                 $scope.onChangePCN = function(isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         $scope.toggleCount++;
-                    }else{
+                    } else {
                         $scope.toggleCount--;
                     }
-                    if (isChecked && $scope.toggleCount <= 3){
+                    if (isChecked && $scope.toggleCount <= 3) {
                         map.addLayer(pcnLayer);
-                    }
-                    else if($scope.toggleCount == 4){
+                    } else if ($scope.toggleCount == 4) {
                         $scope.toggleCount--;
                         $scope.alertPopup();
                         $scope.pcn.checked = false;
-                    }
-                    else{
+                    } else {
                         map.removeLayer(pcnLayer);
                     }
                 }
 
                 $scope.onChangeITPCN = function(isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         $scope.toggleCount++;
-                    }else{
+                    } else {
                         $scope.toggleCount--;
                     }
-                    if (isChecked && $scope.toggleCount <= 3){
+                    if (isChecked && $scope.toggleCount <= 3) {
                         map.addLayer(intraTownCyclingPathLayer);
-                    }
-                    else if($scope.toggleCount == 4){
+                    } else if ($scope.toggleCount == 4) {
                         $scope.toggleCount--;
                         $scope.alertPopup();
                         $scope.itpcn.checked = false;
-                    }
-                    else{
+                    } else {
                         map.removeLayer(intraTownCyclingPathLayer);
                     }
                 }
 
                 $scope.onChangeToilets = function(isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         $scope.toggleCount++;
-                    }else{
+                    } else {
                         $scope.toggleCount--;
                     }
-                    if (isChecked && $scope.toggleCount <= 3){
+                    if (isChecked && $scope.toggleCount <= 3) {
                         map.addLayer(toiletsLayer);
-                    }
-                    else if($scope.toggleCount == 4){
+                    } else if ($scope.toggleCount == 4) {
                         $scope.toggleCount--;
                         $scope.alertPopup();
                         $scope.toilets.checked = false;
-                    }
-                    else{
+                    } else {
                         map.removeLayer(toiletsLayer);
                     }
                 }
 
                 $scope.onChangeFNB = function(isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         $scope.toggleCount++;
-                    }else{
+                    } else {
                         $scope.toggleCount--;
                     }
-                    if (isChecked && $scope.toggleCount <= 3){
+                    if (isChecked && $scope.toggleCount <= 3) {
                         map.addLayer(foodLayer);
-                    }
-                    else if($scope.toggleCount == 4){
+                    } else if ($scope.toggleCount == 4) {
                         $scope.toggleCount--;
                         $scope.alertPopup();
                         $scope.fnb.checked = false;
-                    }
-                    else{
+                    } else {
                         map.removeLayer(foodLayer);
                     }
                 }
 
                 $scope.onChangeShelters = function(isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         $scope.toggleCount++;
-                    }else{
+                    } else {
                         $scope.toggleCount--;
                     }
-                    if (isChecked && $scope.toggleCount <= 3){
+                    if (isChecked && $scope.toggleCount <= 3) {
                         map.addLayer(sheltersLayer);
-                    }
-                    else if($scope.toggleCount == 4){
+                    } else if ($scope.toggleCount == 4) {
                         $scope.toggleCount--;
                         $scope.alertPopup();
                         $scope.shelters.checked = false;
-                    }
-                    else{
+                    } else {
                         map.removeLayer(sheltersLayer);
                     }
                 }
 
                 $scope.onChangeDrinkingWater = function(isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         $scope.toggleCount++;
-                    }else{
+                    } else {
                         $scope.toggleCount--;
                     }
-                    if (isChecked && $scope.toggleCount <= 3){
+                    if (isChecked && $scope.toggleCount <= 3) {
                         map.addLayer(drinkingWaterLayer);
-                    }
-                    else if($scope.toggleCount == 4){
+                    } else if ($scope.toggleCount == 4) {
                         $scope.toggleCount--;
                         $scope.alertPopup();
                         $scope.drinkingwater.checked = false;
-                    }
-                    else{
+                    } else {
                         map.removeLayer(drinkingWaterLayer);
                     }
                 }
 
                 $scope.onChangeBikeLots = function(isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         $scope.toggleCount++;
-                    }else{
+                    } else {
                         $scope.toggleCount--;
                     }
-                    if (isChecked && $scope.toggleCount <= 3){
+                    if (isChecked && $scope.toggleCount <= 3) {
                         map.addLayer(bicycleParkingLayer);
-                    }
-                    else if($scope.toggleCount == 4){
+                    } else if ($scope.toggleCount == 4) {
                         $scope.toggleCount--;
                         $scope.alertPopup();
                         $scope.bikelots.checked = false;
-                    }
-                    else{
+                    } else {
                         map.removeLayer(bicycleParkingLayer);
                     }
                 }
 
                 $scope.onChangeBikeRentals = function(isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         $scope.toggleCount++;
-                    }else{
+                    } else {
                         $scope.toggleCount--;
                     }
-                    if (isChecked && $scope.toggleCount <= 3){
+                    if (isChecked && $scope.toggleCount <= 3) {
                         map.addLayer(bicycleRentalLayer);
-                    }
-                    else if($scope.toggleCount == 4){
+                    } else if ($scope.toggleCount == 4) {
                         $scope.toggleCount--;
                         $scope.alertPopup();
                         $scope.bikerentals.checked = false;
-                    }
-                    else{
+                    } else {
                         map.removeLayer(bicycleRentalLayer);
                     }
                 }
@@ -641,47 +696,4 @@ angular.module('app.main.controllers')
     $scope.$on('modal.removed', function() {
         // Execute action
     });
-
-    function onEachFeature(feature, layer) {
-        if (feature.properties && feature.properties.comment && feature.properties.category) {
-            layer.bindPopup($("<div><b>Category:</b> " + feature.properties.category + "<br><b>Comment:</b> " + feature.properties.comment + "<br><span style='color:blue;text-decoration:underline;'>Go There</span></div>").click(function() {
-                dataShare.data = {
-                    startLatLng: $scope.paths.currentLoc.latlngs,
-                    endLatLng: [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
-                    startPointName: "Starting Location",
-                    endPointName: "Destination",
-                    type: "shortest",
-                    oneMapToken: "",
-                    k: 1
-                }
-                $state.go("planResult");
-            })[0]);
-        } else if (feature.properties && feature.properties.name) {
-            layer.bindPopup($("<div><b>" + feature.properties.name + "</b><br><span style='color:blue;text-decoration:underline;'>Go There</span></div>").click(function() {
-                dataShare.data = {
-                    startLatLng: $scope.paths.currentLoc.latlngs,
-                    endLatLng: [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
-                    startPointName: "Starting Location",
-                    endPointName: feature.properties.name,
-                    type: "shortest",
-                    oneMapToken: "",
-                    k: 1
-                }
-                $state.go("planResult");
-            })[0]);
-        } else {
-            layer.bindPopup($("<span style='color:blue;text-decoration:underline;'>Go There</span>").click(function() {
-                dataShare.data = {
-                    startLatLng: $scope.paths.currentLoc.latlngs,
-                    endLatLng: [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
-                    startPointName: "Starting Location",
-                    endPointName: "Destination",
-                    type: "shortest",
-                    oneMapToken: "",
-                    k: 1
-                }
-                $state.go("planResult");
-            })[0]);
-        }
-    }
 })
