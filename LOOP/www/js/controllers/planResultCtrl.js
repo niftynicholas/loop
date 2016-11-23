@@ -1,6 +1,7 @@
 angular.module('app.main.controllers')
 
 .controller('planResultCtrl', function($scope, $state, $http, leafletData, $cordovaGeolocation, dataShare, sharedRoute, $ionicPopup, $ionicLoading, CONSTANTS) {
+    var Kroutes = 2;
     $scope.routeColours = ["#1ABC9C", "#53599A", "#086375", "#F0A202", "#EF476F"];
     $scope.results = [];
     $scope.timetaken = [];
@@ -66,6 +67,26 @@ angular.module('app.main.controllers')
         var endPointName = data.endPointName;
         var type = data.type.toLowerCase();
         var oneMapToken = data.oneMapToken;
+        if("k" in data){
+            Kroutes = data.k;
+        }
+        if(oneMapToken == ""){
+            $.ajax({
+                dataType: 'json',
+                url: 'http://www.onemap.sg/API/services.svc/getToken',
+                async: false,
+                data: {
+                    'accessKEY': '2WpSB38gVk6Shp1NiEgk0eTAHRsv4jGu7cs4N1r8KipyJJyB7uN8+hl3LXNq2iX1c/wdJhIStL4a6kEacP8CT/HQfXmkWp25|mv73ZvjFcSo=',
+                },
+                success: function(data) {
+                    oneMapToken = data.GetToken[0].NewToken;
+                }
+            });
+
+            if (typeof(oneMapToken) == "undefined") {
+                oneMapToken = 'xkg8VRu6Ol+gMH+SUamkRIEB7fKzhwMvfMo/2U8UJcFhdvR4yN1GutmUIA3A6r3LDhot215OVVkZvNRzjl28TNUZgYFSswOi';
+            }
+        }
         dataShare.clearData();
 
         var openStreetMapWith1 = L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
@@ -156,7 +177,7 @@ angular.module('app.main.controllers')
             endPointName: endPointName
         };
 
-        findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), type, plannedResultLayers);
+        findRoute(map, sourceMarker1, targetMarker1, sourceMarker1.getLatLng(), targetMarker1.getLatLng(), type, plannedResultLayers, Kroutes);
 
         sourceMarker1.on('dragend', function() {
             var source = sourceMarker1;
@@ -195,7 +216,7 @@ angular.module('app.main.controllers')
                     });
                     //source.addTo(sharedRoute.data); //.bindPopup(startPointName, { closeOnClick: false,autoPan: false}).openPopup()
                     //target.addTo(sharedRoute.data); //.bindPopup(endPointName, {closeOnClick: false,autoPan: false}).openPopup()
-                    findRoute(map, source, target, source.getLatLng(), target.getLatLng(), type, plannedResultLayers);
+                    findRoute(map, source, target, source.getLatLng(), target.getLatLng(), type, plannedResultLayers, Kroutes);
                     //source.openPopup();
                     //target.openPopup();
                 }
@@ -239,7 +260,7 @@ angular.module('app.main.controllers')
                     });
                     //source.addTo(sharedRoute.data); //.bindPopup(startPointName, {closeOnClick: false,autoPan: false}).openPopup()
                     //target.addTo(sharedRoute.data); //.bindPopup(endPointName, { closeOnClick: false, autoPan: false}).openPopup()
-                    findRoute(map, source, target, source.getLatLng(), target.getLatLng(), type, plannedResultLayers);
+                    findRoute(map, source, target, source.getLatLng(), target.getLatLng(), type, plannedResultLayers, Kroutes);
                     //source.openPopup();
                     //target.openPopup();
                 }
@@ -283,7 +304,7 @@ angular.module('app.main.controllers')
         });
     }
 
-    function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, type, plannedResultLayers) {
+    function findRoute(map, sourceMarker1, targetMarker1, startLatLng, endLatLng, type, plannedResultLayers, kRoutes) {
         $scope.routesNo = 0;
         $scope.no = -1;
         plannedResultLayers.clearLayers();
@@ -313,7 +334,7 @@ angular.module('app.main.controllers')
                 start: startCoords,
                 end: endCoords,
                 dateTimeStamp: new Date().getTime(),
-                k: 2, // No. of routes to be returned.
+                k: kRoutes, // No. of routes to be returned.
                 tolerance: 500,
                 type: type
             }

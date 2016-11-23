@@ -1,6 +1,6 @@
 angular.module('app.main.controllers')
 
-.controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData, $cordovaGeolocation, $ionicPopup, $http, $ionicModal, CONSTANTS) {
+.controller('pcnCtrl', function($scope, leafletData, $timeout, $ionicLoading, mapData, $cordovaGeolocation, $ionicPopup, $http, $ionicModal, CONSTANTS, dataShare, $state) {
     $scope.caption = 'To submit a Comment or Suggestion, simply TAP & HOLD on the map. Then, TAP on "Submit Comment".';
 
     $scope.help = function() {
@@ -644,10 +644,44 @@ angular.module('app.main.controllers')
 
     function onEachFeature(feature, layer) {
         if (feature.properties && feature.properties.comment && feature.properties.category) {
-            layer.bindPopup("<b>Category:</b> " + feature.properties.category + "<br><b>Comment:</b> " + feature.properties.comment);
-        }
-        if (feature.properties && feature.properties.name) {
-            layer.bindPopup(feature.properties.name);
+            layer.bindPopup($("<div><b>Category:</b> " + feature.properties.category + "<br><b>Comment:</b> " + feature.properties.comment + "<br><span style='color:blue;text-decoration:underline;'>Go There</span></div>").click(function() {
+                dataShare.data = {
+                    startLatLng: $scope.paths.currentLoc.latlngs,
+                    endLatLng: [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+                    startPointName: "Starting Location",
+                    endPointName: "Destination",
+                    type: "shortest",
+                    oneMapToken: "",
+                    k: 1
+                }
+                $state.go("planResult");
+            })[0]);
+        } else if (feature.properties && feature.properties.name) {
+            layer.bindPopup($("<div><b>" + feature.properties.name + "</b><br><span style='color:blue;text-decoration:underline;'>Go There</span></div>").click(function() {
+                dataShare.data = {
+                    startLatLng: $scope.paths.currentLoc.latlngs,
+                    endLatLng: [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+                    startPointName: "Starting Location",
+                    endPointName: feature.properties.name,
+                    type: "shortest",
+                    oneMapToken: "",
+                    k: 1
+                }
+                $state.go("planResult");
+            })[0]);
+        } else {
+            layer.bindPopup($("<span style='color:blue;text-decoration:underline;'>Go There</span>").click(function() {
+                dataShare.data = {
+                    startLatLng: $scope.paths.currentLoc.latlngs,
+                    endLatLng: [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+                    startPointName: "Starting Location",
+                    endPointName: "Destination",
+                    type: "shortest",
+                    oneMapToken: "",
+                    k: 1
+                }
+                $state.go("planResult");
+            })[0]);
         }
     }
 })
