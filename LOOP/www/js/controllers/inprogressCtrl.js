@@ -454,12 +454,13 @@ angular.module('app.main.controllers')
     $scope.showLastGeotag = function() {
         var lastGeotagInfo = geotagsInfo[geotagsInfo.length - 1];
         if (typeof lastGeotagInfo != "undefined") {
+            var popup = "<b>Category:</b> " + lastGeotagInfo.category + "<br><b>Comment:</b> " + lastGeotagInfo.comment;
             $("#geotag").popover('destroy');
-            geotagPopupLayer.setPosition(lastGeotagInfo.coordinates);
+            geotagPopupLayer.setPosition([lastGeotagInfo.coordinates.lng, lastGeotagInfo.coordinates.lat]);
             $("#geotag").popover({
                 'placement': 'top',
                 'html': true,
-                'content': lastGeotagInfo.comment
+                'content': popup
             });
             $("#geotag").popover('show');
         }
